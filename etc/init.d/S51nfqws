@@ -42,9 +42,9 @@ reload() {
 firewall_start() {
   if [ -z "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
     for IFACE in $ISP_INTERFACE; do
-      iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      #iptables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
+      #iptables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
       #iptables -t nat -A POSTROUTING -o eth3 -j MASQUERADE
     done
   fi
@@ -53,9 +53,9 @@ firewall_start() {
 firewall_stop() {
   if [ -n "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
     for IFACE in $ISP_INTERFACE; do
-      iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      #iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
+      #iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
       #iptables -t nat -D POSTROUTING -o eth3 -j MASQUERADE
     done
   fi
