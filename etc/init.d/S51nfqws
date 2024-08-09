@@ -1,0 +1,93 @@
+#!/bin/sh
+
+. /opt/etc/nfqws/nfqws.conf
+
+NFQWS_BIN=/opt/usr/bin/nfqws
+
+start() {
+  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
+    echo 'Service NFQWS is already running' >&2
+    return 1
+  fi
+
+  $NFQWS_BIN --daemon --qnum $NFQUEUE_NUM --pidfile $PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
+  firewall_start
+
+  echo 'Started NFQWS service'
+}
+
+stop() {
+  firewall_stop
+
+  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+    echo 'Service NFQWS is not running' >&2
+    return 1
+  fi
+
+  echo 'Stopping NFQWS service...'
+  kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+}
+
+reload() {
+  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+    echo 'Service NFQWS is not running' >&2
+    return 1
+  fi
+
+  echo 'Reloading NFQWS service...'
+  kill -1 $(cat "$PIDFILE")
+}
+
+firewall_start() {
+  if [ -z "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
+    for IFACE in $ISP_INTERFACE; do
+      iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      #iptables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
+      #iptables -t nat -A POSTROUTING -o eth3 -j MASQUERADE
+    done
+  fi
+}
+
+firewall_stop() {
+  if [ -n "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
+    for IFACE in $ISP_INTERFACE; do
+      iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      #iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
+      #iptables -t nat -D POSTROUTING -o eth3 -j MASQUERADE
+    done
+  fi
+}
+
+status() {
+  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
+    echo 'Service NFQWS is running'
+  else
+    echo 'Service NFQWS is stopped'
+  fi
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  reload)
+    reload
+    ;;
+  firewall)
+    firewall_start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|status}"
+esac
