@@ -10,6 +10,7 @@
 - Keenetic Ultra (KN-1811)
 - Keenetic Extra (KN-1710)
 - Keenetic Hopper (KN-3810)
+- Keenetic Viva (KN-1910)
 
 Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
 
