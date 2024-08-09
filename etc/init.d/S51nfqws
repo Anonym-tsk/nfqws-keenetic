@@ -10,6 +10,7 @@ start() {
     return 1
   fi
 
+  kernel_modules_load
   $NFQWS_BIN --daemon --qnum $NFQUEUE_NUM --pidfile $PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
   firewall_start
 
@@ -57,6 +58,25 @@ firewall_stop() {
       #iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:6 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
       #iptables -t nat -D POSTROUTING -o eth3 -j MASQUERADE
     done
+  fi
+}
+
+kernel_modules_load() {
+  KERNEL=$(uname -r)
+
+  if [ -z $(lsmod 2>/dev/null | grep "xt_multiport ") ]; then
+    insmod /lib/modules/$KERNEL/xt_multiport.ko &> /dev/null
+    echo "xt_multiport.ko loaded"
+  fi
+
+  if [ -z $(lsmod 2>/dev/null | grep "xt_connbytes ") ]; then
+    insmod /lib/modules/$KERNEL/xt_connbytes.ko &> /dev/null
+    echo "xt_connbytes.ko loaded"
+  fi
+
+  if [ -z $(lsmod 2>/dev/null | grep "xt_NFQUEUE ") ]; then
+    insmod /lib/modules/$KERNEL/xt_NFQUEUE.ko &> /dev/null
+    echo "xt_NFQUEUE.ko loaded"
   fi
 }
 
