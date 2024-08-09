@@ -46,6 +46,12 @@ firewall_start() {
       iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       #iptables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
       #iptables -t nat -A POSTROUTING -o eth3 -j MASQUERADE
+
+      # Просто чтобы не забыть, правила отсюда https://github.com/bol-van/zapret/issues/191
+      # NB: Тут нет фильтра по интерфейсу
+      #iptables -t mangle -A INPUT -p tcp -m multiport --sports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir reply -j NFQUEUE --queue-num 200 --queue-bypass
+      #iptables -t mangle -A FORWARD -p tcp -m multiport --sports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir reply -j NFQUEUE --queue-num 200 --queue-bypass
+      #iptables -t mangle -A POSTROUTING -p tcp -m multiport --dports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
     done
   fi
 }
