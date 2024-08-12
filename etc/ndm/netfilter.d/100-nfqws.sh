@@ -8,4 +8,4 @@ fi
 [ "$table" != "mangle" ] && exit
 
 # $type is `iptables` or `ip6tables`
-/opt/etc/init.d/S51tpws firewall-"$type"
+/opt/etc/init.d/S51nfqws firewall-"$type"
