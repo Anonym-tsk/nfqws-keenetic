@@ -8,9 +8,12 @@
 
 - Keenetic Giga (KN-1011)
 - Keenetic Ultra (KN-1811)
+- Keenetic Ultra (KN-1810)
 - Keenetic Extra (KN-1710)
 - Keenetic Hopper (KN-3810)
 - Keenetic Viva (KN-1910)
+- Keenetic Omni (KN-1410)
+- Keenetic Giant (KN-2610)
 
 Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
 
