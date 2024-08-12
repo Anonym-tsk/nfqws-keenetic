@@ -12,13 +12,16 @@ start() {
 
   kernel_modules_load
   $NFQWS_BIN --daemon --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
-  firewall_start
+
+  firewall_start_v4
+  firewall_start_v6
 
   echo 'Started NFQWS service'
 }
 
 stop() {
-  firewall_stop
+  firewall_stop_v4
+  firewall_stop_v6
 
   if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
     echo 'Service NFQWS is not running' >&2
@@ -39,7 +42,7 @@ reload() {
   kill -1 $(cat "$PIDFILE")
 }
 
-firewall_start() {
+firewall_start_v4() {
   if [ -z "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
     for IFACE in $ISP_INTERFACE; do
       iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
@@ -56,13 +59,31 @@ firewall_start() {
   fi
 }
 
-firewall_stop() {
+firewall_start_v6() {
+  if [ -z "$(ip6tables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
+    for IFACE in $ISP_INTERFACE; do
+      ip6tables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      ip6tables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+    done
+  fi
+}
+
+firewall_stop_v4() {
   if [ -n "$(iptables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
     for IFACE in $ISP_INTERFACE; do
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       #iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 210 --queue-bypass
       #iptables -t nat -D POSTROUTING -o eth3 -j MASQUERADE
+    done
+  fi
+}
+
+firewall_stop_v6() {
+  if [ -n "$(ip6tables-save 2>/dev/null | grep "queue-num $NFQUEUE_NUM")" ]; then
+    for IFACE in $ISP_INTERFACE; do
+      ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
     done
   fi
 }
@@ -111,8 +132,11 @@ case "$1" in
   reload)
     reload
     ;;
-  firewall)
-    firewall_start
+  firewall-iptables)
+    firewall_start_v4
+    ;;
+  firewall-ip6tables)
+    firewall_start_v6
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|reload|status}"
