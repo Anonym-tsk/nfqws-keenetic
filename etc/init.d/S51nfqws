@@ -15,6 +15,7 @@ start() {
 
   firewall_start_v4
   firewall_start_v6
+  system_config
 
   echo 'Started NFQWS service'
 }
@@ -105,6 +106,11 @@ kernel_modules_load() {
     insmod /lib/modules/$KERNEL/xt_NFQUEUE.ko &> /dev/null
     echo "xt_NFQUEUE.ko loaded"
   fi
+}
+
+system_config() {
+  sysctl -w net.netfilter.nf_conntrack_checksum=0
+  sysctl -w net.netfilter.nf_conntrack_tcp_be_liberal=1
 }
 
 status() {
