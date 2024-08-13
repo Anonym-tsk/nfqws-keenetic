@@ -109,8 +109,8 @@ kernel_modules_load() {
 }
 
 system_config() {
-  sysctl -w net.netfilter.nf_conntrack_checksum=0
-  sysctl -w net.netfilter.nf_conntrack_tcp_be_liberal=1
+  sysctl -w net.netfilter.nf_conntrack_checksum=0 &> /dev/null
+  sysctl -w net.netfilter.nf_conntrack_tcp_be_liberal=1 &> /dev/null
 }
 
 status() {
