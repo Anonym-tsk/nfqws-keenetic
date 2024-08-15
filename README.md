@@ -61,6 +61,14 @@ opkg install curl
 >
 > В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `/opt/etc/nfqws/exclude.list`
 
+##### Обновление
+
+Просто запустите установщик еще раз, следуйте инструкциям
+
+```
+/bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netinstall.sh)"
+```
+
 ##### Автоматическое удаление
 
 ```
@@ -74,6 +82,14 @@ opkg install git git-http curl
 git clone https://github.com/Anonym-tsk/nfqws-keenetic.git --depth 1
 chmod +x ./nfqws-keenetic/*.sh
 ./nfqws-keenetic/install.sh
+```
+
+##### Обновление
+
+```
+cd nfqws-keenetic
+git pull --depth=1
+./install.sh
 ```
 
 ##### Удаление
