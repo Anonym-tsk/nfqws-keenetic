@@ -19,6 +19,8 @@
 
 Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions).
 
+Если nfqws работает как-то не так, можете попробовать [tpws](https://github.com/Anonym-tsk/tpws-keenetic).
+
 ### Что это?
 
 `nfqws` - утилита для модификации TCP соединения на уровне пакетов, работает через обработчик очереди NFQUEUE и raw сокеты.
@@ -127,3 +129,7 @@ git pull --depth=1
 > ```
 > iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
 > ```
+
+---
+
+Нравится проект? [Поддержи автора](https://yoomoney.ru/to/410019180291197)! Купи ему немного :beers: или :coffee:!
