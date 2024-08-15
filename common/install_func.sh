@@ -16,7 +16,7 @@ stop_func() {
   fi
 }
 
-start_func(){
+start_func() {
   if [ -f "$INIT_SCRIPT" ]; then
     $INIT_SCRIPT start
   fi
