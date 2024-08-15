@@ -4,8 +4,33 @@
 
 NFQWS_BIN=/opt/usr/bin/nfqws
 
+is_running() {
+  PID_RUNNING=$(pidof $NFQWS_BIN 2>/dev/null)
+
+  if [ -z "$PID_RUNNING" ]; then
+    return 1
+  fi
+
+  if [ ! -f "$PIDFILE" ]; then
+    return 1
+  fi
+
+  PID_SAVED=$(cat "$PIDFILE")
+
+  if [ "$PID_RUNNING" -ne "$PID_SAVED" ]; then
+    return 1
+  fi
+
+  if ! kill -0 $(cat "$PIDFILE"); then
+    return 1
+  fi
+
+  # 0 = true, 1 = false
+  return 0
+}
+
 start() {
-  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
+  if is_running; then
     echo 'Service NFQWS is already running' >&2
     return 1
   fi
@@ -24,7 +49,7 @@ stop() {
   firewall_stop_v4
   firewall_stop_v6
 
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+  if ! is_running; then
     echo 'Service NFQWS is not running' >&2
     return 1
   fi
@@ -34,7 +59,7 @@ stop() {
 }
 
 reload() {
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+  if ! is_running; then
     echo 'Service NFQWS is not running' >&2
     return 1
   fi
@@ -118,7 +143,7 @@ system_config() {
 }
 
 status() {
-  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
+  if is_running; then
     echo 'Service NFQWS is running'
   else
     echo 'Service NFQWS is stopped'
