@@ -22,7 +22,7 @@
 
 Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
 
-Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions).
+Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions) или в [чате](https://t.me/nfqws).
 
 Если nfqws работает как-то не так, можете попробовать [tpws](https://github.com/Anonym-tsk/tpws-keenetic).
 
@@ -138,6 +138,14 @@ git pull --depth=1
 > ```
 > iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
 > ```
+
+### Частые проблемы
+1. `iptables: No chain/target/match by that name`
+
+    Не установлен пакет "Модули ядра подсистемы Netfilter". На Keenetic он появляется в списке пакетов только после установки "Протокол IPv6"
+2. `can't initialize ip6tables table` и/или `Perhaps ip6tables or your kernel needs to be upgraded`
+
+    Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
 
 ---
 
