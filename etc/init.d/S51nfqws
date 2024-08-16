@@ -184,7 +184,7 @@ case "$1" in
     firewall_start_v6
     ;;
   version|-v|--version)
-    echo "NFQWS version: $VERSION"
+    echo "nfqws-keenetic version: $VERSION"
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|reload|status|version}"
