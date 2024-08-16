@@ -76,7 +76,7 @@ firewall_start_v4() {
       iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      iptables -t nat -A POSTROUTING -o $IFACE -j MASQUERADE
+      iptables -t nat -A POSTROUTING -o $IFACE -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE
 
       # Просто чтобы не забыть, правила отсюда https://github.com/bol-van/zapret/issues/191
       # NB: Тут нет фильтра по интерфейсу
@@ -93,7 +93,7 @@ firewall_stop_v4() {
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      iptables -t nat -D POSTROUTING -o $IFACE -j MASQUERADE
+      iptables -t nat -D POSTROUTING -o $IFACE -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE
     done
   fi
 }
@@ -108,7 +108,6 @@ firewall_start_v6() {
       ip6tables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       ip6tables -t mangle -I POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       ip6tables -t mangle -I POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      ip6tables -t nat -A POSTROUTING -o $IFACE -j MASQUERADE
     done
   fi
 }
@@ -123,7 +122,6 @@ firewall_stop_v6() {
       ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       ip6tables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      ip6tables -t nat -D POSTROUTING -o $IFACE -j MASQUERADE
     done
   fi
 }
