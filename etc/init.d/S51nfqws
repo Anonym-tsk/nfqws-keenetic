@@ -1,13 +1,13 @@
 #!/bin/sh
 
-VERSION="1.0.7"
+VERSION="1.0.8"
 
 . /opt/etc/nfqws/nfqws.conf
 
 NFQWS_BIN=/opt/usr/bin/nfqws
 
 is_running() {
-  PID_RUNNING=$(pidof $NFQWS_BIN 2>/dev/null)
+  PID_RUNNING=$(pgrep -nx "$NFQWS_BIN" 2>/dev/null)
 
   if [ -z "$PID_RUNNING" ]; then
     return 1
