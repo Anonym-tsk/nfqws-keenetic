@@ -1,5 +1,7 @@
 #!/bin/sh
 
+VERSION="1.0.7"
+
 . /opt/etc/nfqws/nfqws.conf
 
 NFQWS_BIN=/opt/usr/bin/nfqws
@@ -181,6 +183,9 @@ case "$1" in
   firewall-ip6tables)
     firewall_start_v6
     ;;
+  version|-v|--version)
+    echo "NFQWS version: $VERSION"
+    ;;
   *)
-    echo "Usage: $0 {start|stop|restart|reload|status}"
+    echo "Usage: $0 {start|stop|restart|reload|status|version}"
 esac

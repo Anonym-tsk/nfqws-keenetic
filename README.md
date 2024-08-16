@@ -105,11 +105,11 @@ git pull --depth=1
 ### Полезное
 
 1. Конфиг-файл `/opt/etc/nfqws/nfqws.conf`
-2. Скрипт запуска/остановки `/opt/etc/init.d/S51nfqws {start|stop|restart|reload|status}`
-3. Вручную добавить домены в список можно в файле `/opt/etc/nfqws/user.list`
+2. Скрипт запуска/остановки `/opt/etc/init.d/S51nfqws {start|stop|restart|reload|status|version}`
+3. Вручную добавить домены в список можно в файле `/opt/etc/nfqws/user.list` (один домен на строке, поддомены учитываются автоматически)
 4. Автоматически добавленные домены `/opt/etc/nfqws/auto.list`
 5. Лог автоматически добавленных доменов `/opt/var/log/nfqws.log`
-6. Домены-исключения `/opt/etc/nfqws/exclude.list`
+6. Домены-исключения `/opt/etc/nfqws/exclude.list` (один домен на строке, поддомены учитываются автоматически)
 7. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
 > Вы должны увидеть похожие строки (по 3 на каждый выбранный сетевой интерфейс)
 > ```
