@@ -172,3 +172,13 @@ config_interface_func() {
 
   sed -i "s#INPUT_ISP_INTERFACE#$BIND_IFACE#" $CONFFILE
 }
+
+config_ipv6_func() {
+  echo -e "\nDisable IPv6 support (enabled by default)? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      sed -i "s#IPV6_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
+      ;;
+  esac
+}

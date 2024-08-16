@@ -33,6 +33,9 @@ config_interface_func
 # Setup working mode
 config_select_mode_func
 
+# Setup IPv6 support
+config_ipv6_func
+
 # Starting Services
 start_func
 
