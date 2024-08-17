@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.0.10"
+VERSION="1.0.11"
 
 . /opt/etc/nfqws/nfqws.conf
 
@@ -76,13 +76,12 @@ firewall_start_v4() {
       iptables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -A POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
-      iptables -t nat -A POSTROUTING -o $IFACE -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE
+    done
+  fi
 
-      # Просто чтобы не забыть, правила отсюда https://github.com/bol-van/zapret/issues/191
-      # NB: Тут нет фильтра по интерфейсу
-      #iptables -t mangle -A INPUT -p tcp -m multiport --sports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir reply -j NFQUEUE --queue-num 200 --queue-bypass
-      #iptables -t mangle -A FORWARD -p tcp -m multiport --sports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir reply -j NFQUEUE --queue-num 200 --queue-bypass
-      #iptables -t mangle -A POSTROUTING -p tcp -m multiport --dports 80,443 -m connbytes --connbytes 1:8 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+  if [ -z "$(iptables-save 2>/dev/null | grep "0x40000000/0x40000000 -j MASQUERADE")" ]; then
+    for IFACE in $ISP_INTERFACE; do
+      iptables -t nat -A POSTROUTING -o $IFACE -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE
     done
   fi
 }
@@ -93,6 +92,11 @@ firewall_stop_v4() {
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+    done
+  fi
+
+  if [ -n "$(iptables-save 2>/dev/null | grep "0x40000000/0x40000000 -j MASQUERADE")" ]; then
+    for IFACE in $ISP_INTERFACE; do
       iptables -t nat -D POSTROUTING -o $IFACE -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE
     done
   fi
