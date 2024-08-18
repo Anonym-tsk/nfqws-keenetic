@@ -38,7 +38,7 @@ start() {
   fi
 
   kernel_modules_load
-  $NFQWS_BIN --daemon --user=root --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
+  $NFQWS_BIN --daemon --user=nobody --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
 
   firewall_start_v4
   firewall_start_v6
