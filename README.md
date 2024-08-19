@@ -146,6 +146,9 @@ git pull --depth=1
 2. `can't initialize ip6tables table` и/или `Perhaps ip6tables or your kernel needs to be upgraded`
 
     Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
+3. Ошибки вида `readlink: not found`, `dirname: not found`
+
+   Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
 
 ---
 
