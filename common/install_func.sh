@@ -133,6 +133,7 @@ config_select_arch_func() {
   fi
 
   echo "Selected architecture: $ARCH"
+  mkdir -p /opt/usr/bin
   curl -SL# "$NFQWS_URL" -o "$NFQWS_BIN"
   chmod +x $NFQWS_BIN
 }
