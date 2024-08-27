@@ -118,7 +118,7 @@ git pull --depth=1
 5. Лог автоматически добавленных доменов `/opt/var/log/nfqws.log`
 6. Домены-исключения `/opt/etc/nfqws/exclude.list` (один домен на строке, поддомены учитываются автоматически)
 7. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
-> Вы должны увидеть похожие строки (по 3 на каждый выбранный сетевой интерфейс)
+> Вы должны увидеть похожие строки (по 2 на каждый выбранный сетевой интерфейс)
 > ```
 > -A POSTROUTING -o eth3 -p tcp -m tcp --dport 443 -m connbytes --connbytes 1:6 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
 > ```
