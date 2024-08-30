@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 
 . /opt/etc/nfqws/nfqws.conf
 
@@ -197,6 +197,13 @@ case "$1" in
     ;;
   firewall-ip6tables)
     firewall_start_v6
+    ;;
+  firewall-stop)
+    firewall_stop_v4
+    firewall_stop_v6
+    ;;
+  kernel-modules)
+    kernel_modules_load
     ;;
   version|-v|--version)
     echo "nfqws-keenetic version: $VERSION"
