@@ -118,7 +118,7 @@ config_select_arch_func() {
     echo -e "\nSelect the router architecture: mipsel (default), mips, aarch64, arm"
     echo "  mipsel  - KN-1010/1011, KN-1810, KN-1910/1912, KN-2310, KN-2311, KN-2610, KN-2910, KN-3810"
     echo "  mips    - KN-2410, KN-2510, KN-2010, KN-2012, KN-2110, KN-2112, KN-3610"
-    echo "  aarch64 - KN-2710, KN-1811"
+    echo "  aarch64 - KN-2710, KN-1811, KN-3812"
     echo "  arm     - Other arm-based devices"
     read ARCH
   fi
