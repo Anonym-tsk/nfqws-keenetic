@@ -34,37 +34,9 @@
 
 ### Подготовка
 
-- Рекомендуется игнорировать предложенные провайдером адреса DNS-серверов. Для этого в интерфейсе роутера отметьте пункты ["игнорировать DNS от провайдера" ("Ignore DNS from ISP")](https://help.keenetic.com/hc/ru/articles/360008609399) в настройках как IPv4, так и IPv6, или отредактируйте файл конфигурации в блоке, который соответствует WAN-подключению (чаще всего назван `GigabitEthernet1` / `ISP`):
-
-```
-interface GigabitEthernet1
-    ...
-    ip   no name-servers
-    ipv6 no name-servers auto
-    ...
-```
+- Рекомендуется игнорировать предложенные провайдером адреса DNS-серверов. Для этого в интерфейсе роутера отметьте пункты ["игнорировать DNS от провайдера"](https://help.keenetic.com/hc/ru/articles/360008609399) в настройках IPv4 и IPv6.
  
-- Вместе с этим рекомендуется [настроить использование DoT/DoH](https://help.keenetic.com/hc/ru/articles/360007687159). Ниже приведены настройки, с которыми роутер будет использовать DNS-серверы [Cloudflare](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/) и [Google](https://developers.google.com/speed/public-dns/docs/using):
-
-```
-ip name-server 1.1.1.1 cloudflare-dns.com on ISP
-ip name-server 1.0.0.1 cloudflare-dns.com on ISP
-ip name-server 8.8.8.8 dns.google         on ISP
-ip name-server 8.8.4.4 dns.google         on ISP
-ipv6 name-server 2606:4700:4700::1111 cloudflare-dns.com on ISP
-ipv6 name-server 2606:4700:4700::1001 cloudflare-dns.com on ISP
-ipv6 name-server 2001:4860:4860::8888 dns.google         on ISP
-ipv6 name-server 2001:4860:4860::8844 dns.google         on ISP
-dns-proxy
-    rebind-protect auto
-    https upstream https://cloudflare-dns.com/dns-query dnsm on ISP
-    https upstream https://dns.google/dns-query dnsm on ISP
-    tls upstream 1.1.1.1 sni cloudflare-dns.com on ISP
-    tls upstream 1.0.0.1 sni cloudflare-dns.com on ISP
-    tls upstream 8.8.8.8 sni dns.google on ISP
-    tls upstream 8.8.4.4 sni dns.google on ISP
-!
-```
+- Вместе с этим рекомендуется [настроить использование DoT/DoH](https://help.keenetic.com/hc/ru/articles/360007687159).
 
 - Установить entware на маршрутизатор по инструкции [на встроенную память роутера](https://help.keenetic.com/hc/ru/articles/360021888880) или [на USB-накопитель](https://help.keenetic.com/hc/ru/articles/360021214160).
 
