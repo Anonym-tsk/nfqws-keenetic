@@ -24,6 +24,7 @@ _control:
 	echo "Description: NFQWS service" >> out/$(ARCH)/control/control
 
 _scripts:
+	cp common/ipk/preinst out/$(ARCH)/control/preinst
 	cp common/ipk/postinst out/$(ARCH)/control/postinst
 	cp common/ipk/prerm out/$(ARCH)/control/prerm
 	cp common/ipk/postrm out/$(ARCH)/control/postrm

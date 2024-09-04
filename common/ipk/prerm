@@ -10,3 +10,5 @@ stop_func() {
 
 # Stop service if exist
 stop_func
+
+exit 0

@@ -74,17 +74,33 @@ config_ipv6_func() {
 # Stop service if exist
 stop_func
 
-# Setup ISP interface
-show_interfaces_func
-config_interface_func
+NFQWS_INSTALL_TYPE="install"
+if [ -f "/tmp/nfqws_install_type" ]; then
+  # Set in preinst script
+  NFQWS_INSTALL_TYPE=$(cat "/tmp/nfqws_install_type")
+  rm -f /tmp/nfqws_install_type
+fi
 
-# Setup working mode
-config_select_mode_func
+case "$NFQWS_INSTALL_TYPE" in
+  install)
+    # Setup ISP interface
+    show_interfaces_func
+    config_interface_func
 
-# Setup IPv6 support
-config_ipv6_func
+    # Setup working mode
+    config_select_mode_func
+
+    # Setup IPv6 support
+    config_ipv6_func
+
+    echo "Installation successful"
+    ;;
+  *)
+    # Do nothing
+    ;;
+esac
 
 # Starting Services
 start_func
 
-echo "Installation successful"
+exit 0
