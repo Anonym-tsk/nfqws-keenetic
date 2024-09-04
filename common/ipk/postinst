@@ -1,5 +1,13 @@
 #!/bin/sh
 
+CONFDIR=/opt/etc/nfqws
+CONFFILE=$CONFDIR/nfqws.conf
+LISTFILE=$CONFDIR/user.list
+LISTAUTOFILE=$CONFDIR/auto.list
+LISTEXCLUDEFILE=$CONFDIR/exclude.list
+LISTLOG=/opt/var/log/nfqws.log
+INIT_SCRIPT=/opt/etc/init.d/S51nfqws
+
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
     $INIT_SCRIPT stop
@@ -63,8 +71,20 @@ config_ipv6_func() {
   esac
 }
 
+# Stop service if exist
+stop_func
+
+# Setup ISP interface
+show_interfaces_func
+config_interface_func
+
+# Setup working mode
+config_select_mode_func
+
+# Setup IPv6 support
 config_ipv6_func
 
-echo "Installation successful"
+# Starting Services
+start_func
 
-exit 0
+echo "Installation successful"

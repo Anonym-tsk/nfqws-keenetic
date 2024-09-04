@@ -1,0 +1,34 @@
+#!/bin/sh
+
+CONFDIR=/opt/etc/nfqws
+CONFFILE=$CONFDIR/nfqws.conf
+LISTFILE=$CONFDIR/user.list
+LISTAUTOFILE=$CONFDIR/auto.list
+LISTEXCLUDEFILE=$CONFDIR/exclude.list
+LISTLOG=/opt/var/log/nfqws.log
+
+remove_all_files_func() {
+  rm -f $CONFFILE
+  rm -f $LISTLOG
+}
+
+remove_list_func() {
+  echo -e "\nRemove hosts list? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      rm -f $LISTFILE
+      rm -f $LISTAUTOFILE
+      rm -f $LISTEXCLUDEFILE
+      rm -rf $CONFDIR
+      ;;
+  esac
+}
+
+# Remove all data
+remove_all_files_func
+
+# Remove lists
+remove_list_func
+
+echo "Unnstallation successful"
