@@ -65,6 +65,7 @@ remove_list_func() {
       rm -f $LISTFILE
       rm -f $LISTAUTOFILE
       rm -f $LISTEXCLUDEFILE
+      rm -rf $CONFDIR
       ;;
   esac
 }
