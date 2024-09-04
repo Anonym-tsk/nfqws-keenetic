@@ -16,6 +16,7 @@ _conffiles:
 _control:
 	echo "Package: nfqws-keenetic" > out/$(ARCH)/control/control
 	echo "Version: $(VERSION)" >> out/$(ARCH)/control/control
+	echo "Depends: busybox, iptables" >> out/$(ARCH)/control/control
 	echo "License: MIT" >> out/$(ARCH)/control/control
 	echo "Section: net" >> out/$(ARCH)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(ARCH)/control/control
