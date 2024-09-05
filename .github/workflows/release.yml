@@ -47,13 +47,6 @@ jobs:
         git push origin v${{ steps.version.outputs.content }}
         git push
 
-#    - name: Commit and push version file
-#      uses: actions-js/push@master
-#      with:
-#        github_token: ${{ secrets.GITHUB_TOKEN }}
-#        message: Version ${{ steps.version.outputs.content }}
-#        branch: master
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.1.4
