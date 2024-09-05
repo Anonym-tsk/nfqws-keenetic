@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  bump_version:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,10 +39,19 @@ jobs:
         message: Version ${{ steps.version.outputs.content }}
         branch: master
 
-    - name: Checkout repository again
+  build_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Read version
+      id: version
+      uses: juliangruber/read-file-action@v1
       with:
-        fetch-depth: 0
+        path: ./VERSION
+        trim: true
 
     - name: Build packages
       run: make all
