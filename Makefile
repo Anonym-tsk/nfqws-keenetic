@@ -1,4 +1,4 @@
-VERSION=2.0.0
+VERSION := $(shell cat VERSION)
 
 .DEFAULT_GOAL := all
 
