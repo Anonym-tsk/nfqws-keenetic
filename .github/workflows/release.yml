@@ -30,6 +30,7 @@ jobs:
       uses: juliangruber/read-file-action@v1
       with:
         path: ./VERSION
+        trim: true
 
     - name: Echo version
       run: echo "${{ steps.version.outputs.content }}"
