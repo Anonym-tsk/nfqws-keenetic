@@ -40,6 +40,9 @@ jobs:
         branch: master
 
   build_release:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Checkout repository again
       uses: actions/checkout@v4
 
