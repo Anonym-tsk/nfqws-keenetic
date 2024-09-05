@@ -32,9 +32,6 @@ jobs:
         path: ./VERSION
         trim: true
 
-    - name: Build packages
-      run: make all
-
     - name: Commit and push version file
       uses: actions-js/push@master
       with:
@@ -44,6 +41,9 @@ jobs:
 
     - name: Checkout repository again
       uses: actions/checkout@v3
+
+    - name: Build packages
+      run: make all
 
     - name: Create Release
       id: create_release
