@@ -37,9 +37,6 @@ _binary:
 	curl -sSL $(URL) -o out/$(ARCH)/data/opt/usr/bin/nfqws
 	chmod +x out/$(ARCH)/data/opt/usr/bin/nfqws
 
-_version:
-	sed -i "s#VERSION=\"0.0.0\"#VERSION=\"$(VERSION)\"#" out/$(ARCH)/data/opt/etc/init.d/S51nfqws
-
 _ipk:
 	# cleanup
 	make _clean
@@ -53,7 +50,6 @@ _ipk:
 	# data.tar.gz
 	make _binary
 	cp -r etc out/$(ARCH)/data/opt/etc
-	make _version
 	cd out/$(ARCH)/data; tar czvf ../data.tar.gz .; cd ../../..
 
 	# ipk
