@@ -1,0 +1,8 @@
+Package: nfqws-keenetic
+Version: 2.0.1
+Depends: busybox, iptables
+License: MIT
+Section: net
+URL: https://github.com/Anonym-tsk/nfqws-keenetic
+Architecture: mipsel-3.4
+Description: NFQWS service

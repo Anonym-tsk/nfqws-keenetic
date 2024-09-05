@@ -1,0 +1,29 @@
+#!/bin/sh
+
+CONFDIR=/opt/etc/nfqws
+LISTLOG=/opt/var/log/nfqws.log
+
+remove_all_files_func() {
+  rm -f $LISTLOG
+  echo -e "\nRemove lists and config? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      rm -rf $CONFDIR
+      ;;
+  esac
+}
+
+case "$1" in
+  upgrade)
+    # Do nothing
+    ;;
+  *)
+    # Remove all data
+    remove_all_files_func
+
+    echo "Unnstallation successful"
+    ;;
+esac
+
+exit 0
