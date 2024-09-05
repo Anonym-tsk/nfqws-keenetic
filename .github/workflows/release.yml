@@ -13,12 +13,12 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  bump_version:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Bump version file
       uses: francktrouillez/auto-bump-version-file@v1
@@ -39,8 +39,9 @@ jobs:
         message: Version ${{ steps.version.outputs.content }}
         branch: master
 
+  build_release:
     - name: Checkout repository again
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build packages
       run: make all
