@@ -1,0 +1,84 @@
+name: Build and publish release
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Bump version
+      id: bump_version
+      uses: remorses/bump-version@v8
+      with:
+          version_file: ./VERSION
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build packages
+      run: make all
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: true
+        prerelease: false
+
+    - name: Upload Release mips
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic_${{ steps.bump_version.outputs.version }}_mips-3.4.ipk
+        asset_name: nfqws-keenetic_${{ steps.bump_version.outputs.version }}_mips-3.4.ipk
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release mipsel
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic_${{ steps.bump_version.outputs.version }}_mipsel-3.4.ipk
+        asset_name: nfqws-keenetic_${{ steps.bump_version.outputs.version }}_mipsel-3.4.ipk
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release aarch64
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic_${{ steps.bump_version.outputs.version }}_aarch64-3.10.ipk
+        asset_name: nfqws-keenetic_${{ steps.bump_version.outputs.version }}_aarch64-3.10.ipk
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release armv7
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic_${{ steps.bump_version.outputs.version }}_armv7-3.2.ipk
+        asset_name: nfqws-keenetic_${{ steps.bump_version.outputs.version }}_armv7-3.2.ipk
+        asset_content_type: application/octet-stream

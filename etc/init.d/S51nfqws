@@ -1,7 +1,5 @@
 #!/bin/sh
 
-VERSION="1.2.1"
-
 . /opt/etc/nfqws/nfqws.conf
 
 NFQWS_BIN=/opt/usr/bin/nfqws
@@ -205,9 +203,6 @@ case "$1" in
   kernel-modules)
     kernel_modules_load
     ;;
-  version|-v|--version)
-    echo "nfqws-keenetic version: $VERSION"
-    ;;
   *)
-    echo "Usage: $0 {start|stop|restart|reload|status|version}"
+    echo "Usage: $0 {start|stop|restart|reload|status}"
 esac
