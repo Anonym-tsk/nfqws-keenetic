@@ -39,7 +39,7 @@ jobs:
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Version ${{ steps.version.outputs.version }}
+        message: Version ${{ steps.version.outputs.content }}
         branch: master
 
     - name: Create Release
@@ -48,8 +48,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.version.outputs.version }}
-        release_name: Release v${{ steps.version.outputs.version }}
+        tag_name: v${{ steps.version.outputs.content }}
+        release_name: Release v${{ steps.version.outputs.content }}
         draft: false
         prerelease: false
 
@@ -59,8 +59,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.version }}_mips-3.4.ipk
-        asset_name: nfqws-keenetic_${{ steps.version.outputs.version }}_mips-3.4.ipk
+        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_mips-3.4.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_mips-3.4.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release mipsel
@@ -69,8 +69,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.version }}_mipsel-3.4.ipk
-        asset_name: nfqws-keenetic_${{ steps.version.outputs.version }}_mipsel-3.4.ipk
+        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_mipsel-3.4.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_mipsel-3.4.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release aarch64
@@ -79,8 +79,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.version }}_aarch64-3.10.ipk
-        asset_name: nfqws-keenetic_${{ steps.version.outputs.version }}_aarch64-3.10.ipk
+        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_aarch64-3.10.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_aarch64-3.10.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release armv7
@@ -89,6 +89,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.version }}_armv7-3.2.ipk
-        asset_name: nfqws-keenetic_${{ steps.version.outputs.version }}_armv7-3.2.ipk
+        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
         asset_content_type: application/octet-stream
