@@ -1,11 +1,15 @@
 name: Build and publish release
 
 on:
-  push:
+  workflow_dispatch:
     branches:
-      - 'master'
-    paths:
-      - 'VERSION'
+      - master
+#  push:
+#    branches:
+#      - 'master'
+#  pull_request:
+#    branches:
+#      - 'master'
 
 permissions:
   contents: write
@@ -18,6 +22,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Bump version file
+      uses: francktrouillez/auto-bump-version-file@v1
+      with:
+        file: 'VERSION'
+
     - name: Read version
       id: version
       uses: juliangruber/read-file-action@v1
@@ -27,6 +36,23 @@ jobs:
 
     - name: Build packages
       run: make all
+
+    - name: Commit and push version file
+      run: |
+        git config --local user.email "nfqws-keenetic@github-actions.com"
+        git config --local user.name "nfqws-keenetic"
+        git add VERSION
+        git commit -m "Version ${{ steps.version.outputs.content }}"
+        git tag -a v${{ steps.version.outputs.content }} -m "Version ${{ steps.version.outputs.content }}"
+        git push origin v${{ steps.version.outputs.content }}
+        git push
+
+#    - name: Commit and push version file
+#      uses: actions-js/push@master
+#      with:
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#        message: Version ${{ steps.version.outputs.content }}
+#        branch: master
 
     - name: Create Release
       id: create_release
