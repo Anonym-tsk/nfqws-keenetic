@@ -1,52 +1,22 @@
 name: Build and publish release
 
 on:
-  workflow_dispatch:
+  push:
     branches:
-      - master
-#  push:
-#    branches: [ "master" ]
-#  pull_request:
-#    branches: [ "master" ]
+      - 'master'
+    paths:
+      - 'VERSION'
 
 permissions:
   contents: write
 
 jobs:
-  bump_version:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Bump version file
-      uses: francktrouillez/auto-bump-version-file@v1
-      with:
-        file: 'VERSION'
-
-    - name: Read version
-      id: version
-      uses: juliangruber/read-file-action@v1
-      with:
-        path: ./VERSION
-        trim: true
-
-    - name: Commit and push version file
-      uses: actions-js/push@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Version ${{ steps.version.outputs.content }}
-        branch: master
-
   build_release:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Read version
       id: version
