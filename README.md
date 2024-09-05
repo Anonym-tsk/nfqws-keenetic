@@ -46,49 +46,89 @@
 
 - Все дальнейшие команды выполняются не в cli роутера, а **в среде entware**. Переключиться в неё из cli можно командой `exec sh`; или же подключиться напрямую через SSH (логин - `root`, пароль по умолчанию - `keenetic`, порт - 222).
 
-### Автоматическая установка (рекомендуется)
+- Установите необходимые зависимости:
+  ```
+  opkg update
+  opkg install curl ca-certificates iptables busybox
+  ```
 
-```
-opkg install curl
-/bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netinstall.sh)"
-```
+### Установка через `opkg` (рекомендуется)
 
-**Следуйте инструкции установщика:**
-
-1. Выберите архитектуру маршрутизатора `mipsel`, `mips`, `aarch64` или `arm`
-> Для моделей Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912), Hero 4G (KN-2310), Hero 4G+ (KN-2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810) используйте архитектуру `mipsel`
->
-> Для моделей Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610) используйте архитектуру `mips`
->
-> Для моделей Peak (KN-2710), Ultra (KN-1811), Hopper SE (KN-3812) используйте архитектуру `aarch64`
+> **Важно!! Миграция с версии 1.x.x на 2.x.x:**
 > 
-> Для других устройств доступен вариант `arm`
-2. Введите сетевой интерфейс провайдера, обычно это `eth3`. Если ваш провайдер использует PPPoE, ваш интерфейс, скорее всего, `ppp0`.
-> Можно указать несколько интерфейсов через пробел (`eth3 nwg1`), например, если вы подключены к нескольким провайдерам
-3. Выберите режим работы `auto`, `list` или `all`
-> В режиме `list` будут обрабатываться только домены из файла `/opt/etc/nfqws/user.list` (один домен на строку)
->
-> В режиме `auto` кроме этого будут автоматически определяться недоступные домены и добавляться в список, по которому `nfqws` обрабатывает трафик. Домен будет добавлен, если за 60 секунд будет 3 раза определено, что ресурс недоступен
->
-> В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `/opt/etc/nfqws/exclude.list`
-4. Укажите, нужна ли поддержка IPv6
-> Если не уверены, лучше не отключайте и оставьте как есть
+> Если не уверены, выполните команду `/opt/etc/init.d/S51nfqws version` - она работает только на версиях 1.x.x и возвращает номер версии.
+> 
+> **Только если у вас установлена версия 1.x.x:**
+> 
+> Выполните удаление старой версии скриптом
+> ```
+> /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netuninstall.sh)"
+> ```
+> 
+> Только после этого устанавливайте новую версию по инструкции ниже
+
+1. Скачайте установочный пакет для вашей архитектуры
+   - Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912), Hero 4G (KN-2310), Hero 4G+ (KN-2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810) с архитектурой `mipsel`:
+     ```
+     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_mipsel.ipk -o /tmp/nfqws-keenetic.ipk
+     ```
+
+   - Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610) с архитектурой `mips`:
+     ```
+     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_mips.ipk -o /tmp/nfqws-keenetic.ipk
+     ```
+
+   - Peak (KN-2710), Ultra (KN-1811), Hopper SE (KN-3812) с архитектурой `aarch64`:
+     ```
+     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_aarch64.ipk -o /tmp/nfqws-keenetic.ipk
+     ```
+
+   - Другие устройства с архитектурой `arm`:
+     ```
+     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_armv7.ipk -o /tmp/nfqws-keenetic.ipk
+     ```
+
+2. Установите скачанный пакет
+   ```
+   opkg install /tmp/nfqws-keenetic.ipk
+   ```
+3. Во время установки следуйте инструкции установщика
+   - Введите сетевой интерфейс провайдера, обычно это `eth3`. Если ваш провайдер использует PPPoE, ваш интерфейс, скорее всего, `ppp0`.
+     > Можно указать несколько интерфейсов через пробел (`eth3 nwg1`), например, если вы подключены к нескольким провайдерам
+
+   - Выберите режим работы `auto`, `list` или `all`
+     > В режиме `list` будут обрабатываться только домены из файла `/opt/etc/nfqws/user.list` (один домен на строку)
+     >
+     > В режиме `auto` кроме этого будут автоматически определяться недоступные домены и добавляться в список, по которому `nfqws` обрабатывает трафик. Домен будет добавлен, если за 60 секунд будет 3 раза определено, что ресурс недоступен
+     >
+     > В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `/opt/etc/nfqws/exclude.list`
+
+   - Укажите, нужна ли поддержка IPv6
+     > Если не уверены, лучше не отключайте и оставьте как есть
+
+
+4. Удалите скачанный файл (опционально)
+   ```
+   rm -f /tmp/nfqws-keenetic.ipk
+   ```
 
 ##### Обновление
 
-Просто запустите установщик еще раз, следуйте инструкциям
+Просто скачайте нужный пакет и установите его поверх старого.
+
+##### Удаление
 
 ```
-/bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netinstall.sh)"
+opkg remove nfqws-keenetic
 ```
 
-##### Автоматическое удаление
+##### Информация об установленной версии
 
 ```
-/bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netuninstall.sh)"
+opkg info nfqws-keenetic
 ```
 
-### Ручная установка (не рекомендуется, если entware установлен во внутреннюю память)
+### Ручная установка (не рекомендуется)
 
 ```
 opkg install git git-http curl
