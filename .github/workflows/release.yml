@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  bump_version:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,12 +39,10 @@ jobs:
         message: Version ${{ steps.version.outputs.content }}
         branch: master
 
-  build_release:
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Checkout repository again
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Build packages
       run: make all
