@@ -40,7 +40,6 @@ jobs:
         prerelease: false
 
     - name: Upload Release mips
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +50,6 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload Release mipsel
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +60,6 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload Release aarch64
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +70,6 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload Release armv7
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
