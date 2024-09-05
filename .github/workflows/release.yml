@@ -36,7 +36,7 @@ jobs:
       with:
         tag_name: ${{ steps.bump_version.outputs.version }}
         release_name: Release v${{ steps.bump_version.outputs.version }}
-        draft: true
+        draft: false
         prerelease: false
 
     - name: Upload Release mips
