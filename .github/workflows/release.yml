@@ -39,8 +39,6 @@ jobs:
 
     - name: Commit and push version file
       run: |
-        git config --local user.email "nfqws-keenetic@github-actions.com"
-        git config --local user.name "nfqws-keenetic"
         git add VERSION
         git commit -m "Version ${{ steps.version.outputs.content }}"
         git tag -a v${{ steps.version.outputs.content }} -m "Version ${{ steps.version.outputs.content }}"
