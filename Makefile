@@ -94,7 +94,7 @@ mips:
 	make ARCH=mips ARCHFULL=mips-3.4 URL="$(URL_MIPS)" _ipk-arch
 
 aarch64:
-	make ARCH=aarch ARCHFULL=aarch64-3.10 URL="$(URL_AARCH64)" _ipk-arch
+	make ARCH=aarch64 ARCHFULL=aarch64-3.10 URL="$(URL_AARCH64)" _ipk-arch
 
 armv7:
 	make ARCH=armv7 ARCHFULL=armv7-3.2 URL="$(URL_ARMV7)" _ipk-arch
