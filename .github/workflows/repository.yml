@@ -1,0 +1,78 @@
+name: Publish GitHub Pages
+
+on:
+  workflow_dispatch:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Read version
+      id: version
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./VERSION
+        trim: true
+
+    - name: Build packages
+      run: make all
+
+    - name: Make Packages
+      run: |
+        FILE="nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk"
+        HASH="$(sha256sum out/_pages/all/$FILE)"
+        SIZE="$(stat -f%z out/_pages/all/$FILE)"
+        
+        cp "out/$FILE" "out/_pages/all/$FILE"
+
+        echo "Package: nfqws-keenetic" > out/_pages/all/Packages
+        echo "Version: ${{ steps.version.outputs.content }}" >> out/_pages/all/Packages
+        echo "Depends: busybox, iptables" >> out/_pages/all/Packages
+        echo "Section: net" >> out/_pages/all/Packages
+        echo "Architecture: all" >> out/_pages/all/Packages
+        echo "Filename: $FILE" >> out/_pages/all/Packages
+        echo "Size: $SIZE" >> out/_pages/all/Packages
+        echo "SHA256sum: $HASH" >> out/_pages/all/Packages
+        echo "Description:  NFQWS service" >> out/_pages/all/Packages
+        
+        gzip -k out/_pages/all/Packages
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Build with Jekyll
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: ./out/_pages
+        destination: ./out/_site
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./out/_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
