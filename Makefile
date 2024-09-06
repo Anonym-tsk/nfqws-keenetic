@@ -25,7 +25,7 @@ _control:
 	echo "License: MIT" >> out/$(ARCH)/control/control
 	echo "Section: net" >> out/$(ARCH)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(ARCH)/control/control
-	echo "Architecture: $(ARCH)" >> out/$(ARCH)/control/control
+	echo "Architecture: $(ARCHFULL)" >> out/$(ARCH)/control/control
 	echo "Description: NFQWS service" >> out/$(ARCH)/control/control
 
 _scripts:
@@ -75,7 +75,7 @@ _end:
 
 	# ipk
 	make _debian-binary
-	cd out/$(ARCH); tar czvf ../nfqws-keenetic_$(VERSION)_$(ARCH).ipk control.tar.gz data.tar.gz debian-binary; cd ../..
+	cd out/$(ARCH); tar czvf ../nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk control.tar.gz data.tar.gz debian-binary; cd ../..
 
 _ipk-arch:
 	make _start
@@ -88,19 +88,19 @@ _ipk-multi:
 	make _end
 
 mipsel:
-	make ARCH=mipsel-3.4 URL="$(URL_MIPSEL)" _ipk-arch
+	make ARCH=mipsel ARCHFULL=mipsel-3.4 URL="$(URL_MIPSEL)" _ipk-arch
 
 mips:
-	make ARCH=mips-3.4 URL="$(URL_MIPS)" _ipk-arch
+	make ARCH=mips ARCHFULL=mips-3.4 URL="$(URL_MIPS)" _ipk-arch
 
 aarch64:
-	make ARCH=aarch64-3.10 URL="$(URL_AARCH64)" _ipk-arch
+	make ARCH=aarch ARCHFULL=aarch64-3.10 URL="$(URL_AARCH64)" _ipk-arch
 
 armv7:
-	make ARCH=armv7-3.2 URL="$(URL_ARMV7)" _ipk-arch
+	make ARCH=armv7 ARCHFULL=armv7-3.2 URL="$(URL_ARMV7)" _ipk-arch
 
 multi:
-	make ARCH=all _ipk-multi
+	make ARCH=all ARCHFULL=all _ipk-multi
 
 all: mipsel mips aarch64 armv7 multi
 
