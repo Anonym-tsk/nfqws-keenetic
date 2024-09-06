@@ -8,6 +8,26 @@ LISTEXCLUDEFILE=$CONFDIR/exclude.list
 LISTLOG=/opt/var/log/nfqws.log
 INIT_SCRIPT=/opt/etc/init.d/S51nfqws
 
+install_binary_func() {
+  ARCH=$(cat /opt/etc/opkg.conf | grep -oE 'mips-3|mipsel-3|aarch64-3|armv7' | head -n 1)
+  case "$ARCH" in
+    "mips-3") ARCH="mips" ;;
+    "mipsel-3") ARCH="mipsel" ;;
+    "aarch64-3") ARCH="aarch64" ;;
+    "armv7") ARCH="armv7" ;;
+  esac
+
+  if [ -z $ARCH ]; then
+    echo "Failed to detect architecture"
+    exit 1
+  fi
+  echo "Detected arch: $ARCH"
+
+  cp -f "/tmp/nfqws_binary/nfqws-$ARCH" "/opt/usr/bin/nfqws"
+  chmod +x /opt/usr/bin/nfqws
+  rm -rf /tmp/nfqws_binary
+}
+
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
     $INIT_SCRIPT stop
@@ -73,6 +93,9 @@ config_ipv6_func() {
 
 # Stop service if exist
 stop_func
+
+# Install binary
+install_binary_func
 
 NFQWS_INSTALL_TYPE="install"
 if [ -f "/tmp/nfqws_install_type" ]; then

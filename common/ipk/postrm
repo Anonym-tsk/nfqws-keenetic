@@ -3,6 +3,10 @@
 CONFDIR=/opt/etc/nfqws
 LISTLOG=/opt/var/log/nfqws.log
 
+remove_binary_func() {
+  rm -f /opt/usr/bin/nfqws
+}
+
 remove_all_files_func() {
   rm -f $LISTLOG
   echo -e "\nRemove lists and config? y/N"
@@ -13,6 +17,9 @@ remove_all_files_func() {
       ;;
   esac
 }
+
+# Remove binary file
+remove_binary_func
 
 case "$1" in
   upgrade)

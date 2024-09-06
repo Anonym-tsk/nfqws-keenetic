@@ -44,17 +44,17 @@ _binary-arch:
 
 _binary-all:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
-	mkdir -p out/$(ARCH)/data/tmp/nfqws
+	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
 
-	curl -sSL "$(URL_MIPSEL)" -o out/$(ARCH)/data/tmp/nfqws/nfqws-mipsel
-	curl -sSL "$(URL_MIPS)" -o out/$(ARCH)/data/tmp/nfqws/nfqws-mips
-	curl -sSL "$(URL_AARCH64)" -o out/$(ARCH)/data/tmp/nfqws/nfqws-aarch64
-	curl -sSL "$(URL_ARMV7)" -o out/$(ARCH)/data/tmp/nfqws/nfqws-armv7
+	curl -sSL "$(URL_MIPSEL)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
+	curl -sSL "$(URL_MIPS)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
+	curl -sSL "$(URL_AARCH64)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
+	curl -sSL "$(URL_ARMV7)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
 
-	chmod +x out/$(ARCH)/data/tmp/nfqws/nfqws-mipsel
-	chmod +x out/$(ARCH)/data/tmp/nfqws/nfqws-mips
-	chmod +x out/$(ARCH)/data/tmp/nfqws/nfqws-aarch64
-	chmod +x out/$(ARCH)/data/tmp/nfqws/nfqws-armv7
+	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
+	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
+	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
+	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
 
 _start:
 	# cleanup
