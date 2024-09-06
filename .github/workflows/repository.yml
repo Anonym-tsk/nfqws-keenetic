@@ -29,8 +29,8 @@ jobs:
         path: ./VERSION
         trim: true
 
-    - name: Build packages
-      run: make all
+    - name: Build package
+      run: make multi
 
     - name: Make Packages
       run: make VERSION=${{ steps.version.outputs.content }} repository
