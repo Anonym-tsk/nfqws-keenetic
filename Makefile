@@ -114,8 +114,8 @@ repository:
 	echo "Section: net" >> out/_pages/all/Packages
 	echo "Architecture: all" >> out/_pages/all/Packages
 	echo "Filename: nfqws-keenetic_$(VERSION)_all.ipk" >> out/_pages/all/Packages
-	echo "Size: $(shell stat -f%z out/nfqws-keenetic_$(VERSION)_all.ipk)" >> out/_pages/all/Packages
-	echo "SHA256sum: $(shell sha256sum out/nfqws-keenetic_$(VERSION)_all.ipk | head -c 64)" >> out/_pages/all/Packages
+	echo "Size: $(shell wc -c out/nfqws-keenetic_$(VERSION)_all.ipk | awk '{print $1}')" >> out/_pages/all/Packages
+	echo "SHA256sum: $(shell sha256sum out/nfqws-keenetic_$(VERSION)_all.ipk | awk '{print $1}')" >> out/_pages/all/Packages
 	echo "Description: NFQWS service" >> out/_pages/all/Packages
 
 	gzip -k out/_pages/all/Packages
