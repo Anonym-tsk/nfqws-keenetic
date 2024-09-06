@@ -39,17 +39,19 @@ _debian-binary:
 
 _binary-arch:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
-	curl -sSL $(URL) -o out/$(ARCH)/data/opt/usr/bin/nfqws
-	chmod +x out/$(ARCH)/data/opt/usr/bin/nfqws
+	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
+
+	curl -sSL $(URL) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-$(ARCH)
+	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-$(ARCH)
 
 _binary-all:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
 	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
 
-	curl -sSL "$(URL_MIPSEL)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
-	curl -sSL "$(URL_MIPS)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
-	curl -sSL "$(URL_AARCH64)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
-	curl -sSL "$(URL_ARMV7)" -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
+	curl -sSL $(URL_MIPSEL) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
+	curl -sSL $(URL_MIPS) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
+	curl -sSL $(URL_AARCH64) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
+	curl -sSL $(URL_ARMV7) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
 
 	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
 	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
