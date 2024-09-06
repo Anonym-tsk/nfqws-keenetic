@@ -102,6 +102,24 @@ armv7:
 multi:
 	make ARCH=all ARCHFULL=all _ipk-multi
 
+repository:
+	rm -rf out/_pages
+	mkdir -p out/_pages/all
+
+	cp "out/nfqws-keenetic_$(VERSION)_all.ipk" "out/_pages/all/"
+
+	echo "Package: nfqws-keenetic" > out/_pages/all/Packages
+	echo "Version: $(VERSION)" >> out/_pages/all/Packages
+	echo "Depends: busybox, iptables" >> out/_pages/all/Packages
+	echo "Section: net" >> out/_pages/all/Packages
+	echo "Architecture: all" >> out/_pages/all/Packages
+	echo "Filename: nfqws-keenetic_$(VERSION)_all.ipk" >> out/_pages/all/Packages
+	echo "Size: $(shell stat -f%z out/nfqws-keenetic_$(VERSION)_all.ipk)" >> out/_pages/all/Packages
+	echo "SHA256sum: $(shell sha256sum out/nfqws-keenetic_$(VERSION)_all.ipk | head -c 64)" >> out/_pages/all/Packages
+	echo "Description: NFQWS service" >> out/_pages/all/Packages
+
+	gzip -k out/_pages/all/Packages
+
 all: mipsel mips aarch64 armv7 multi
 
 clean:
