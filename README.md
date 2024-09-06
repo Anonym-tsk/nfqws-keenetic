@@ -68,31 +68,16 @@
 > 
 > Только после этого устанавливайте новую версию по инструкции ниже
 
-1. Скачайте установочный пакет для вашей архитектуры
-   - Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912), Hero 4G (KN-2310), Hero 4G+ (KN-2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810) с архитектурой `mipsel`:
-     ```
-     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_mipsel.ipk -o /tmp/nfqws-keenetic.ipk
-     ```
-
-   - Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610) с архитектурой `mips`:
-     ```
-     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_mips.ipk -o /tmp/nfqws-keenetic.ipk
-     ```
-
-   - Peak (KN-2710), Ultra (KN-1811), Hopper SE (KN-3812) с архитектурой `aarch64`:
-     ```
-     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_aarch64.ipk -o /tmp/nfqws-keenetic.ipk
-     ```
-
-   - Другие устройства с архитектурой `arm`:
-     ```
-     curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_armv7.ipk -o /tmp/nfqws-keenetic.ipk
-     ```
+1. Скачайте установочный пакет
+   ```
+   curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_all.ipk -o /tmp/nfqws-keenetic.ipk
+   ```
 
 2. Установите скачанный пакет
    ```
    opkg install /tmp/nfqws-keenetic.ipk
    ```
+
 3. Во время установки следуйте инструкции установщика
    - Введите сетевой интерфейс провайдера, обычно это `eth3`. Если ваш провайдер использует PPPoE, ваш интерфейс, скорее всего, `ppp0`.
      > Можно указать несколько интерфейсов через пробел (`eth3 nwg1`), например, если вы подключены к нескольким провайдерам
