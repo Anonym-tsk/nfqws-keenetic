@@ -177,6 +177,36 @@ config_interface_func() {
   sed -i "s#INPUT_ISP_INTERFACE#$BIND_IFACE#" $CONFFILE
 }
 
+config_http_func() {
+  echo -e "\nEnable HTTP support (disabled by default)? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      sed -i "s#HTTP_ENABLED=0#IPV6_ENABLED=1#" $CONFFILE
+      ;;
+  esac
+}
+
+config_https_func() {
+  echo -e "\nDisable HTTPS support (enabled by default)? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      sed -i "s#HTTPs_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
+      ;;
+  esac
+}
+
+config_quic_func() {
+  echo -e "\nDisable QUIC support (enabled by default)? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      sed -i "s#QUIC_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
+      ;;
+  esac
+}
+
 config_ipv6_func() {
   echo -e "\nDisable IPv6 support (enabled by default)? y/N"
   read yn
