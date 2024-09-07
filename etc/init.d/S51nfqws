@@ -79,8 +79,12 @@ firewall_start_v4() {
       if [ "$HTTP_ENABLED" -eq "1" ]; then
         iptables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       fi
+      if [ "$HTTPS_ENABLED" -eq "1" ]; then
       iptables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
+      if [ "$QUIC_ENABLED" -eq "1" ]; then
       iptables -t mangle -A POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
     done
   fi
 
@@ -97,8 +101,12 @@ firewall_stop_v4() {
       if [ "$HTTP_ENABLED" -eq "1" ]; then
         iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       fi
+      if [ "$HTTPS_ENABLED" -eq "1" ]; then
       iptables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
+      if [ "$QUIC_ENABLED" -eq "1" ]; then
       iptables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
     done
   fi
 
@@ -119,8 +127,12 @@ firewall_start_v6() {
       if [ "$HTTP_ENABLED" -eq "1" ]; then
         ip6tables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       fi
+      if [ "$HTTPS_ENABLED" -eq "1" ]; then
       ip6tables -t mangle -A POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
+      if [ "$QUIC_ENABLED" -eq "1" ]; then
       ip6tables -t mangle -A POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
     done
   fi
 }
@@ -135,8 +147,12 @@ firewall_stop_v6() {
       if [ "$HTTP_ENABLED" -eq "1" ]; then
         ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
       fi
+      if [ "$HTTPS_ENABLED" -eq "1" ]; then
       ip6tables -t mangle -D POSTROUTING -o $IFACE -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
+      if [ "$QUIC_ENABLED" -eq "1" ]; then
       ip6tables -t mangle -D POSTROUTING -o $IFACE -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass
+      fi
     done
   fi
 }
