@@ -182,7 +182,7 @@ config_http_func() {
   read yn
   case $yn in
     [Yy]* )
-      sed -i "s#HTTP_ENABLED=0#IPV6_ENABLED=1#" $CONFFILE
+      sed -i "s#HTTP_ENABLED=0#HTTP_ENABLED=1#" $CONFFILE
       ;;
   esac
 }
@@ -192,7 +192,7 @@ config_https_func() {
   read yn
   case $yn in
     [Yy]* )
-      sed -i "s#HTTPs_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
+      sed -i "s#HTTPS_ENABLED=1#HTTPS_ENABLED=0#" $CONFFILE
       ;;
   esac
 }
@@ -202,7 +202,7 @@ config_quic_func() {
   read yn
   case $yn in
     [Yy]* )
-      sed -i "s#QUIC_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
+      sed -i "s#QUIC_ENABLED=1#QUIC_ENABLED=0#" $CONFFILE
       ;;
   esac
 }
