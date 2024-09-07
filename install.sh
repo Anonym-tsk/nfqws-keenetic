@@ -33,6 +33,15 @@ config_interface_func
 # Setup working mode
 config_select_mode_func
 
+# Setup http support
+config_http_func
+
+# Setup https support
+config_https_func
+
+# Setup quic support
+config_quic_func
+
 # Setup IPv6 support
 config_ipv6_func
 
