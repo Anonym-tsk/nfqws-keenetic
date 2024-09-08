@@ -29,22 +29,28 @@ _control:
 	echo "Description: NFQWS service" >> out/$(ARCH)/control/control
 
 _scripts:
+	cp common/ipk/common out/$(ARCH)/control/common
 	cp common/ipk/preinst out/$(ARCH)/control/preinst
 	cp common/ipk/postinst out/$(ARCH)/control/postinst
+	cp common/ipk/prerm out/$(ARCH)/control/prerm
+	cp common/ipk/postrm out/$(ARCH)/control/postrm
+
+_scripts-multi:
+	cp common/ipk/common out/$(ARCH)/control/common
+	cp common/ipk/preinst out/$(ARCH)/control/preinst
+	cp common/ipk/postinst-multi out/$(ARCH)/control/postinst
 	cp common/ipk/prerm out/$(ARCH)/control/prerm
 	cp common/ipk/postrm out/$(ARCH)/control/postrm
 
 _debian-binary:
 	echo 2.0 > out/$(ARCH)/debian-binary
 
-_binary-arch:
+_binary:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
-	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
+	curl -sSL $(URL) -o out/$(ARCH)/data/opt/usr/bin/nfqws
+	chmod +x out/$(ARCH)/data/opt/usr/bin/nfqws
 
-	curl -sSL $(URL) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-$(ARCH)
-	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-$(ARCH)
-
-_binary-all:
+_binary-multi:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
 	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
 
@@ -59,16 +65,13 @@ _binary-all:
 	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
 
 _start:
-	# cleanup
 	make _clean
-
-	# control.tar.gz
 	make _conffiles
 	make _control
-	make _scripts
-	cd out/$(ARCH)/control; tar czvf ../control.tar.gz .; cd ../../..
 
 _end:
+	# control.tar.gz
+	cd out/$(ARCH)/control; tar czvf ../control.tar.gz .; cd ../../..
 	# data.tar.gz
 	cp -r etc out/$(ARCH)/data/opt/etc
 	cd out/$(ARCH)/data; tar czvf ../data.tar.gz .; cd ../../..
@@ -79,12 +82,14 @@ _end:
 
 _ipk-arch:
 	make _start
-	make _binary-arch
+	make _scripts
+	make _binary
 	make _end
 
 _ipk-multi:
 	make _start
-	make _binary-all
+	make _scripts-multi
+	make _binary-multi
 	make _end
 
 mipsel:

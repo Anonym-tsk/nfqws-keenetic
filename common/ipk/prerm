@@ -1,12 +1,6 @@
 #!/bin/sh
 
-INIT_SCRIPT=/opt/etc/init.d/S51nfqws
-
-stop_func() {
-  if [ -f "$INIT_SCRIPT" ]; then
-    $INIT_SCRIPT stop
-  fi
-}
+source $(dirname $0)/nfqws-keenetic.common
 
 # Stop service if exist
 stop_func

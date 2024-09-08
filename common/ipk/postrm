@@ -1,22 +1,6 @@
 #!/bin/sh
 
-CONFDIR=/opt/etc/nfqws
-LISTLOG=/opt/var/log/nfqws.log
-
-remove_binary_func() {
-  rm -f /opt/usr/bin/nfqws
-}
-
-remove_all_files_func() {
-  rm -f $LISTLOG
-  echo -e "\nRemove lists and config? y/N"
-  read yn
-  case $yn in
-    [Yy]* )
-      rm -rf $CONFDIR
-      ;;
-  esac
-}
+source $(dirname $0)/nfqws-keenetic.common
 
 # Remove binary file
 remove_binary_func
