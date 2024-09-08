@@ -65,7 +65,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_mips-3.4.ipk
-        asset_name: nfqws-keenetic_mips.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_mips-3.4.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release mipsel
@@ -75,7 +75,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_mipsel-3.4.ipk
-        asset_name: nfqws-keenetic_mipsel.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_mipsel-3.4.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release aarch64
@@ -85,7 +85,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_aarch64-3.10.ipk
-        asset_name: nfqws-keenetic_aarch64.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_aarch64-3.10.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release armv7
@@ -95,7 +95,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
-        asset_name: nfqws-keenetic_armv7.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
         asset_content_type: application/octet-stream
 
     - name: Upload Release multiarch
@@ -105,5 +105,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
-        asset_name: nfqws-keenetic_all.ipk
+        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
         asset_content_type: application/octet-stream
