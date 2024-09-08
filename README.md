@@ -79,25 +79,25 @@
    <details>
      <summary>Или можете выбрать репозиторий под конкретную архитектуру</summary>
 
-     - mips
+     - mips-3.4
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - mipsel
+     - mipsel-3.4
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - aarch64
+     - aarch64-3.10
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - armv7
+     - armv7-3.2
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/armv7" > /opt/etc/opkg/nfqws-keenetic.conf
