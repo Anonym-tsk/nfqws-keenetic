@@ -3,13 +3,25 @@
 source $(dirname $0)/nfqws-keenetic.common
 
 install_binary_func() {
-  ARCH=$(cat /opt/etc/opkg.conf | grep -oE 'mips-3|mipsel-3|aarch64-3|armv7' | head -n 1)
-  case "$ARCH" in
-    "mips-3") ARCH="mips" ;;
-    "mipsel-3") ARCH="mipsel" ;;
-    "aarch64-3") ARCH="aarch64" ;;
-    "armv7") ARCH="armv7" ;;
-  esac
+  if [ -f "/opt/etc/opkg.conf" ]; then
+    ARCH=$(cat /opt/etc/opkg.conf | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
+    case "$ARCH" in
+      "mips-3") ARCH="mips" ;;
+      "mips_") ARCH="mips" ;;
+      "mipsel-3") ARCH="mipsel" ;;
+      "mipsel_") ARCH="mipsel" ;;
+      "aarch64-3") ARCH="aarch64" ;;
+      "aarch64_") ARCH="aarch64" ;;
+      "armv7") ARCH="armv7" ;;
+    esac
+  else
+    ARCH=$(uname -m)
+    if [ "$ARCH" == "mips" ]; then
+      if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
+        ARCH="mipsel"
+      fi
+    fi
+  fi
 
   if [ -z $ARCH ]; then
     echo "Failed to detect architecture"
