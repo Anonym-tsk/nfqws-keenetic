@@ -13,6 +13,12 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build_release:
@@ -35,7 +41,7 @@ jobs:
         trim: true
 
     - name: Build packages
-      run: make all
+      run: make packages
 
     - name: Commit and push version file
       run: |
@@ -107,3 +113,18 @@ jobs:
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
         asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
         asset_content_type: application/octet-stream
+
+    - name: Make Packages
+      run: make repository
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./out/_pages
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

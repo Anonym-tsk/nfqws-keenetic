@@ -5,7 +5,7 @@ URL_MIPS := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mi
 URL_AARCH64 := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/aarch64/nfqws"
 URL_ARMV7 := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/arm/nfqws"
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := packages
 
 _clean:
 	rm -rf out/$(ARCH)
@@ -81,12 +81,14 @@ _end:
 	cd out/$(ARCH); tar czvf ../nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk control.tar.gz data.tar.gz debian-binary; cd ../..
 
 _ipk-arch:
+	# Required args: ARCH, ARCHFULL
 	make _start
 	make _scripts
 	make _binary
 	make _end
 
 _ipk-multi:
+	# Required args: ARCH, ARCHFULL
 	make _start
 	make _scripts-multi
 	make _binary-multi
@@ -107,25 +109,43 @@ armv7:
 multi:
 	make ARCH=all ARCHFULL=all _ipk-multi
 
-repository:
-	rm -rf out/_pages
-	mkdir -p out/_pages/all
+_repository:
+	# Required args: ARCH, ARCHFULL
+	rm -rf out/_pages/$(ARCH)
+	mkdir -p out/_pages/$(ARCH)
 
-	cp "out/nfqws-keenetic_$(VERSION)_all.ipk" "out/_pages/all/"
+	cp "out/nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk" "out/_pages/$(ARCH)/"
 
-	echo "Package: nfqws-keenetic" > out/_pages/all/Packages
-	echo "Version: $(VERSION)" >> out/_pages/all/Packages
-	echo "Depends: busybox, iptables" >> out/_pages/all/Packages
-	echo "Section: net" >> out/_pages/all/Packages
-	echo "Architecture: all" >> out/_pages/all/Packages
-	echo "Filename: nfqws-keenetic_$(VERSION)_all.ipk" >> out/_pages/all/Packages
-	echo "Size: $(shell wc -c out/nfqws-keenetic_$(VERSION)_all.ipk | awk '{print $$1}')" >> out/_pages/all/Packages
-	echo "SHA256sum: $(shell sha256sum out/nfqws-keenetic_$(VERSION)_all.ipk | awk '{print $$1}')" >> out/_pages/all/Packages
-	echo "Description: NFQWS service" >> out/_pages/all/Packages
+	echo "Package: nfqws-keenetic" > out/_pages/$(ARCH)/Packages
+	echo "Version: $(VERSION)" >> out/_pages/$(ARCH)/Packages
+	echo "Depends: busybox, iptables" >> out/_pages/$(ARCH)/Packages
+	echo "Section: net" >> out/_pages/$(ARCH)/Packages
+	echo "Architecture: $(ARCHFULL)" >> out/_pages/$(ARCH)/Packages
+	echo "Filename: nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk" >> out/_pages/$(ARCH)/Packages
+	echo "Size: $(shell wc -c out/nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk | awk '{print $$1}')" >> out/_pages/$(ARCH)/Packages
+	echo "SHA256sum: $(shell sha256sum out/nfqws-keenetic_$(VERSION)_$(ARCHFULL).ipk | awk '{print $$1}')" >> out/_pages/$(ARCH)/Packages
+	echo "Description: NFQWS service" >> out/_pages/$(ARCH)/Packages
 
-	gzip -k out/_pages/all/Packages
+	gzip -k out/_pages/$(ARCH)/Packages
 
-all: mipsel mips aarch64 armv7 multi
+repo-mipsel:
+	make ARCH=mipsel ARCHFULL=mipsel-3.4 _repository
+
+repo-mips:
+	make ARCH=mips ARCHFULL=mips-3.4 _repository
+
+repo-aarch64:
+	make ARCH=aarch64 ARCHFULL=aarch64-3.10 _repository
+
+repo-armv7:
+	make ARCH=armv7 ARCHFULL=armv7-3.2 _repository
+
+repo-multi:
+	make ARCH=all ARCHFULL=all _repository
+
+packages: mipsel mips aarch64 armv7 multi
+
+repository: repo-mipsel repo-mips repo-aarch64 repo-armv7 repo-multi
 
 clean:
 	rm -rf out/mipsel
