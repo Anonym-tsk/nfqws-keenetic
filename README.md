@@ -46,14 +46,6 @@
 
 - Все дальнейшие команды выполняются не в cli роутера, а **в среде entware**. Переключиться в неё из cli можно командой `exec sh`; или же подключиться напрямую через SSH (логин - `root`, пароль по умолчанию - `keenetic`, порт - 222).
 
-- Установите необходимые зависимости:
-  ```
-  opkg update
-  opkg install curl ca-certificates iptables busybox
-  ```
-
-### Установка через `opkg` (рекомендуется)
-
 > **Важно!! Миграция с версии 1.x.x на 2.x.x:**
 > 
 > Если не уверены, выполните команду `opkg info nfqws-keenetic` - она работает только на версиях 2.x.x и возвращает информацию о пакете.
@@ -66,19 +58,59 @@
 > /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netuninstall.sh)"
 > ```
 > 
-> Только после этого устанавливайте новую версию по инструкции ниже
+> После этого устанавливайте новую версию по инструкции ниже
 
-1. Скачайте установочный пакет
+### Установка через `opkg` (рекомендуется)
+
+1. Установите необходимые зависимости
    ```
-   curl -SL# https://github.com/Anonym-tsk/nfqws-keenetic/releases/latest/download/nfqws-keenetic_all.ipk -o /tmp/nfqws-keenetic.ipk
+   opkg update
+   opkg install ca-certificates wget-ssl
+   opkg remove wget-nossl
    ```
 
-2. Установите скачанный пакет
+2. Установите opkg-репозиторий в систему
    ```
-   opkg install /tmp/nfqws-keenetic.ipk
+   mkdir -p /opt/etc/opkg
+   echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all" > /opt/etc/opkg/nfqws-keenetic.conf
+   ```
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`
+
+   <details>
+     <summary>Или можете выбрать репозиторий под конкретную архитектуру</summary>
+
+     - mips
+       ```
+       mkdir -p /opt/etc/opkg
+       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
+       ```
+
+     - mipsel
+       ```
+       mkdir -p /opt/etc/opkg
+       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
+       ```
+
+     - aarch64
+       ```
+       mkdir -p /opt/etc/opkg
+       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
+       ```
+
+     - armv7
+       ```
+       mkdir -p /opt/etc/opkg
+       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/armv7" > /opt/etc/opkg/nfqws-keenetic.conf
+       ```
+   </details>
+
+3. Установите пакет
+   ```
+   opkg update
+   opkg install nfqws-keenetic
    ```
 
-3. Во время установки следуйте инструкции установщика
+4. Во время установки следуйте инструкции установщика
    - Введите сетевой интерфейс провайдера, обычно это `eth3`. Если ваш провайдер использует PPPoE, ваш интерфейс, скорее всего, `ppp0`.
      > Можно указать несколько интерфейсов через пробел (`eth3 nwg1`), например, если вы подключены к нескольким провайдерам
 
@@ -92,15 +124,12 @@
    - Укажите, нужна ли поддержка IPv6
      > Если не уверены, лучше не отключайте и оставьте как есть
 
-
-4. Удалите скачанный файл (опционально)
-   ```
-   rm -f /tmp/nfqws-keenetic.ipk
-   ```
-
 ##### Обновление
 
-Просто скачайте нужный пакет и установите его поверх старого.
+```
+opkg update
+opkg upgrade nfqws-keenetic
+```
 
 ##### Удаление
 
@@ -168,10 +197,10 @@ iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
 ### Частые проблемы
 1. `iptables: No chain/target/match by that name`
 
-    Не установлен пакет "Модули ядра подсистемы Netfilter". На Keenetic он появляется в списке пакетов только после установки "Протокол IPv6"
+   Не установлен пакет "Модули ядра подсистемы Netfilter". На Keenetic он появляется в списке пакетов только после установки "Протокол IPv6"
 2. `can't initialize ip6tables table` и/или `Perhaps ip6tables or your kernel needs to be upgraded`
 
-    Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
+   Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
 3. Ошибки вида `readlink: not found`, `dirname: not found`
 
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
