@@ -27,13 +27,17 @@ show_interfaces_func() {
 }
 
 config_interface_func() {
+  DEF_IFACE=$(route | grep '^default' | grep -o '[^ ]*$')
+  if [ -z "$DEF_IFACE" ]; then
+    DEF_IFACE="eth3"
+  fi
   if [ -z "$BIND_IFACE" ]; then
-    echo -e "\nEnter the provider interface name from the list above, e.g. eth3 (default) or nwg1"
-    echo "You can specify multiple interfaces separated by space, e.g. eth3 nwg1"
+    echo -e "\nEnter the provider interface name from the list above, e.g. $DEF_IFACE (default) or ppp0"
+    echo "You can specify multiple interfaces separated by space, e.g. eth3 ppp0"
     read BIND_IFACE
   fi
   if [ -z "$BIND_IFACE" ]; then
-    BIND_IFACE="eth3"
+    BIND_IFACE="$DEF_IFACE"
   fi
   echo "Selected interface: $BIND_IFACE"
 
