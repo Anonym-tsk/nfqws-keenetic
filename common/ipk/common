@@ -7,6 +7,7 @@ LISTAUTOFILE=$CONFDIR/auto.list
 LISTEXCLUDEFILE=$CONFDIR/exclude.list
 LISTLOG=/opt/var/log/nfqws.log
 INIT_SCRIPT=/opt/etc/init.d/S51nfqws
+NFQWS_BIN=/opt/usr/bin/nfqws
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
@@ -100,7 +101,7 @@ install_func() {
 }
 
 remove_binary_func() {
-  rm -f /opt/usr/bin/nfqws
+  rm -f "$NFQWS_BIN"
 }
 
 remove_all_files_func() {
