@@ -4,7 +4,7 @@ ABSOLUTE_FILENAME=`readlink -f "$0"`
 HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"`
 BASE_URL="https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master"
 
-cd /tmp
+cd /opt/tmp
 mkdir -p nfqws-keenetic/common
 
 curl -SL# "$BASE_URL/uninstall.sh" -o "nfqws-keenetic/uninstall.sh"

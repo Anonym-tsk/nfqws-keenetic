@@ -52,17 +52,17 @@ _binary:
 
 _binary-multi:
 	mkdir -p out/$(ARCH)/data/opt/usr/bin
-	mkdir -p out/$(ARCH)/data/tmp/nfqws_binary
+	mkdir -p out/$(ARCH)/data/opt/tmp/nfqws_binary
 
-	curl -sSL $(URL_MIPSEL) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
-	curl -sSL $(URL_MIPS) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
-	curl -sSL $(URL_AARCH64) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
-	curl -sSL $(URL_ARMV7) -o out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
+	curl -sSL $(URL_MIPSEL) -o out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-mipsel
+	curl -sSL $(URL_MIPS) -o out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-mips
+	curl -sSL $(URL_AARCH64) -o out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-aarch64
+	curl -sSL $(URL_ARMV7) -o out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-armv7
 
-	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mipsel
-	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-mips
-	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-aarch64
-	chmod +x out/$(ARCH)/data/tmp/nfqws_binary/nfqws-armv7
+	chmod +x out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-mipsel
+	chmod +x out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-mips
+	chmod +x out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-aarch64
+	chmod +x out/$(ARCH)/data/opt/tmp/nfqws_binary/nfqws-armv7
 
 _start:
 	make _clean
@@ -73,6 +73,8 @@ _end:
 	# control.tar.gz
 	cd out/$(ARCH)/control; tar czvf ../control.tar.gz .; cd ../../..
 	# data.tar.gz
+	mkdir -p out/$(ARCH)/data/opt/var/log
+	mkdir -p out/$(ARCH)/data/opt/var/run
 	cp -r etc out/$(ARCH)/data/opt/etc
 	cd out/$(ARCH)/data; tar czvf ../data.tar.gz .; cd ../../..
 

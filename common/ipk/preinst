@@ -1,6 +1,6 @@
 #!/bin/sh
 
 # Set `install` or `upgrade` for postinst script
-echo "$1" > /tmp/nfqws_install_type
+echo "$1" > /opt/tmp/nfqws_install_type
 
 exit 0

@@ -73,10 +73,10 @@ config_ipv6_func() {
 
 install_func() {
   NFQWS_INSTALL_TYPE="install"
-  if [ -f "/tmp/nfqws_install_type" ]; then
+  if [ -f "/opt/tmp/nfqws_install_type" ]; then
     # Set in preinst script
-    NFQWS_INSTALL_TYPE=$(cat "/tmp/nfqws_install_type")
-    rm -f /tmp/nfqws_install_type
+    NFQWS_INSTALL_TYPE=$(cat "/opt/tmp/nfqws_install_type")
+    rm -f /opt/tmp/nfqws_install_type
   fi
 
   case "$NFQWS_INSTALL_TYPE" in
