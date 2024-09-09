@@ -3,13 +3,13 @@
 source $(dirname $0)/nfqws-keenetic.common
 
 install_binary_func() {
-  CONFFILE="/opt/etc/opkg.conf" # Keenetic
-  if [ ! -f "$CONFFILE" ]; then
-    CONFFILE="/etc/opkg.conf" # OpenWRT
+  OPKG_CONF="/opt/etc/opkg.conf" # Keenetic
+  if [ ! -f "$OPKG_CONF" ]; then
+    OPKG_CONF="/etc/opkg.conf" # OpenWRT
   fi
 
-  if [ -f "$CONFFILE" ]; then
-    ARCH=$(cat "$CONFFILE" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
+  if [ -f "$OPKG_CONF" ]; then
+    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
     case "$ARCH" in
       "mips-3"|"mips_") ARCH="mips" ;;
       "mipsel-3"|"mipsel_") ARCH="mipsel" ;;
