@@ -235,6 +235,28 @@ git pull --depth=1
 
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
 
+### Как подобрать рабочую стратегию NFQWS
+
+1. Скачать скрипт
+   ```
+   cd ~
+   curl -SL# "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh" -o "strategy.sh"
+   chmod +x strategy.sh
+   ```
+
+2. Запустить
+   ```
+   ./strategy.sh www.mos.ru
+   ```
+   или так
+   ```
+   ./strategy.sh www.mos.ru --full
+   ```
+   где первым аргументом указывается домен, который вы хотите проверить (без https://),
+   вторым можно указать параметр `--full` для полного перебора стратегий, если быстрый перебор ничего не нашел.
+
+3. Найденную стратегию вписать в конфиге `/opt/etc/nfqws/nfqws.conf` в параметр `NFQWS_ARGS`
+
 ---
 
 Нравится проект? [Поддержи автора](https://yoomoney.ru/to/410019180291197)! Купи ему немного :beers: или :coffee:!
