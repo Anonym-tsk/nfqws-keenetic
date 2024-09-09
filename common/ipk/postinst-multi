@@ -3,8 +3,13 @@
 source $(dirname $0)/nfqws-keenetic.common
 
 install_binary_func() {
-  if [ -f "/opt/etc/opkg.conf" ]; then
-    ARCH=$(cat /opt/etc/opkg.conf | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
+  CONFFILE="/opt/etc/opkg.conf" # Keenetic
+  if [ ! -f "/opt/etc/opkg.conf" ]; then
+    CONFFILE="/etc/opkg.conf" # OpenWRT
+  fi
+
+  if [ -f "$CONFFILE" ]; then
+    ARCH=$(cat "$CONFFILE" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
     case "$ARCH" in
       "mips-3") ARCH="mips" ;;
       "mips_") ARCH="mips" ;;
@@ -14,8 +19,10 @@ install_binary_func() {
       "aarch64_") ARCH="aarch64" ;;
       "armv7") ARCH="armv7" ;;
     esac
-  else
-    ARCH=$(uname -m)
+  fi
+
+  if [ -z $ARCH ]; then
+    ARCH=$(uname -m | grep -oE 'mips|mipsel|aarch64|armv7')
     if [ "$ARCH" == "mips" ]; then
       if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
         ARCH="mipsel"
@@ -27,6 +34,7 @@ install_binary_func() {
     echo "Failed to detect architecture"
     exit 1
   fi
+
   echo "Detected arch: $ARCH"
 
   cp -f "/tmp/nfqws_binary/nfqws-$ARCH" "/opt/usr/bin/nfqws"
