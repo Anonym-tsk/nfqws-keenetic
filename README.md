@@ -1,24 +1,14 @@
 # nfqws-keenetic
 
-Скрипты для установки `nfqws` на маршрутизаторы с поддержкой `opkg`.
+Пакеты для установки `nfqws` на маршрутизаторы с поддержкой `opkg`.
 
 > **Вы пользуетесь этой инструкцией на свой страх и риск!**
 > 
 > Автор не несёт ответственности за порчу оборудования и программного обеспечения, проблемы с доступом и потенцией.
 > Подразумевается, что вы понимаете, что вы делаете.
 
-Предназначено для роутеров Keenetic с установленным на них entware, а так же для любой системы с opkg пакетами, у которых система расположена в каталоге /opt/.
-
-Проверено на маршрутизаторах:
-
-- Keenetic Giga (KN-1011)
-- Keenetic Ultra (KN-1811)
-- Keenetic Ultra (KN-1810)
-- Keenetic Extra (KN-1710)
-- Keenetic Hopper (KN-3810)
-- Keenetic Viva (KN-1910)
-- Keenetic Omni (KN-1410)
-- Keenetic Giant (KN-2610)
+Изначально написано для роутеров Keenetic с установленным entware.
+Однако, работоспособность также была проверена на прошивках Padavan и OpenWRT (читайте ниже).
 
 Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
 
@@ -33,6 +23,8 @@
 Почитать подробнее можно на [странице авторов](https://github.com/bol-van/zapret) (ищите по ключевому слову `nfqws`).
 
 ### Подготовка
+
+- Прочитайте инструкцию полностью, прежде, чем начать что-то делать!
 
 - Рекомендуется игнорировать предложенные провайдером адреса DNS-серверов. Для этого в интерфейсе роутера отметьте пункты ["игнорировать DNS от провайдера"](https://help.keenetic.com/hc/ru/articles/360008609399) в настройках IPv4 и IPv6.
  
@@ -60,6 +52,8 @@
 > 
 > После этого устанавливайте новую версию по инструкции ниже
 
+---
+
 ### Установка через `opkg` (рекомендуется)
 
 1. Установите необходимые зависимости
@@ -79,25 +73,25 @@
    <details>
      <summary>Или можете выбрать репозиторий под конкретную архитектуру</summary>
 
-     - mips-3.4
+     - `mips-3.4` <sub><sup>Keenetic Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610)</sup></sub>
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - mipsel-3.4
+     - `mipsel-3.4` <sub><sup>Keenetic Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912), Hero 4G (KN-2310), Hero 4G+ (KN-2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810)</sup></sub>
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - aarch64-3.10
+     - `aarch64-3.10` <sub><sup>Keenetic Peak (KN-2710), Ultra (KN-1811), Hopper SE (KN-3812)</sup></sub>
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
-     - armv7-3.2
+     - `armv7-3.2`
        ```
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/armv7" > /opt/etc/opkg/nfqws-keenetic.conf
@@ -143,6 +137,40 @@ opkg remove nfqws-keenetic
 opkg info nfqws-keenetic
 ```
 
+---
+
+### Установка на OpenWRT
+
+Пакет работает только с `iptables`.
+Если в вашей системе используется `nftables`, придется удалить `nftables` и `firewall4`, и установить `firewall3` и `iptables`.
+
+Проверить, что ваша система использует `nftables`:
+```
+ls -la /sbin/fw4
+which nft
+```
+
+1. Для систем с `iptables` установите зависимости:
+   ```
+   opkg update
+   opkg install ca-certificates wget-ssl iptables iptables-mod-extra iptables-mod-nfqueue iptables-mod-filter iptables-mod-ipopt iptables-mod-conntrack-extra ip6tables ip6tables-mod-nat ip6tables-extra
+   ```
+
+2. Добавьте репозиторий в файл `/etc/opkg/customfeeds.conf`
+   ```
+   src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all
+   ```
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`.
+   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
+
+4. Установите пакет
+   ```
+   opkg update
+   opkg install nfqws-keenetic
+   ```
+
+---
+
 ### Ручная установка (не рекомендуется)
 
 ```
@@ -166,6 +194,8 @@ git pull --depth=1
 ./nfqws-keenetic/uninstall.sh
 ```
 
+---
+
 ### Полезное
 
 1. Конфиг-файл `/opt/etc/nfqws/nfqws.conf`
@@ -183,15 +213,15 @@ git pull --depth=1
 ### Если ничего не работает...
 
 1. Если ваше устройство поддерживает аппаратное ускорение (flow offloading, hardware nat, hardware acceleration), то iptables могут не работать.
-При включенном offloading пакет не проходит по обычному пути netfilter.
-Необходимо или его отключить, или выборочно им управлять.
+   При включенном offloading пакет не проходит по обычному пути netfilter.
+   Необходимо или его отключить, или выборочно им управлять.
 2. На Keenetic можно попробовать выключить или наоборот включить [сетевой ускоритель](https://help.keenetic.com/hc/ru/articles/214470905)
 3. Возможно, стоит выключить службу классификации трафика IntelliQOS.
 4. Можно попробовать отключить IPv6 на сетевом интерфейсе провайдера через веб-интерфейс маршрутизатора.
 5. Можно попробовать запретить весь UDP трафик на 443 порт для отключения QUIC:
-```
-iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
-```
+   ```
+   iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
+   ```
 6. Попробовать разные варианты аргументов nfqws. Для этого в конфиге `/opt/etc/nfqws/nfqws.conf` есть несколько заготовок `NFQWS_ARGS`.
 
 ### Частые проблемы
