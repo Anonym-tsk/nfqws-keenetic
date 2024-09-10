@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 VERSION := $(shell cat VERSION)
 ROOT_DIR := /opt
 
