@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NETFILTER_SCRIPT=/opt/etc/ndm/netfilter.d/100-nfqws.sh
+NETFILTER_SCRIPT="$ROOT_DIR/etc/ndm/netfilter.d/100-nfqws.sh"
 
 read_yes_or_abort_func() {
   read yn
@@ -62,7 +62,7 @@ config_copy_files_func() {
   cp -f $HOME_FOLDER/etc/init.d/S51nfqws $INIT_SCRIPT
   chmod +x $INIT_SCRIPT
 
-  if [ -d "/opt/etc/ndm/netfilter.d" ]; then
+  if [ -d "$ROOT_DIR/etc/ndm/netfilter.d" ]; then
     cp -f $HOME_FOLDER/etc/ndm/netfilter.d/100-nfqws.sh $NETFILTER_SCRIPT
     chmod +x $NETFILTER_SCRIPT
   fi
@@ -111,9 +111,9 @@ config_select_arch_func() {
   fi
 
   echo "Selected architecture: $ARCH"
-  mkdir -p /opt/usr/bin
-  mkdir -p /opt/var/log
-  mkdir -p /opt/var/run
+  mkdir -p "$ROOT_DIR/usr/bin"
+  mkdir -p "$ROOT_DIR/var/log"
+  mkdir -p "$ROOT_DIR/var/run"
   curl -SL# "$NFQWS_URL" -o "$NFQWS_BIN"
   chmod +x $NFQWS_BIN
 }
