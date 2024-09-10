@@ -187,7 +187,11 @@ which nft
 opkg install git git-http curl
 git clone https://github.com/Anonym-tsk/nfqws-keenetic.git --depth 1
 chmod +x ./nfqws-keenetic/*.sh
+
+# Для Entware
 ./nfqws-keenetic/install.sh
+# Для OpenWrt
+./nfqws-keenetic/install.sh --openwrt
 ```
 
 ##### Обновление
@@ -195,13 +199,20 @@ chmod +x ./nfqws-keenetic/*.sh
 ```
 cd nfqws-keenetic
 git pull --depth=1
+
+# Для Entware
 ./install.sh
+# Для OpenWrt
+./install.sh --openwrt
 ```
 
 ##### Удаление
 
 ```
+# Для Entware
 ./nfqws-keenetic/uninstall.sh
+# Для OpenWrt
+./nfqws-keenetic/uninstall.sh --openwrt
 ```
 
 ---
