@@ -1,8 +1,11 @@
 #!/bin/sh
 
-. /opt/etc/nfqws/nfqws.conf
+ROOT_DIR=$(readlink -f $(dirname $0)/../../)
+NFQWS_BIN="$ROOT_DIR/usr/bin/nfqws"
+PIDFILE="$ROOT_DIR/var/run/nfqws.pid"
+CONFFILE="$ROOT_DIR/etc/nfqws/nfqws.conf"
 
-NFQWS_BIN=/opt/usr/bin/nfqws
+source "$CONFFILE"
 
 is_running() {
   PID_RUNNING=$(pgrep -nx "$NFQWS_BIN" 2>/dev/null)
