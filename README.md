@@ -150,15 +150,22 @@ ls -la /sbin/fw4
 which nft
 ```
 
-1. Для систем с `iptables` установите зависимости:
+1. Установите необходимые зависимости
    ```
    opkg update
    opkg install ca-certificates wget-ssl
+   opkg remove wget-nossl
    ```
 
-2. Добавьте репозиторий в файл `/etc/opkg/customfeeds.conf`
+2. Установите публичный ключ репозитория
    ```
-   src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all
+   curl -SL# "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub" -o "/tmp/nfqws-keenetic.pub"
+   opkg-key add /tmp/nfqws-keenetic.pub
+   ```
+
+3. Добавьте репозиторий в файл `/etc/opkg/customfeeds.conf`
+   ```
+   src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
