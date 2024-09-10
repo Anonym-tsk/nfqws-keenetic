@@ -23,7 +23,7 @@ _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
 
-	@if [ "$(BUILD_DIR)" == "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/$(BUILD_DIR)/control/control; \
 	else \
 		echo "Depends: iptables" >> out/$(BUILD_DIR)/control/control; \
@@ -41,13 +41,13 @@ _scripts:
 	cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm
 	cp common/ipk/postrm out/$(BUILD_DIR)/control/postrm
 
-	@if [ "$(BUILD_DIR)" == "all" ] || [ "$(BUILD_DIR)" == "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" == "all" ]] || [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		cp common/ipk/postinst-multi out/$(BUILD_DIR)/control/postinst; \
 	else \
 		cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst; \
 	fi
 
-	@if [ "$(BUILD_DIR)" == "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		cp common/ipk/env-openwrt out/$(BUILD_DIR)/control/env; \
 	else \
 		cp common/ipk/env out/$(BUILD_DIR)/control/env; \
@@ -88,11 +88,11 @@ _ipk:
 
 	cp -r etc/init.d out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
-	@if [ "$(BUILD_DIR)" != "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" != "openwrt" ]]; then \
 		cp -r etc/ndm out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/ndm; \
 	fi
 
-	@if [ "$(BUILD_DIR)" == "all" ] || [ "$(BUILD_DIR)" == "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" == "all" ]] || [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		make _binary-multi; \
 	else \
 		make _binary; \
@@ -167,7 +167,7 @@ _repository:
 	echo "Package: nfqws-keenetic" > out/_pages/$(BUILD_DIR)/Packages
 	echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages
 
-	@if [ "$(BUILD_DIR)" == "openwrt" ]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/_pages/$(BUILD_DIR)/Packages; \
 	else \
 		echo "Depends: iptables" >> out/_pages/$(BUILD_DIR)/Packages; \
