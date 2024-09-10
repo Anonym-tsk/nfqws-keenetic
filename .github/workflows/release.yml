@@ -123,25 +123,25 @@ jobs:
 #        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
 #        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
 #        asset_content_type: application/octet-stream
-#
-#    - name: Make Packages
-#      run: make repository
-#
-#    - name: Sign openwrt repository
-#      env:
-#        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
-#        OPENWRT_SECRET_KEY: ${{ secrets.OPENWRT_SECRET_KEY }}
-#      run: |
-#        git clone https://git.openwrt.org/project/usign.git
-#        cd usign/
-#        cmake .
-#        make
-#        cd ..
-#
-#        echo -e "$OPENWRT_SECRET_KEY" >> ./out/secret.key
-#        echo -e "$OPENWRT_PUBLIC_KEY" >> ./out/_pages/openwrt/nfqws-keenetic.pub
-#        ./usign/usign -S -m ./out/_pages/openwrt/Packages -s ./out/secret.key -c "nfqws-keenetic OpenWRT repository"
-#
+
+    - name: Build repository
+      run: make repository
+
+    - name: Sign openwrt repository
+      env:
+        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
+        OPENWRT_SECRET_KEY: ${{ secrets.OPENWRT_SECRET_KEY }}
+      run: |
+        git clone https://git.openwrt.org/project/usign.git
+        cd usign/
+        cmake .
+        make
+        cd ..
+
+        echo -e "$OPENWRT_SECRET_KEY" >> ./out/secret.key
+        echo -e "$OPENWRT_PUBLIC_KEY" >> ./out/_pages/openwrt/nfqws-keenetic.pub
+        ./usign/usign -S -m ./out/_pages/openwrt/Packages -s ./out/secret.key -c "nfqws-keenetic OpenWRT repository"
+
 #    - name: Setup Pages
 #      uses: actions/configure-pages@v5
 #
