@@ -1,12 +1,10 @@
 #!/bin/sh
 
+source $(dirname $0)/nfqws-keenetic.env
 source $(dirname $0)/nfqws-keenetic.common
 
 install_binary_func() {
-  OPKG_CONF="/opt/etc/opkg.conf" # Keenetic
-  if [ ! -f "$OPKG_CONF" ]; then
-    OPKG_CONF="/etc/opkg.conf" # OpenWRT
-  fi
+  OPKG_CONF="${ROOT_DIR}/etc/opkg.conf"
 
   if [ -f "$OPKG_CONF" ]; then
     ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
@@ -34,9 +32,9 @@ install_binary_func() {
 
   echo "Detected arch: $ARCH"
 
-  cp -f "/opt/tmp/nfqws_binary/nfqws-$ARCH" "/opt/usr/bin/nfqws"
-  chmod +x /opt/usr/bin/nfqws
-  rm -rf /opt/tmp/nfqws_binary
+  cp -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-$ARCH" "${ROOT_DIR}/usr/bin/nfqws"
+  chmod +x "${ROOT_DIR}/usr/bin/nfqws"
+  rm -rf "${ROOT_DIR}/tmp/nfqws_binary"
 }
 
 # Stop service if exist

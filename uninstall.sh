@@ -3,6 +3,7 @@
 ABSOLUTE_FILENAME=`readlink -f "$0"`
 HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"`
 
+source $HOME_FOLDER/common/ipk/env
 source $HOME_FOLDER/common/ipk/common
 source $HOME_FOLDER/common/install_func.sh
 

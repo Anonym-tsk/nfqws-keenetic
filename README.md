@@ -153,7 +153,7 @@ which nft
 1. Для систем с `iptables` установите зависимости:
    ```
    opkg update
-   opkg install ca-certificates wget-ssl iptables iptables-mod-extra iptables-mod-nfqueue iptables-mod-filter iptables-mod-ipopt iptables-mod-conntrack-extra ip6tables ip6tables-mod-nat ip6tables-extra
+   opkg install ca-certificates wget-ssl
    ```
 
 2. Добавьте репозиторий в файл `/etc/opkg/customfeeds.conf`

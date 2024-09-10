@@ -1,13 +1,13 @@
 #!/bin/sh
 
-CONFDIR=/opt/etc/nfqws
+CONFDIR="${ROOT_DIR}/etc/nfqws"
 CONFFILE=$CONFDIR/nfqws.conf
 LISTFILE=$CONFDIR/user.list
 LISTAUTOFILE=$CONFDIR/auto.list
 LISTEXCLUDEFILE=$CONFDIR/exclude.list
-LISTLOG=/opt/var/log/nfqws.log
-INIT_SCRIPT=/opt/etc/init.d/S51nfqws
-NFQWS_BIN=/opt/usr/bin/nfqws
+LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
+INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
+NFQWS_BIN="${ROOT_DIR}/usr/bin/nfqws"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
@@ -78,10 +78,10 @@ config_ipv6_func() {
 
 install_func() {
   NFQWS_INSTALL_TYPE="install"
-  if [ -f "/opt/tmp/nfqws_install_type" ]; then
+  if [ -f "${ROOT_DIR}/tmp/nfqws_install_type" ]; then
     # Set in preinst script
-    NFQWS_INSTALL_TYPE=$(cat "/opt/tmp/nfqws_install_type")
-    rm -f /opt/tmp/nfqws_install_type
+    NFQWS_INSTALL_TYPE=$(cat "${ROOT_DIR}/tmp/nfqws_install_type")
+    rm -f "${ROOT_DIR}/tmp/nfqws_install_type"
   fi
 
   case "$NFQWS_INSTALL_TYPE" in
