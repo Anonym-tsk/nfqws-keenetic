@@ -153,7 +153,7 @@ which nft
 1. Установите необходимые зависимости
    ```
    opkg update
-   opkg install ca-certificates wget-ssl
+   opkg install ca-certificates wget-ssl curl
    opkg remove wget-nossl
    ```
 
@@ -249,6 +249,7 @@ git pull --depth=1
 
 1. Скачать скрипт
    ```
+   opkg install curl
    cd ~
    curl -SL# "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh" -o "strategy.sh"
    chmod +x strategy.sh
