@@ -141,6 +141,10 @@ jobs:
         echo -e "$OPENWRT_SECRET_KEY" >> ./out/secret.key
         echo -e "$OPENWRT_PUBLIC_KEY" >> ./out/_pages/openwrt/nfqws-keenetic.pub
         ./usign/usign -S -m ./out/_pages/openwrt/Packages -s ./out/secret.key -c "nfqws-keenetic OpenWRT repository"
+        
+        ls -la ./out
+        ls -la ./out/_pages/openwrt/
+        cat ./out/_pages/openwrt/nfqws-keenetic.pub
 
 #    - name: Setup Pages
 #      uses: actions/configure-pages@v5
