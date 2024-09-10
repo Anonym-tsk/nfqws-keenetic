@@ -1,10 +1,10 @@
 VERSION := $(shell cat VERSION)
-ROOT_DIR := "/opt"
+ROOT_DIR := /opt
 
-URL_MIPSEL := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-lsb/nfqws"
-URL_MIPS := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-msb/nfqws"
-URL_AARCH64 := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/aarch64/nfqws"
-URL_ARMV7 := "https://raw.githubusercontent.com/bol-van/zapret/master/binaries/arm/nfqws"
+URL_MIPSEL := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-lsb/nfqws
+URL_MIPS := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-msb/nfqws
+URL_AARCH64 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/aarch64/nfqws
+URL_ARMV7 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/arm/nfqws
 
 .DEFAULT_GOAL := packages
 
