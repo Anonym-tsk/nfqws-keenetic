@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Entware startup script
+
 ROOT_DIR=$(readlink -f $(dirname $0)/../../)
 NFQWS_BIN="$ROOT_DIR/usr/bin/nfqws"
 PIDFILE="$ROOT_DIR/var/run/nfqws.pid"
