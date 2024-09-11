@@ -214,6 +214,7 @@ which nft
 
 1. Скачать скрипт
    ```
+   opkg install curl
    cd ~
    wget -O "strategy.sh" "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh"
    chmod +x strategy.sh
