@@ -93,9 +93,9 @@ _ipk:
 
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		cp etc/init.d/nfqws-keenetic out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
+		cp etc/init.d/openwrt out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
 	else \
-	  	cp etc/init.d/S51nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
+	  	cp etc/init.d/entware out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
 	fi
 	@if [[ "$(BUILD_DIR)" != "openwrt" ]]; then \
 		cp -r etc/ndm out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/ndm; \
