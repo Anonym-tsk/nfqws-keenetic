@@ -3,9 +3,9 @@
 ABSOLUTE_FILENAME=`readlink -f "$0"`
 HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"`
 
-ROOT_DIR=/opt
-if [ "$1" = "--openwrt" ]; then
-  ROOT_DIR=
+ROOT_DIR=
+if [ -f "/opt/usr/bin/nfqws" ]; then
+  ROOT_DIR="/opt"
 fi
 
 source $HOME_FOLDER/common/ipk/common

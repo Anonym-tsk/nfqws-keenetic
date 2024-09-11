@@ -3,8 +3,8 @@
 ABSOLUTE_FILENAME=`readlink -f "$0"`
 HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"`
 
-ROOT_DIR=/opt
-if [ "$1" = "--openwrt" ]; then
+ROOT_DIR="/opt"
+if [ -f "/usr/bin/nfqws" ] || [ "$1" = "--openwrt" ]; then
   ROOT_DIR=
 fi
 

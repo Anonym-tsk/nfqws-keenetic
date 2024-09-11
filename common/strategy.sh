@@ -1,8 +1,13 @@
 #!/bin/sh
 
-. /opt/etc/nfqws/nfqws.conf
+ROOT_DIR=
+if [ -f "/opt/usr/bin/nfqws" ]; then
+  ROOT_DIR="/opt"
+fi
 
-NFQWS_BIN=/opt/usr/bin/nfqws
+source "$ROOT_DIR/etc/nfqws/nfqws.conf"
+
+NFQWS_BIN="$ROOT_DIR/usr/bin/nfqws"
 USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 CURL_MAX_TIME=2
 DOMAIN="$1"
@@ -15,8 +20,8 @@ test_func() {
   # $1 - domain
   # $2 - nfqws args
 
-  /opt/etc/init.d/S51nfqws firewall-iptables
-  /opt/etc/init.d/S51nfqws firewall-ip6tables
+  $ROOT_DIR/etc/init.d/S51nfqws firewall-iptables
+  $ROOT_DIR/etc/init.d/S51nfqws firewall-ip6tables
   $NFQWS_BIN --daemon --user=nobody --qnum=$NFQUEUE_NUM $2
 
   curl -SLs -A "$USER_AGENT" --max-time $CURL_MAX_TIME "https://$1" -o /dev/null 2>&1 > /dev/null
@@ -74,9 +79,9 @@ run() {
   echo "Testing domain: $DOMAIN"
 
   # Prepare
-  /opt/etc/init.d/S51nfqws stop
+  $ROOT_DIR/etc/init.d/S51nfqws stop
   killall nfqws
-  /opt/etc/init.d/S51nfqws kernel-modules
+  $ROOT_DIR/etc/init.d/S51nfqws kernel-modules
 
   if [ "$FULL_CHECK" -eq "1" ]; then
     full_check_func
@@ -85,7 +90,7 @@ run() {
   fi
 
   # Cleanup
-  /opt/etc/init.d/S51nfqws firewall-stop
+  $ROOT_DIR/etc/init.d/S51nfqws firewall-stop
 }
 
 run

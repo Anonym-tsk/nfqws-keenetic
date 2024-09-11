@@ -186,7 +186,7 @@ which nft
 ### Ручная установка (не рекомендуется)
 
 ```
-opkg install git git-http curl
+opkg install git git-http curl ca-certificates
 git clone https://github.com/Anonym-tsk/nfqws-keenetic.git --depth 1
 chmod +x ./nfqws-keenetic/*.sh
 
@@ -201,20 +201,13 @@ chmod +x ./nfqws-keenetic/*.sh
 ```
 cd nfqws-keenetic
 git pull --depth=1
-
-# Для Entware
 ./install.sh
-# Для OpenWrt
-./install.sh --openwrt
 ```
 
 ##### Удаление
 
 ```
-# Для Entware
 ./nfqws-keenetic/uninstall.sh
-# Для OpenWrt
-./nfqws-keenetic/uninstall.sh --openwrt
 ```
 
 ---
@@ -262,7 +255,7 @@ git pull --depth=1
 
 1. Скачать скрипт
    ```
-   opkg install curl
+   opkg install curl ca-certificates
    cd ~
    curl -SL# "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh" -o "strategy.sh"
    chmod +x strategy.sh
