@@ -7,17 +7,22 @@ LISTAUTOFILE=$CONFDIR/auto.list
 LISTEXCLUDEFILE=$CONFDIR/exclude.list
 LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
 INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
+INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
 NFQWS_BIN="${ROOT_DIR}/usr/bin/nfqws"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
     $INIT_SCRIPT stop
+  elif [ -f "$INIT_SCRIPT_OWRT" ]; then
+    $INIT_SCRIPT_OWRT stop
   fi
 }
 
 start_func() {
   if [ -f "$INIT_SCRIPT" ]; then
     $INIT_SCRIPT start
+  elif [ -f "$INIT_SCRIPT_OWRT" ]; then
+    $INIT_SCRIPT_OWRT start
   fi
 }
 
