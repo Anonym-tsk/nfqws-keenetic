@@ -40,20 +40,6 @@
   - Через telnet: в терминале выполнить `telnet 192.168.1.1`, а потом `exec sh`.
   - Или же подключиться напрямую через SSH (логин - `root`, пароль по умолчанию - `keenetic`, порт - 222 или 22). Для этого в терминале написать `ssh 192.168.1.1 -l root -p 222`.
 
-> **Важно!! Миграция с версии 1.x.x на 2.x.x:**
-> 
-> Если не уверены, выполните команду `opkg info nfqws-keenetic` - она работает только на версиях 2.x.x и возвращает информацию о пакете.
-> Если ничего не вернула, вам нужно удалить старую версию.
-> 
-> **Только если у вас установлена версия 1.x.x:**
-> 
-> Выполните удаление старой версии скриптом
-> ```
-> /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/netuninstall.sh)"
-> ```
-> 
-> После этого устанавливайте новую версию по инструкции ниже
-
 ---
 
 ### Установка через `opkg` (рекомендуется)
@@ -155,13 +141,13 @@ which nft
 1. Установите необходимые зависимости
    ```
    opkg update
-   opkg install ca-certificates wget-ssl curl
+   opkg install ca-certificates wget-ssl
    opkg remove wget-nossl
    ```
 
 2. Установите публичный ключ репозитория
    ```
-   curl -SL# "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub" -o "/tmp/nfqws-keenetic.pub"
+   wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
    opkg-key add /tmp/nfqws-keenetic.pub
    ```
 
@@ -255,9 +241,8 @@ git pull --depth=1
 
 1. Скачать скрипт
    ```
-   opkg install curl ca-certificates
    cd ~
-   curl -SL# "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh" -o "strategy.sh"
+   wget -O "strategy.sh" "https://raw.githubusercontent.com/Anonym-tsk/nfqws-keenetic/master/common/strategy.sh"
    chmod +x strategy.sh
    ```
 
