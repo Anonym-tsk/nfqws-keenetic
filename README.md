@@ -165,7 +165,9 @@ which nft
    ```
 
 > NB: Все пути файлов, описанные в этой инструкции, начинающиеся с `/opt`, на OpenWRT будут начинаться с корня `/`.
-> Например для перезапуска сервиса используйте `/etc/init.d/S51nfqws restart`, а конфиг расположен в `/etc/nfqws/nfqws.conf`
+> Например конфиг расположен в `/etc/nfqws/nfqws.conf`
+> 
+> Для запуска/остановки используйте команду `service nfqws-keenetic {start|stop|restart|reload|status}`
 
 ---
 
