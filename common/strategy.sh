@@ -1,8 +1,10 @@
 #!/bin/sh
 
 ROOT_DIR=
+INIT_SCRIPT="/etc/init.d/nfqws-keenetic"
 if [ -f "/opt/usr/bin/nfqws" ]; then
   ROOT_DIR="/opt"
+  INIT_SCRIPT="/opt/etc/init.d/S51nfqws"
 fi
 
 source "$ROOT_DIR/etc/nfqws/nfqws.conf"
@@ -20,8 +22,8 @@ test_func() {
   # $1 - domain
   # $2 - nfqws args
 
-  $ROOT_DIR/etc/init.d/S51nfqws firewall-iptables
-  $ROOT_DIR/etc/init.d/S51nfqws firewall-ip6tables
+  $INIT_SCRIPT firewall_iptables
+  $INIT_SCRIPT firewall_ip6tables
   $NFQWS_BIN --daemon --user=nobody --qnum=$NFQUEUE_NUM $2
 
   curl -SLs -A "$USER_AGENT" --max-time $CURL_MAX_TIME "https://$1" -o /dev/null 2>&1 > /dev/null
@@ -79,9 +81,9 @@ run() {
   echo "Testing domain: $DOMAIN"
 
   # Prepare
-  $ROOT_DIR/etc/init.d/S51nfqws stop
+  $INIT_SCRIPT stop
   killall nfqws
-  $ROOT_DIR/etc/init.d/S51nfqws kernel-modules
+  $INIT_SCRIPT kernel_modules
 
   if [ "$FULL_CHECK" -eq "1" ]; then
     full_check_func
@@ -90,7 +92,7 @@ run() {
   fi
 
   # Cleanup
-  $ROOT_DIR/etc/init.d/S51nfqws firewall-stop
+  $INIT_SCRIPT firewall_stop
 }
 
 run
