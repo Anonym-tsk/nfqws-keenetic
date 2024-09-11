@@ -22,7 +22,7 @@
 
 Почитать подробнее можно на [странице авторов](https://github.com/bol-van/zapret) (ищите по ключевому слову `nfqws`).
 
-### Подготовка
+### Подготовка Keenetic
 
 - Прочитайте инструкцию полностью, прежде, чем начать что-то делать!
 
@@ -42,7 +42,7 @@
 
 ---
 
-### Установка через `opkg` (рекомендуется)
+### Установка на Keenetic и Entware
 
 1. Установите необходимые зависимости
    ```
@@ -168,35 +168,6 @@ which nft
 > Например конфиг расположен в `/etc/nfqws/nfqws.conf`
 > 
 > Для запуска/остановки используйте команду `service nfqws-keenetic {start|stop|restart|reload|status}`
-
----
-
-### Ручная установка (не рекомендуется)
-
-```
-opkg install git git-http curl ca-certificates
-git clone https://github.com/Anonym-tsk/nfqws-keenetic.git --depth 1
-chmod +x ./nfqws-keenetic/*.sh
-
-# Для Entware
-./nfqws-keenetic/install.sh
-# Для OpenWrt
-./nfqws-keenetic/install.sh --openwrt
-```
-
-##### Обновление
-
-```
-cd nfqws-keenetic
-git pull --depth=1
-./install.sh
-```
-
-##### Удаление
-
-```
-./nfqws-keenetic/uninstall.sh
-```
 
 ---
 
