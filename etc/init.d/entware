@@ -203,17 +203,17 @@ case "$1" in
   reload)
     reload
     ;;
-  firewall-iptables)
+  firewall_iptables)
     firewall_start_v4
     ;;
-  firewall-ip6tables)
+  firewall_ip6tables)
     firewall_start_v6
     ;;
-  firewall-stop)
+  firewall_stop)
     firewall_stop_v4
     firewall_stop_v6
     ;;
-  kernel-modules)
+  kernel_modules)
     kernel_modules_load
     ;;
   *)

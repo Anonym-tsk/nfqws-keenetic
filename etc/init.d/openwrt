@@ -12,6 +12,11 @@ CONFFILE="/etc/nfqws/nfqws.conf"
 
 source "$CONFFILE"
 
+extra_command "firewall_iptables" "Load IPv4 firewall rules"
+extra_command "firewall_ip6tables" "Load IPv6 firewall rules"
+extra_command "firewall_stop" "Unload firewall rules"
+extra_command "kernel_modules" "Load kernel modules"
+
 is_running() {
   PID_RUNNING=$(pgrep -nx "$NFQWS_BIN" 2>/dev/null)
 
@@ -90,6 +95,23 @@ reload_service() {
 
   echo 'Reloading NFQWS service...'
   kill -1 $(cat "$PIDFILE")
+}
+
+firewall_iptables() {
+  firewall_start_v4
+}
+
+firewall_ip6tables() {
+  firewall_start_v6
+}
+
+firewall_stop() {
+  firewall_stop_v4
+  firewall_stop_v6
+}
+
+kernel_modules() {
+  kernel_modules_load
 }
 
 firewall_start_v4() {
