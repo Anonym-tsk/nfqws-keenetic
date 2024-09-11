@@ -39,18 +39,21 @@ _control:
 _scripts:
 	cp common/ipk/common out/$(BUILD_DIR)/control/common
 	cp common/ipk/preinst out/$(BUILD_DIR)/control/preinst
-	cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm
 	cp common/ipk/postrm out/$(BUILD_DIR)/control/postrm
 
-	@if [[ "$(BUILD_DIR)" == "all" ]] || [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+	@if [[ "$(BUILD_DIR)" == "all" ]]; then \
 		cp common/ipk/postinst-multi out/$(BUILD_DIR)/control/postinst; \
+	elif [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+	  cp common/ipk/postinst-openwrt out/$(BUILD_DIR)/control/postinst; \
 	else \
 		cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst; \
 	fi
 
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+		cp common/ipk/prerm-openwrt out/$(BUILD_DIR)/control/prerm; \
 		cp common/ipk/env-openwrt out/$(BUILD_DIR)/control/env; \
 	else \
+		cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm; \
 		cp common/ipk/env out/$(BUILD_DIR)/control/env; \
 	fi
 
@@ -85,10 +88,15 @@ _ipk:
 	# data.tar.gz
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/log
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/run
-	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
 
-	cp -r etc/init.d out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
+
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+		cp etc/init.d/nfqws-keenetic out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
+	else \
+	  	cp etc/init.d/S51nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
+	fi
 	@if [[ "$(BUILD_DIR)" != "openwrt" ]]; then \
 		cp -r etc/ndm out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/ndm; \
 	fi

@@ -118,3 +118,37 @@ remove_all_files_func() {
       ;;
   esac
 }
+
+install_binary_func() {
+  OPKG_CONF="${ROOT_DIR}/etc/opkg.conf"
+
+  if [ -f "$OPKG_CONF" ]; then
+    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7' | head -n 1)
+    case "$ARCH" in
+      "mips-3"|"mips_") ARCH="mips" ;;
+      "mipsel-3"|"mipsel_") ARCH="mipsel" ;;
+      "aarch64-3"|"aarch64_") ARCH="aarch64" ;;
+      "armv7") ARCH="armv7" ;;
+    esac
+  fi
+
+  if [ -z $ARCH ]; then
+    ARCH=$(uname -m | grep -oE 'mips|mipsel|aarch64|armv7')
+    if [ "$ARCH" == "mips" ]; then
+      if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
+        ARCH="mipsel"
+      fi
+    fi
+  fi
+
+  if [ -z $ARCH ]; then
+    echo "Failed to detect architecture"
+    exit 1
+  fi
+
+  echo "Detected arch: $ARCH"
+
+  cp -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-$ARCH" "${ROOT_DIR}/usr/bin/nfqws"
+  chmod +x "${ROOT_DIR}/usr/bin/nfqws"
+  rm -rf "${ROOT_DIR}/tmp/nfqws_binary"
+}

@@ -151,9 +151,9 @@ which nft
    opkg-key add /tmp/nfqws-keenetic.pub
    ```
 
-3. Добавьте репозиторий в файл `/etc/opkg/customfeeds.conf`
+3. Установите opkg-репозиторий в систему
    ```
-   src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt
+   echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
