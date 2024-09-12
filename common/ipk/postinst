@@ -6,8 +6,8 @@ source $(dirname $0)/nfqws-keenetic.common
 # Stop service if exist
 stop_func
 
-# Install wizard
-install_func
+# Install configuration
+fast_install_func
 
 # Starting Services
 start_func

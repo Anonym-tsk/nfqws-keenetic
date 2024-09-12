@@ -2,9 +2,6 @@
 
 CONFDIR="${ROOT_DIR}/etc/nfqws"
 CONFFILE=$CONFDIR/nfqws.conf
-LISTFILE=$CONFDIR/user.list
-LISTAUTOFILE=$CONFDIR/auto.list
-LISTEXCLUDEFILE=$CONFDIR/exclude.list
 LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
 INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
 INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
@@ -26,52 +23,17 @@ start_func() {
   fi
 }
 
-show_interfaces_func() {
-  echo -e "\n----------------------"
-  ip addr show | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $(NF), $2}'
+isp_interface_func() {
+  route | grep '^default' | grep -o '[^ ]*$'
 }
 
-config_interface_func() {
-  DEF_IFACE=$(route | grep '^default' | grep -o '[^ ]*$')
-  if [ -z "$DEF_IFACE" ]; then
-    DEF_IFACE="eth3"
-  fi
-  if [ -z "$BIND_IFACE" ]; then
-    echo -e "\nEnter the provider interface name from the list above, e.g. $DEF_IFACE (default) or ppp0"
-    echo "You can specify multiple interfaces separated by space, e.g. eth3 ppp0"
-    read BIND_IFACE
-  fi
-  if [ -z "$BIND_IFACE" ]; then
-    BIND_IFACE="$DEF_IFACE"
-  fi
-  echo "Selected interface: $BIND_IFACE"
-
-  sed -i -E "s#ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$BIND_IFACE\"#" $CONFFILE
+ipv6_enabled_func() {
+  # $1 - interface, e.g. eth3
+  enabled=$(ip -f inet6 addr show dev "$1" 2>/dev/null | grep "scope global")
+  return $([ -z "$enabled" ])
 }
 
-config_select_mode_func() {
-  if [ -z "$MODE" ]; then
-    echo -e "\nSelect working mode: auto (default), list, all"
-    echo "  auto - automatically detects blocked resources and adds them to the list"
-    echo "  list - applies rules only to domains in the list $LISTFILE"
-    echo "  all  - applies rules to all traffic except domains from list $LISTEXCLUDEFILE"
-    read MODE
-  fi
-
-  if [ "$MODE" == "list" ]; then
-    EXTRA_ARGS="--hostlist=$LISTFILE"
-  elif [ "$MODE" == "all" ]; then
-    EXTRA_ARGS="--hostlist-exclude=$LISTEXCLUDEFILE"
-  else
-    MODE="auto"
-    EXTRA_ARGS="--hostlist=$LISTFILE --hostlist-auto=$LISTAUTOFILE --hostlist-auto-debug=$LISTLOG --hostlist-exclude=$LISTEXCLUDEFILE"
-  fi
-  echo "Selected mode: $MODE"
-
-  sed -i -E "s#NFQWS_EXTRA_ARGS=\".*\"#NFQWS_EXTRA_ARGS=\"$EXTRA_ARGS\"#" $CONFFILE
-}
-
-install_func() {
+fast_install_func() {
   NFQWS_INSTALL_TYPE="install"
   if [ -f "${ROOT_DIR}/tmp/nfqws_install_type" ]; then
     # Set in preinst script
@@ -81,12 +43,18 @@ install_func() {
 
   case "$NFQWS_INSTALL_TYPE" in
     install)
-      # Setup ISP interface
-      show_interfaces_func
-      config_interface_func
+      # Interface
+      DEF_IFACE=$(isp_interface_func)
+      sed -i -E "s#ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
 
-      # Setup working mode
-      config_select_mode_func
+      # IPv6
+      IPV6=$(ipv6_enabled_func "$DEF_IFACE" && echo 1 || echo 0)
+      sed -i -E "s#IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
+
+      # Config paths
+      if [ -f "$INIT_SCRIPT_OWRT" ]; then
+        sed -i -E "s#/opt/#/#g" $CONFFILE
+      fi
 
       echo "Installation successful"
       ;;

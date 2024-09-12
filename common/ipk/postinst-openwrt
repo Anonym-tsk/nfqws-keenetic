@@ -7,8 +7,8 @@ source $(dirname $0)/nfqws-keenetic.common
 # Install binary
 install_binary_func
 
-# Install wizard
-install_func
+# Install configuration
+fast_install_func
 
 # Default postinst
 [ -f ${IPKG_INSTROOT}/lib/functions.sh ] || exit 0
