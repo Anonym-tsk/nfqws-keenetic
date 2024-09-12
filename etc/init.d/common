@@ -1,12 +1,3 @@
-#!/bin/sh
-
-# Entware startup script
-
-ROOT_DIR=$(readlink -f $(dirname $0)/../../)
-NFQWS_BIN="$ROOT_DIR/usr/bin/nfqws"
-PIDFILE="$ROOT_DIR/var/run/nfqws.pid"
-CONFFILE="$ROOT_DIR/etc/nfqws/nfqws.conf"
-
 source "$CONFFILE"
 
 is_running() {
@@ -34,41 +25,15 @@ is_running() {
   return 0
 }
 
-start() {
+status_service() {
   if is_running; then
-    echo 'Service NFQWS is already running' >&2
-    return 1
+    echo 'Service NFQWS is running'
+  else
+    echo 'Service NFQWS is stopped'
   fi
-
-  kernel_modules_load
-
-  LOGGING=""
-  if [ "$LOG_LEVEL" -eq "1" ]; then
-    LOGGING="--debug=syslog"
-  fi
-  $NFQWS_BIN --daemon $LOGGING --user=nobody --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
-
-  firewall_start_v4
-  firewall_start_v6
-  system_config
-
-  echo 'Started NFQWS service'
 }
 
-stop() {
-  firewall_stop_v4
-  firewall_stop_v6
-
-  if ! is_running; then
-    echo 'Service NFQWS is not running' >&2
-    return 1
-  fi
-
-  echo 'Stopping NFQWS service...'
-  kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
-}
-
-reload() {
+reload_service() {
   if ! is_running; then
     echo 'Service NFQWS is not running' >&2
     return 1
@@ -76,6 +41,25 @@ reload() {
 
   echo 'Reloading NFQWS service...'
   kill -1 $(cat "$PIDFILE")
+}
+
+kernel_modules() {
+  KERNEL=$(uname -r)
+
+  if [ -z "$(lsmod 2>/dev/null | grep "xt_multiport ")" ]; then
+    insmod /lib/modules/$KERNEL/xt_multiport.ko &> /dev/null
+    echo "xt_multiport.ko loaded"
+  fi
+
+  if [ -z "$(lsmod 2>/dev/null | grep "xt_connbytes ")" ]; then
+    insmod /lib/modules/$KERNEL/xt_connbytes.ko &> /dev/null
+    echo "xt_connbytes.ko loaded"
+  fi
+
+  if [ -z "$(lsmod 2>/dev/null | grep "xt_NFQUEUE ")" ]; then
+    insmod /lib/modules/$KERNEL/xt_NFQUEUE.ko &> /dev/null
+    echo "xt_NFQUEUE.ko loaded"
+  fi
 }
 
 firewall_start_v4() {
@@ -154,68 +138,20 @@ firewall_stop_v6() {
   fi
 }
 
-kernel_modules_load() {
-  KERNEL=$(uname -r)
+firewall_iptables() {
+  firewall_start_v4
+}
 
-  if [ -z "$(lsmod 2>/dev/null | grep "xt_multiport ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_multiport.ko &> /dev/null
-    echo "xt_multiport.ko loaded"
-  fi
+firewall_ip6tables() {
+  firewall_start_v6
+}
 
-  if [ -z "$(lsmod 2>/dev/null | grep "xt_connbytes ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_connbytes.ko &> /dev/null
-    echo "xt_connbytes.ko loaded"
-  fi
-
-  if [ -z "$(lsmod 2>/dev/null | grep "xt_NFQUEUE ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_NFQUEUE.ko &> /dev/null
-    echo "xt_NFQUEUE.ko loaded"
-  fi
+firewall_stop() {
+  firewall_stop_v4
+  firewall_stop_v6
 }
 
 system_config() {
   sysctl -w net.netfilter.nf_conntrack_checksum=0 &> /dev/null
   sysctl -w net.netfilter.nf_conntrack_tcp_be_liberal=1 &> /dev/null
 }
-
-status() {
-  if is_running; then
-    echo 'Service NFQWS is running'
-  else
-    echo 'Service NFQWS is stopped'
-  fi
-}
-
-case "$1" in
-  start)
-    start
-    ;;
-  stop)
-    stop
-    ;;
-  status)
-    status
-    ;;
-  restart)
-    stop
-    start
-    ;;
-  reload)
-    reload
-    ;;
-  firewall_iptables)
-    firewall_start_v4
-    ;;
-  firewall_ip6tables)
-    firewall_start_v6
-    ;;
-  firewall_stop)
-    firewall_stop_v4
-    firewall_stop_v6
-    ;;
-  kernel_modules)
-    kernel_modules_load
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart|reload|status}"
-esac

@@ -76,6 +76,15 @@ _binary-multi:
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
 
+_startup:
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+  		cat etc/init.d/openwrt-start etc/init.d/common etc/init.d/openwrt-end > out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
+  		chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
+	else \
+	  	cat etc/init.d/entware-start etc/init.d/common etc/init.d/entware-end > out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
+	  	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
+	fi
+
 _ipk:
 	make _clean
 
@@ -92,11 +101,8 @@ _ipk:
 
 
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		cp etc/init.d/openwrt out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
-	else \
-	  	cp etc/init.d/entware out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/S51nfqws; \
-	fi
+	make _startup
+
 	@if [[ "$(BUILD_DIR)" != "openwrt" ]]; then \
 		cp -r etc/ndm out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/ndm; \
 	fi

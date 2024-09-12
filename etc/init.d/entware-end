@@ -1,0 +1,66 @@
+start() {
+  if is_running; then
+    echo 'Service NFQWS is already running' >&2
+    return 1
+  fi
+
+  kernel_modules
+
+  LOGGING=""
+  if [ "$LOG_LEVEL" -eq "1" ]; then
+    LOGGING="--debug=syslog"
+  fi
+  $NFQWS_BIN --daemon $LOGGING --user=nobody --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
+
+  firewall_start_v4
+  firewall_start_v6
+  system_config
+
+  echo 'Started NFQWS service'
+}
+
+stop() {
+  firewall_stop_v4
+  firewall_stop_v6
+
+  if ! is_running; then
+    echo 'Service NFQWS is not running' >&2
+    return 1
+  fi
+
+  echo 'Stopping NFQWS service...'
+  kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status_service
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  reload)
+    reload_service
+    ;;
+  firewall_iptables)
+    firewall_iptables
+    ;;
+  firewall_ip6tables)
+    firewall_ip6tables
+    ;;
+  firewall_stop)
+    firewall_stop
+    ;;
+  kernel_modules)
+    kernel_modules
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|reload|status}"
+esac
