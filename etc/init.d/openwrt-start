@@ -7,5 +7,6 @@ START=51
 STOP=19
 
 NFQWS_BIN="/usr/bin/nfqws"
-PIDFILE="/var/run/nfqws.pid"
 CONFFILE="/etc/nfqws/nfqws.conf"
+PIDFILE="/var/run/nfqws.pid"
+PIDFILE_QIUC="/var/run/nfqws.quic.pid"

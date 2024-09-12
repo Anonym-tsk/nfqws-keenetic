@@ -2,5 +2,6 @@
 # Entware startup script
 
 NFQWS_BIN=/opt/usr/bin/nfqws
-PIDFILE=/opt/var/run/nfqws.pid
 CONFFILE=/opt/etc/nfqws/nfqws.conf
+PIDFILE=/opt/var/run/nfqws.pid
+PIDFILE_QIUC=/opt/var/run/nfqws.quic.pid
