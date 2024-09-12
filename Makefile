@@ -34,7 +34,7 @@ _control:
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "Architecture: $(ARCH)" >> out/$(BUILD_DIR)/control/control
-	echo "Description: NFQWS service" >> out/$(BUILD_DIR)/control/control
+	echo "Description:  NFQWS service" >> out/$(BUILD_DIR)/control/control
 
 _scripts:
 	cp common/ipk/common out/$(BUILD_DIR)/control/common
@@ -187,7 +187,7 @@ _repository:
 	echo "Filename: $(FILENAME)" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Size: $(shell wc -c out/$(FILENAME) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "SHA256sum: $(shell sha256sum out/$(FILENAME) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages
-	echo "Description: NFQWS service" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Description:  NFQWS service" >> out/_pages/$(BUILD_DIR)/Packages
 
 	gzip -k out/_pages/$(BUILD_DIR)/Packages
 
