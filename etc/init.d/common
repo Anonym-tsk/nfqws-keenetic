@@ -16,8 +16,8 @@ is_running() {
     return 1
   fi
 
-  PID_SAVED=$(cat "$PIDFILE")
-  PID_SAVED_QUIC=$(cat "$PIDFILE_QUIC")
+  PID_SAVED=$(cat "$PIDFILE" 2>/dev/null)
+  PID_SAVED_QUIC=$(cat "$PIDFILE_QUIC" 2>/dev/null)
 
   if [ "$PID_RUNNING" -ne "$PID_SAVED" ] && [ "$PID_RUNNING" -ne "$PID_SAVED_QUIC" ]; then
     return 1
@@ -47,7 +47,9 @@ reload_service() {
 
   echo 'Reloading NFQWS service...'
   kill -1 $(cat "$PIDFILE")
-  kill -1 $(cat "$PIDFILE_QUIC")
+  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
+    kill -1 $(cat "$PIDFILE_QUIC")
+  fi
 }
 
 kernel_modules() {
