@@ -125,52 +125,6 @@ opkg remove nfqws-keenetic
 opkg info nfqws-keenetic
 ```
 
----
-
-### Установка на OpenWRT
-
-Пакет работает только с `iptables`.
-Если в вашей системе используется `nftables`, придется удалить `nftables` и `firewall4`, и установить `firewall3` и `iptables`.
-
-Проверить, что ваша система использует `nftables`:
-```
-ls -la /sbin/fw4
-which nft
-```
-
-1. Установите необходимые зависимости
-   ```
-   opkg update
-   opkg install ca-certificates wget-ssl
-   opkg remove wget-nossl
-   ```
-
-2. Установите публичный ключ репозитория
-   ```
-   wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
-   opkg-key add /tmp/nfqws-keenetic.pub
-   ```
-
-3. Установите opkg-репозиторий в систему
-   ```
-   echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
-   ```
-   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`.
-   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
-
-4. Установите пакет
-   ```
-   opkg update
-   opkg install nfqws-keenetic
-   ```
-
-> NB: Все пути файлов, описанные в этой инструкции, начинающиеся с `/opt`, на OpenWRT будут начинаться с корня `/`.
-> Например конфиг расположен в `/etc/nfqws/nfqws.conf`
-> 
-> Для запуска/остановки используйте команду `service nfqws-keenetic {start|stop|restart|reload|status}`
-
----
-
 ### Полезное
 
 1. Конфиг-файл `/opt/etc/nfqws/nfqws.conf`
@@ -232,5 +186,3 @@ which nft
    вторым можно указать параметр `--full` для полного перебора стратегий, если быстрый перебор ничего не нашел.
 
 3. Найденную стратегию вписать в конфиге `/opt/etc/nfqws/nfqws.conf` в параметр `NFQWS_ARGS`
-
----
