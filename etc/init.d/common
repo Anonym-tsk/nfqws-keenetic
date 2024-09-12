@@ -17,8 +17,9 @@ is_running() {
   fi
 
   PID_SAVED=$(cat "$PIDFILE")
+  PID_SAVED_QUIC=$(cat "$PIDFILE_QUIC")
 
-  if [ "$PID_RUNNING" -ne "$PID_SAVED" ]; then
+  if [ "$PID_RUNNING" -ne "$PID_SAVED" ] && [ "$PID_RUNNING" -ne "$PID_SAVED_QUIC" ]; then
     return 1
   fi
 
