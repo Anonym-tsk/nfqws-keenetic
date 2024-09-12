@@ -46,7 +46,7 @@ config_interface_func() {
   fi
   echo "Selected interface: $BIND_IFACE"
 
-  sed -i "s#INPUT_ISP_INTERFACE#$BIND_IFACE#" $CONFFILE
+  sed -i -E "s#ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$BIND_IFACE\"#" $CONFFILE
 }
 
 config_select_mode_func() {
@@ -68,17 +68,7 @@ config_select_mode_func() {
   fi
   echo "Selected mode: $MODE"
 
-  sed -i "s#INPUT_EXTRA_ARGS#$EXTRA_ARGS#" $CONFFILE
-}
-
-config_ipv6_func() {
-  echo -e "\nDisable IPv6 support (enabled by default)? y/N"
-  read yn
-  case $yn in
-    [Yy]* )
-      sed -i "s#IPV6_ENABLED=1#IPV6_ENABLED=0#" $CONFFILE
-      ;;
-  esac
+  sed -i -E "s#NFQWS_EXTRA_ARGS=\".*\"#NFQWS_EXTRA_ARGS=\"$EXTRA_ARGS\"#" $CONFFILE
 }
 
 install_func() {
@@ -97,9 +87,6 @@ install_func() {
 
       # Setup working mode
       config_select_mode_func
-
-      # Setup IPv6 support
-      config_ipv6_func
 
       echo "Installation successful"
       ;;
