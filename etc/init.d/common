@@ -52,17 +52,20 @@ kernel_modules() {
   KERNEL=$(uname -r)
 
   if [ -z "$(lsmod 2>/dev/null | grep "xt_multiport ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_multiport.ko &> /dev/null
+    multiport_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_multiport.ko*")
+    insmod "$multiport_mod_path" &> /dev/null
     echo "xt_multiport.ko loaded"
   fi
 
   if [ -z "$(lsmod 2>/dev/null | grep "xt_connbytes ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_connbytes.ko &> /dev/null
+    connbytes_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_connbytes.ko*")
+    insmod "$connbytes_mod_path" &> /dev/null
     echo "xt_connbytes.ko loaded"
   fi
 
   if [ -z "$(lsmod 2>/dev/null | grep "xt_NFQUEUE ")" ]; then
-    insmod /lib/modules/$KERNEL/xt_NFQUEUE.ko &> /dev/null
+    nfqueue_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_NFQUEUE.ko*")
+    insmod "$nfqueue_mod_path" &> /dev/null
     echo "xt_NFQUEUE.ko loaded"
   fi
 }
