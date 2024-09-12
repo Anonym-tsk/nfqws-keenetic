@@ -4,11 +4,6 @@ extra_command "firewall_stop" "Unload firewall rules"
 extra_command "kernel_modules" "Load kernel modules"
 
 start_service() {
-  if is_running; then
-    echo 'Service NFQWS is already running' >&2
-    return 1
-  fi
-
   kernel_modules
 
   procd_open_instance
@@ -29,13 +24,7 @@ start_service() {
 }
 
 stop_service() {
+  echo 'Stopping NFQWS service...'
   firewall_stop_v4
   firewall_stop_v6
-
-  if ! is_running; then
-    echo 'Service NFQWS is not running' >&2
-    return 1
-  fi
-
-  echo 'Stopping NFQWS service...'
 }
