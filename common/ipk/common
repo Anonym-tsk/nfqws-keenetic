@@ -58,6 +58,9 @@ fast_install_func() {
         sed -i -E "s#/opt/#/#g" $CONFFILE
       fi
 
+      echo "Current working mode: auto"
+      echo "You can change settings in the configuration file: $CONFFILE"
+
       echo "Installation successful"
       ;;
     *)
