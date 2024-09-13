@@ -179,6 +179,14 @@ _repo-html:
 	echo '<h1>Index of /$(BUILD_DIR)/</h1><hr>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<pre>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<a href="../">../</a>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<a href="Packages">Packages</a>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<a href="Packages.gz">Packages.gz</a>' >> out/_pages/$(BUILD_DIR)/index.html
+
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+  		echo '<a href="Packages.sig">Packages.sig</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+  		echo '<a href="nfqws-keenetic.pub">nfqws-keenetic.pub</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+  	fi
+
 	echo '<a href="$(FILENAME)">$(FILENAME)</a>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '</pre>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<hr></body></html>' >> out/_pages/$(BUILD_DIR)/index.html
