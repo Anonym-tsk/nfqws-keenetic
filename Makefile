@@ -174,6 +174,28 @@ _repo-clean:
 	rm -rf out/_pages/$(BUILD_DIR)
 	mkdir -p out/_pages/$(BUILD_DIR)
 
+_repo-html:
+	echo '<html><head><title>nfqws-keenetic opkg repository</title></head><body>' > out/_pages/$(BUILD_DIR)/index.html
+	echo '<h1>Index of /$(BUILD_DIR)/</h1><hr>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<pre>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<a href="../">../</a>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<a href="$(FILENAME)">$(FILENAME)</a>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '</pre>' >> out/_pages/$(BUILD_DIR)/index.html
+	echo '<hr></body></html>' >> out/_pages/$(BUILD_DIR)/index.html
+
+_repo-index:
+	echo '<html><head><title>nfqws-keenetic opkg repository</title></head><body>' > out/_pages/index.html
+	echo '<h1>Index of /</h1><hr>' >> out/_pages/index.html
+	echo '<pre>' >> out/_pages/index.html
+	echo '<a href="all/">all/</a>' >> out/_pages/index.html
+	echo '<a href="aarch64/">aarch64/</a>' >> out/_pages/index.html
+	echo '<a href="armv7/">armv7/</a>' >> out/_pages/index.html
+	echo '<a href="entware/">entware/</a>' >> out/_pages/index.html
+	echo '<a href="mips/">mips/</a>' >> out/_pages/index.html
+	echo '<a href="mipsel/">mipsel/</a>' >> out/_pages/index.html
+	echo '</pre>' >> out/_pages/index.html
+	echo '<hr></body></html>' >> out/_pages/index.html
+
 _repository:
 	make _repo-clean
 
@@ -196,6 +218,8 @@ _repository:
 	echo "Description:  NFQWS service" >> out/_pages/$(BUILD_DIR)/Packages
 
 	gzip -k out/_pages/$(BUILD_DIR)/Packages
+
+	@make _repo-html
 
 repo-mipsel:
 	@make \
@@ -239,7 +263,7 @@ repo-openwrt:
 		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
 		_repository
 
-repository: repo-mipsel repo-mips repo-aarch64 repo-armv7 repo-multi repo-openwrt
+repository: repo-mipsel repo-mips repo-aarch64 repo-armv7 repo-multi repo-openwrt _repo-index
 
 clean:
 	rm -rf out/mipsel
