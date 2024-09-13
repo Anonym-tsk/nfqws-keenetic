@@ -23,7 +23,7 @@ is_running() {
     return 1
   fi
 
-  if ! kill -0 $(cat "$PIDFILE"); then
+  if ! kill -0 $PID_SAVED; then
     return 1
   fi
 
