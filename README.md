@@ -99,20 +99,6 @@
    opkg install nfqws-keenetic
    ```
 
-4. Во время установки следуйте инструкции установщика
-   - Введите сетевой интерфейс провайдера, обычно это `eth3`. Если ваш провайдер использует PPPoE, ваш интерфейс, скорее всего, `ppp0`.
-     > Можно указать несколько интерфейсов через пробел (`eth3 nwg1`), например, если вы подключены к нескольким провайдерам
-
-   - Выберите режим работы `auto`, `list` или `all`
-     > В режиме `list` будут обрабатываться только домены из файла `/opt/etc/nfqws/user.list` (один домен на строку)
-     >
-     > В режиме `auto` кроме этого будут автоматически определяться недоступные домены и добавляться в список, по которому `nfqws` обрабатывает трафик. Домен будет добавлен, если за 60 секунд будет 3 раза определено, что ресурс недоступен
-     >
-     > В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `/opt/etc/nfqws/exclude.list`
-
-   - Укажите, нужна ли поддержка IPv6
-     > Если не уверены, лучше не отключайте и оставьте как есть
-
 ##### Обновление
 
 ```
@@ -175,6 +161,40 @@ which nft
 > Например конфиг расположен в `/etc/nfqws/nfqws.conf`
 > 
 > Для запуска/остановки используйте команду `service nfqws-keenetic {start|stop|restart|reload|status}`
+
+---
+
+### Настройки
+
+Файл настроек расположен по пути `/opt/etc/nfqws/nfqws.conf`. Для редактирования можно воспользоваться встроенным редактором `vi` или установить `nano`.
+
+```
+# Интерфейс провайдера. Обычно `eth3` или `eth2.2` для проводного соединения, и `ppp0` для PPPoE
+# Заполняется автоматически при установке
+# Можно ввести несколько интерфейсов, например ISP_INTERFACE="eth3 nwg1"
+ISP_INTERFACE="eth3"
+
+# Стратегия обработки HTTPS трафика
+NFQWS_ARGS="--dpi-desync=disorder2 --dpi-desync-split-pos=1 --dpi-desync-ttl=6 --dpi-desync-fooling=md5sig,badseq"
+
+# Стратегия обработки QUIC трафика
+NFQWS_ARGS_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum"
+
+# Режим работы (auto, list, all)
+NFQWS_EXTRA_ARGS="--hostlist=/opt/etc/nfqws/user.list --hostlist-auto=/opt/etc/nfqws/auto.list --hostlist-auto-debug=/opt/var/log/nfqws.log --hostlist-exclude=/opt/etc/nfqws/exclude.list"
+
+# Обрабатывать ли IPv6 соединения
+IPV6_ENABLED=1
+
+# Обрабатывать ли HTTP
+HTTP_ENABLED=0
+
+# Обрабатывать ли QUIC
+QUIC_ENABLED=1
+
+# Логирование в Syslog
+LOG_LEVEL=0
+```
 
 ---
 
