@@ -55,17 +55,6 @@ reload_service() {
 kernel_modules() {
   KERNEL=$(uname -r)
 
-  if [ -z "$(lsmod 2>/dev/null | grep "xt_multiport ")" ]; then
-    multiport_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_multiport.ko*")
-
-    if [ -n "$multiport_mod_path" ]; then
-      insmod "$multiport_mod_path" &> /dev/null
-      echo "xt_multiport.ko loaded"
-    else
-      echo "Cannot find xt_multiport.ko module"
-    fi
-  fi
-
   if [ -z "$(lsmod 2>/dev/null | grep "xt_connbytes ")" ]; then
     connbytes_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_connbytes.ko*")
 
