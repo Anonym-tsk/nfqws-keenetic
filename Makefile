@@ -190,9 +190,9 @@ _repo-index:
 	echo '<a href="all/">all/</a>' >> out/_pages/index.html
 	echo '<a href="aarch64/">aarch64/</a>' >> out/_pages/index.html
 	echo '<a href="armv7/">armv7/</a>' >> out/_pages/index.html
-	echo '<a href="entware/">entware/</a>' >> out/_pages/index.html
 	echo '<a href="mips/">mips/</a>' >> out/_pages/index.html
 	echo '<a href="mipsel/">mipsel/</a>' >> out/_pages/index.html
+	echo '<a href="openwrt/">openwrt/</a>' >> out/_pages/index.html
 	echo '</pre>' >> out/_pages/index.html
 	echo '<hr></body></html>' >> out/_pages/index.html
 
