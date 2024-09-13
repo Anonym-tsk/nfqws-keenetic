@@ -2,7 +2,18 @@
 
 source $(dirname $0)/env
 
+CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
+
 # Set `install` or `upgrade` for postinst script
 echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
+
+# Migrations
+if [ $(grep -c "NFQWS_ARGS_QUIC" "$CONFFILE") -eq 0 ]; then
+  # Old config
+  mv "$CONFFILE" "$CONFFILE-old"
+  echo "Old configuration file was moved to $CONFFILE-old"
+  # We need clean install
+  echo "install" > "${ROOT_DIR}/tmp/nfqws_install_type"
+fi
 
 exit 0
