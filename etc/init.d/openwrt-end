@@ -1,3 +1,12 @@
+extra_command() {
+  local cmd="$1"
+  local help="$2"
+
+  local extra="$(printf "%-16s%s" "${cmd}" "${help}")"
+  ALL_HELP="${ALL_HELP}\t${extra}\n"
+  ALL_COMMANDS="${ALL_COMMANDS} ${cmd}"
+}
+
 extra_command "firewall_iptables" "Load IPv4 firewall rules"
 extra_command "firewall_ip6tables" "Load IPv6 firewall rules"
 extra_command "firewall_stop" "Unload firewall rules"
