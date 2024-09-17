@@ -215,7 +215,7 @@ _repository:
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/_pages/$(BUILD_DIR)/Packages; \
 	else \
-		echo "Depends: iptables" >> out/_pages/$(BUILD_DIR)/Packages; \
+		echo "Depends: iptables, busybox" >> out/_pages/$(BUILD_DIR)/Packages; \
 	fi
 
 	echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages
