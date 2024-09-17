@@ -27,7 +27,7 @@ _control:
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
 		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/$(BUILD_DIR)/control/control; \
 	else \
-		echo "Depends: iptables" >> out/$(BUILD_DIR)/control/control; \
+		echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control; \
 	fi
 
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
