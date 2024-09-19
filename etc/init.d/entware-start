@@ -4,4 +4,3 @@
 NFQWS_BIN="/opt/usr/bin/nfqws"
 CONFFILE="/opt/etc/nfqws/nfqws.conf"
 PIDFILE="/opt/var/run/nfqws.pid"
-PIDFILE_QUIC="/opt/var/run/nfqws.quic.pid"

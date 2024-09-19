@@ -3,18 +3,43 @@
 source $(dirname $0)/env
 
 CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
+LISTFILE="${ROOT_DIR}/etc/nfqws/user.list"
 
 # Set `install` or `upgrade` for postinst script
 echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
 
 # Migrations
+NEED_MIGRATION_CONF=0
+NEED_MIGRATION_LIST=0
+
 if [ -f "$CONFFILE" ]; then
   if [ $(grep -c "NFQWS_ARGS_QUIC" "$CONFFILE") -eq 0 ]; then
+    NEED_MIGRATION_CONF=1
+  fi
+
+  if [ $(grep -c "NFQWS_ARGS_FAKE" "$CONFFILE") -eq 0 ]; then
+    NEED_MIGRATION_CONF=1
+    NEED_MIGRATION_LIST=1
+  fi
+fi
+
+if [ $NEED_MIGRATION_CONF -ne 0 ]; then
+  if [ -f "$CONFFILE" ]; then
     # Old config
     mv "$CONFFILE" "$CONFFILE-old"
     echo "Old configuration file was moved to $CONFFILE-old"
-    # We need clean install
-    echo "install" > "${ROOT_DIR}/tmp/nfqws_install_type"
+  fi
+
+  # We need clean install
+  echo "install" > "${ROOT_DIR}/tmp/nfqws_install_type"
+fi
+
+if [ $NEED_MIGRATION_LIST -ne 0 ]; then
+  if [ -f "$LISTFILE" ]; then
+    # Old list
+    mv "$LISTFILE" "$LISTFILE-old"
+    echo "user.list file was moved to $LISTFILE-old"
   fi
 fi
+
 exit 0

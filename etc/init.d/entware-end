@@ -6,14 +6,7 @@ start() {
 
   kernel_modules
 
-  LOGGING=""
-  if [ "$LOG_LEVEL" -eq "1" ]; then
-    LOGGING="--debug=syslog"
-  fi
-  $NFQWS_BIN --daemon $LOGGING --user=nobody --qnum=$NFQUEUE_NUM --pidfile=$PIDFILE $NFQWS_ARGS $NFQWS_EXTRA_ARGS
-  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-    $NFQWS_BIN --daemon $LOGGING --user=nobody --qnum=$NFQUEUE_NUM_QUIC --pidfile=$PIDFILE_QUIC $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS
-  fi
+  $NFQWS_BIN --daemon --pidfile=$PIDFILE $(_startup_args)
 
   firewall_start_v4
   firewall_start_v6
@@ -33,9 +26,6 @@ stop() {
 
   echo 'Stopping NFQWS service...'
   kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
-  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-    kill -15 $(cat "$PIDFILE_QUIC") && rm -f "$PIDFILE_QUIC"
-  fi
 }
 
 case "$1" in

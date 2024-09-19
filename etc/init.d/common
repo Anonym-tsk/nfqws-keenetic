@@ -2,7 +2,7 @@ source "$CONFFILE"
 
 RULE_HTTP="-t mangle -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_HTTPS="-t mangle -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_QUIC="-t mangle -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM_QUIC --queue-bypass"
+RULE_QUIC="-t mangle -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_MASQ="-t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
 
 is_running() {
@@ -17,9 +17,7 @@ is_running() {
   fi
 
   PID_SAVED=$(cat "$PIDFILE" 2>/dev/null)
-  PID_SAVED_QUIC=$(cat "$PIDFILE_QUIC" 2>/dev/null)
-
-  if [ "$PID_RUNNING" -ne "$PID_SAVED" ] && [ "$PID_RUNNING" -ne "$PID_SAVED_QUIC" ]; then
+  if [ "$PID_RUNNING" -ne "$PID_SAVED" ]; then
     return 1
   fi
 
@@ -47,9 +45,6 @@ reload_service() {
 
   echo 'Reloading NFQWS service...'
   kill -1 $(cat "$PIDFILE")
-  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-    kill -1 $(cat "$PIDFILE_QUIC")
-  fi
 }
 
 kernel_modules() {
@@ -76,6 +71,31 @@ kernel_modules() {
       echo "Cannot find xt_NFQUEUE.ko module"
     fi
   fi
+}
+
+_startup_args() {
+  # Fake
+  local args="--filter-tcp=443 $NFQWS_ARGS_FAKE"
+  # QUIC
+  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
+    args="$args --new --filter-udp=443 $NFQWS_ARGS_FAKE_QUIC"
+    args="$args --new --filter-udp=443 $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS"
+  fi
+  # All
+  args="$args --new $NFQWS_ARGS $NFQWS_EXTRA_ARGS"
+
+  # Queue number
+  args="--qnum=$NFQUEUE_NUM $args"
+
+  # User
+  args="--user=$USER $args"
+
+  # Logging
+  if [ "$LOG_LEVEL" -eq "1" ]; then
+    args="--debug=syslog $args"
+  fi
+
+  echo "$args"
 }
 
 _iptables_add_remove() {
