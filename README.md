@@ -178,11 +178,13 @@ which nft
 # Можно ввести несколько интерфейсов, например ISP_INTERFACE="eth3 nwg1"
 ISP_INTERFACE="eth3"
 
-# Стратегия обработки HTTPS трафика
+# Базовые стратегии обработки HTTPS и QUIC трафика
 NFQWS_ARGS="--dpi-desync=disorder2 --dpi-desync-split-pos=1 --dpi-desync-ttl=6 --dpi-desync-fooling=md5sig,badseq"
-
-# Стратегия обработки QUIC трафика
 NFQWS_ARGS_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum"
+
+# Стратегии обработки HTTPS и QUIC трафика для доменов из fake.list 
+NFQWS_ARGS_FAKE="--dpi-desync=fake,split2 --dpi-desync-autottl=2 --dpi-desync-fooling=md5sig --hostlist=/opt/etc/nfqws/fake.list --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
+NFQWS_ARGS_FAKE_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum --hostlist=/opt/etc/nfqws/fake.list --dpi-desync-fake-quic=/opt/etc/nfqws/quic_initial.bin"
 
 # Режим работы (auto, list, all)
 NFQWS_EXTRA_ARGS="--hostlist=/opt/etc/nfqws/user.list --hostlist-auto=/opt/etc/nfqws/auto.list --hostlist-auto-debug=/opt/var/log/nfqws.log --hostlist-exclude=/opt/etc/nfqws/exclude.list"
@@ -200,6 +202,17 @@ QUIC_ENABLED=1
 LOG_LEVEL=0
 ```
 
+В файле `nfqws.conf` есть 4 стратегии работы с разным трафиком.
+
+Базовая стратегия содержится в параметрах `NFQWS_ARGS` и `NFQWS_ARGS_QUIC`. Она применяется ко всем доменам из `user.list` и `auto.list`, за исключением доменов из `exclude.list`.
+В конфиге есть 3 варианта параметра `NFQWS_EXTRA_ARGS` - это режим работы nfqws:
+- В режиме `list` будут обрабатываться только домены из файла `user.list`
+- В режиме `auto` кроме этого будут автоматически определяться недоступные домены и добавляться в список, по которому `nfqws` обрабатывает трафик. Домен будет добавлен, если за 60 секунд будет 3 раза определено, что ресурс недоступен
+- В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `exclude.list`
+
+В параметрах `NFQWS_ARGS_FAKE` и `NFQWS_ARGS_FAKE_QUIC` содержится стратегия обработки трафика к доменам, указанным в `fake.list`.
+Стратегия не учитывает параметр `NFQWS_EXTRA_ARGS` и работает всегда.
+
 ---
 
 ### Полезное
@@ -210,7 +223,8 @@ LOG_LEVEL=0
 4. Автоматически добавленные домены `/opt/etc/nfqws/auto.list`
 5. Лог автоматически добавленных доменов `/opt/var/log/nfqws.log`
 6. Домены-исключения `/opt/etc/nfqws/exclude.list` (один домен на строке, поддомены учитываются автоматически)
-7. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
+7. Домены с альтернативной стратегией `/opt/etc/nfqws/fake.list`
+8. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
 > Вы должны увидеть похожие строки
 > ```
 > -A POSTROUTING -o eth3 -p tcp -m tcp --dport 443 -m connbytes --connbytes 1:6 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
@@ -225,20 +239,20 @@ LOG_LEVEL=0
 3. Возможно, стоит выключить службу классификации трафика IntelliQOS.
 4. Можно попробовать отключить IPv6 на сетевом интерфейсе провайдера через веб-интерфейс маршрутизатора.
 5. Можно попробовать запретить весь UDP трафик на 443 порт для отключения QUIC:
-   ```
-   iptables -I FORWARD -i br0 -p udp --dport 443 -j DROP
-   ```
-6. Попробовать разные варианты аргументов nfqws. Для этого в конфиге `/opt/etc/nfqws/nfqws.conf` есть несколько заготовок `NFQWS_ARGS`.
+   > Межсетевой экран → Домашняя сеть → Добавить правило<br/>
+   > Включить правило: Включено<br/>
+   > Описание: Блокировать QUIC<br/>
+   > Действие: Запретить<br/>
+   > Протокол: UDP<br/>
+   > Номер порта назначения: Равен 443<br/>
+   > Остальные параметры оставляем без изменений
 
 ### Частые проблемы
-1. `iptables: No chain/target/match by that name`
-
+1. `iptables: No chain/target/match by that name`<br/>
    Не установлен пакет "Модули ядра подсистемы Netfilter". На Keenetic он появляется в списке пакетов только после установки "Протокол IPv6"
-2. `can't initialize ip6tables table` и/или `Perhaps ip6tables or your kernel needs to be upgraded`
-
+2. `can't initialize ip6tables table` и/или `Perhaps ip6tables or your kernel needs to be upgraded`<br/>
    Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
-3. Ошибки вида `readlink: not found`, `dirname: not found`
-
+3. Ошибки вида `readlink: not found`, `dirname: not found`<br/>
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
 
 ### Как подобрать рабочую стратегию NFQWS
