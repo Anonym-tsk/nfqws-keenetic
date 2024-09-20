@@ -31,6 +31,7 @@ _control:
 		echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control; \
 	fi
 
+	echo "Conflicts: tpws-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
