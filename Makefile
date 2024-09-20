@@ -220,6 +220,7 @@ _repository:
 		echo "Depends: iptables, busybox" >> out/_pages/$(BUILD_DIR)/Packages; \
 	fi
 
+	echo "Conflicts: tpws-keenetic" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Architecture: $(ARCH)" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Filename: $(FILENAME)" >> out/_pages/$(BUILD_DIR)/Packages
