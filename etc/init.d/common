@@ -6,7 +6,7 @@ RULE_QUIC="-t mangle -p udp --dport 443 -m connbytes --connbytes-dir=original --
 RULE_MASQ="-t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
 
 is_running() {
-  PID_RUNNING=$(pgrep -nx "$NFQWS_BIN" 2>/dev/null)
+  PID_RUNNING=$(pgrep -nf "$NFQWS_BIN" 2>/dev/null)
 
   if [ -z "$PID_RUNNING" ]; then
     return 1
