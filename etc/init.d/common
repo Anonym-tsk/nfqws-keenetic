@@ -50,6 +50,17 @@ reload_service() {
 kernel_modules() {
   KERNEL=$(uname -r)
 
+  if [ -z "$(lsmod 2>/dev/null | grep "nfnetlink_queue ")" ]; then
+    nfnetlink_mod_path=$(find "/lib/modules/$KERNEL" -name "nfnetlink_queue.ko*")
+
+    if [ -n "$nfnetlink_mod_path" ]; then
+      insmod "$nfnetlink_mod_path" &> /dev/null
+      echo "nfnetlink_queue.ko loaded"
+    else
+      echo "Cannot find nfnetlink_queue.ko module"
+    fi
+  fi
+
   if [ -z "$(lsmod 2>/dev/null | grep "xt_connbytes ")" ]; then
     connbytes_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_connbytes.ko*")
 
