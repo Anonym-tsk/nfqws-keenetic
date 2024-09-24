@@ -102,6 +102,8 @@ install_binary_func() {
     if [ "$ARCH" == "mips" ]; then
       if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
         ARCH="mipsel"
+      elif grep -q 'mips32r1' /proc/cpuinfo; then
+        ARCH="mipsel"
       fi
     fi
   fi
