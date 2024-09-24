@@ -9,8 +9,17 @@ LISTFILE="${ROOT_DIR}/etc/nfqws/user.list"
 echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
 
 # Migrations
-NEED_MIGRATION_CONF=1
-NEED_MIGRATION_LIST=1
+NEED_MIGRATION_CONF=0
+NEED_MIGRATION_LIST=0
+
+CURRENT_VERSION=2  # TODO: Set from current config
+INSTALLED_VERSION=$(grep -E '^CONFIG_VERSION=' "$CONFFILE" 2>/dev/null | grep -oE '[0-9]+$')
+
+if [ -z "$INSTALLED_VERSION" ]; then
+  NEED_MIGRATION_CONF=1
+elif [ "$INSTALLED_VERSION" -lt "$CURRENT_VERSION" ]; then
+  NEED_MIGRATION_CONF=1
+fi
 
 if [ $NEED_MIGRATION_CONF -ne 0 ]; then
   if [ -f "$CONFFILE" ]; then
