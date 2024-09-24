@@ -9,19 +9,8 @@ LISTFILE="${ROOT_DIR}/etc/nfqws/user.list"
 echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
 
 # Migrations
-NEED_MIGRATION_CONF=0
-NEED_MIGRATION_LIST=0
-
-if [ -f "$CONFFILE" ]; then
-  if [ $(grep -c "NFQWS_ARGS_QUIC" "$CONFFILE") -eq 0 ]; then
-    NEED_MIGRATION_CONF=1
-  fi
-
-  if [ $(grep -c "NFQWS_ARGS_FAKE" "$CONFFILE") -eq 0 ]; then
-    NEED_MIGRATION_CONF=1
-    NEED_MIGRATION_LIST=1
-  fi
-fi
+NEED_MIGRATION_CONF=1
+NEED_MIGRATION_LIST=1
 
 if [ $NEED_MIGRATION_CONF -ne 0 ]; then
   if [ -f "$CONFFILE" ]; then

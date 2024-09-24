@@ -16,7 +16,6 @@ _clean:
 
 _conffiles:
 	echo "$(ROOT_DIR)/etc/nfqws/nfqws.conf" > out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/fake.list" >> out/$(BUILD_DIR)/control/conffiles
 	echo "$(ROOT_DIR)/etc/nfqws/user.list" >> out/$(BUILD_DIR)/control/conffiles
 	echo "$(ROOT_DIR)/etc/nfqws/auto.list" >> out/$(BUILD_DIR)/control/conffiles
 	echo "$(ROOT_DIR)/etc/nfqws/exclude.list" >> out/$(BUILD_DIR)/control/conffiles

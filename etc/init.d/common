@@ -85,26 +85,20 @@ kernel_modules() {
 }
 
 _startup_args() {
-  # Fake
-  local args="--filter-tcp=443 $NFQWS_ARGS_FAKE"
-  # QUIC
-  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-    args="$args --new --filter-udp=443 $NFQWS_ARGS_FAKE_QUIC"
-    args="$args --new --filter-udp=443 $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS"
-  fi
-  # All
-  args="$args --new $NFQWS_ARGS $NFQWS_EXTRA_ARGS"
-
-  # Queue number
-  args="--qnum=$NFQUEUE_NUM $args"
-
-  # User
-  args="--user=$USER $args"
+  local args="--user=$USER --qnum=$NFQUEUE_NUM"
 
   # Logging
   if [ "$LOG_LEVEL" -eq "1" ]; then
     args="--debug=syslog $args"
   fi
+
+  # QUIC
+  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
+    args="$args --filter-udp=443 $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS --new"
+  fi
+
+  # HTTP(S)
+  args="$args $NFQWS_ARGS $NFQWS_EXTRA_ARGS"
 
   echo "$args"
 }
