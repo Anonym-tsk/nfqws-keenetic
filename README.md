@@ -245,6 +245,16 @@ LOG_LEVEL=0
 3. Ошибки вида `readlink: not found`, `dirname: not found`<br/>
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
 
+### Как использовать несколько стратегий
+
+По-умолчанию, параметры для запуска `nfqws` формируются из двух переменных – `$NFQWS_ARGS $NFQWS_EXTRA_ARGS`.<br/>
+Если вы хотите использовать несколько стратегий, можно разделять их параметром `--new`.
+Например, стратегия ниже применит опцию `--dpi-desync=fake,split2` для HTTPS запросов к доменам из `custom.list`,
+а для всех остальных, соответствующих настройке `NFQWS_EXTRA_ARGS`, будет использовать `--dpi-desync=disorder2 --dpi-desync-fooling=md5sig,badseq`:
+```
+NFQWS_ARGS="--filter-tcp=443 --dpi-desync=fake,split2 --hostlist=custom.list --new --dpi-desync=disorder2 --dpi-desync-fooling=md5sig,badseq"
+```
+
 ### Как подобрать рабочую стратегию NFQWS
 
 1. Скачать скрипт
