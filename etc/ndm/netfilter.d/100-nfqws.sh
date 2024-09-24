@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PIDFILE="/opt/var/run/nfqws.pid"
-if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE") 2>/dev/null; then
   exit
 fi
 [ "$table" != "mangle" ] && exit
