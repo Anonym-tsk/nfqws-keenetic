@@ -178,13 +178,9 @@ which nft
 # Можно ввести несколько интерфейсов, например ISP_INTERFACE="eth3 nwg1"
 ISP_INTERFACE="eth3"
 
-# Базовые стратегии обработки HTTPS и QUIC трафика
-NFQWS_ARGS="--dpi-desync=disorder2 --dpi-desync-split-pos=1 --dpi-desync-ttl=6 --dpi-desync-fooling=md5sig,badseq"
-NFQWS_ARGS_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum"
-
-# Стратегии обработки HTTPS и QUIC трафика для доменов из fake.list 
-NFQWS_ARGS_FAKE="--dpi-desync=fake,split2 --dpi-desync-autottl=2 --dpi-desync-fooling=md5sig --hostlist=/opt/etc/nfqws/fake.list --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
-NFQWS_ARGS_FAKE_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum --hostlist=/opt/etc/nfqws/fake.list --dpi-desync-fake-quic=/opt/etc/nfqws/quic_initial.bin"
+# Стратегии обработки HTTPS и QUIC трафика
+NFQWS_ARGS="--dpi-desync=fake,split2 --dpi-desync-autottl=2 --dpi-desync-split-pos=1 --dpi-desync-fooling=md5sig,badsum --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
+NFQWS_ARGS_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum --dpi-desync-fake-quic=/opt/etc/nfqws/quic_initial.bin"
 
 # Режим работы (auto, list, all)
 NFQWS_EXTRA_ARGS="--hostlist=/opt/etc/nfqws/user.list --hostlist-auto=/opt/etc/nfqws/auto.list --hostlist-auto-debug=/opt/var/log/nfqws.log --hostlist-exclude=/opt/etc/nfqws/exclude.list"
@@ -202,16 +198,11 @@ QUIC_ENABLED=1
 LOG_LEVEL=0
 ```
 
-В файле `nfqws.conf` есть 4 стратегии работы с разным трафиком.
-
-Базовая стратегия содержится в параметрах `NFQWS_ARGS` и `NFQWS_ARGS_QUIC`. Она применяется ко всем доменам из `user.list` и `auto.list`, за исключением доменов из `exclude.list`.
+Стратегии применяются ко всем доменам из `user.list` и `auto.list`, за исключением доменов из `exclude.list`.
 В конфиге есть 3 варианта параметра `NFQWS_EXTRA_ARGS` - это режим работы nfqws:
 - В режиме `list` будут обрабатываться только домены из файла `user.list`
 - В режиме `auto` кроме этого будут автоматически определяться недоступные домены и добавляться в список, по которому `nfqws` обрабатывает трафик. Домен будет добавлен, если за 60 секунд будет 3 раза определено, что ресурс недоступен
 - В режиме `all` будет обрабатываться весь трафик кроме доменов из списка `exclude.list`
-
-В параметрах `NFQWS_ARGS_FAKE` и `NFQWS_ARGS_FAKE_QUIC` содержится стратегия обработки трафика к доменам, указанным в `fake.list`.
-Стратегия не учитывает параметр `NFQWS_EXTRA_ARGS` и работает всегда.
 
 ---
 
@@ -223,12 +214,11 @@ LOG_LEVEL=0
 4. Автоматически добавленные домены `/opt/etc/nfqws/auto.list`
 5. Лог автоматически добавленных доменов `/opt/var/log/nfqws.log`
 6. Домены-исключения `/opt/etc/nfqws/exclude.list` (один домен на строке, поддомены учитываются автоматически)
-7. Домены с альтернативной стратегией `/opt/etc/nfqws/fake.list`
-8. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
-> Вы должны увидеть похожие строки
-> ```
-> -A POSTROUTING -o eth3 -p tcp -m tcp --dport 443 -m connbytes --connbytes 1:6 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
-> ```
+7. Проверить, что нужные правила добавлены в таблицу маршрутизации `iptables-save | grep "queue-num 200"`
+   > Вы должны увидеть похожие строки
+   > ```
+   > -A POSTROUTING -o eth3 -p tcp -m tcp --dport 443 -m connbytes --connbytes 1:6 --connbytes-mode packets --connbytes-dir original -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num 200 --queue-bypass
+   > ```
 
 ### Если ничего не работает...
 
