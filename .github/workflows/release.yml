@@ -94,16 +94,6 @@ jobs:
         asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_aarch64-3.10.ipk
         asset_content_type: application/octet-stream
 
-    - name: Upload Release armv7
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
-        asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_armv7-3.2.ipk
-        asset_content_type: application/octet-stream
-
     - name: Upload Release multiarch
       uses: actions/upload-release-asset@v1
       env:

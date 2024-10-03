@@ -6,6 +6,8 @@ URL_MIPSEL := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/m
 URL_MIPS := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-msb/nfqws
 URL_AARCH64 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/aarch64/nfqws
 URL_ARMV7 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/arm/nfqws
+URL_X86 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/x86/nfqws
+URL_X86_64 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/x86_64/nfqws
 
 .DEFAULT_GOAL := packages
 
@@ -72,11 +74,15 @@ _binary-multi:
 	curl -sSL $(URL_MIPS) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
 	curl -sSL $(URL_AARCH64) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
 	curl -sSL $(URL_ARMV7) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
+	curl -sSL $(URL_X86) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
+	curl -sSL $(URL_X86_64) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
+	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
+	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 _startup:
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
@@ -147,14 +153,6 @@ aarch64:
 		URL="$(URL_AARCH64)" \
 		_ipk
 
-armv7:
-	@make \
-		BUILD_DIR=armv7 \
-		ARCH=armv7-3.2 \
-		FILENAME=nfqws-keenetic_$(VERSION)_armv7-3.2.ipk \
-		URL="$(URL_ARMV7)" \
-		_ipk
-
 multi:
 	@make \
 		BUILD_DIR=all \
@@ -170,7 +168,7 @@ openwrt:
 		ROOT_DIR= \
 		_ipk
 
-packages: mipsel mips aarch64 armv7 multi openwrt
+packages: mipsel mips aarch64 multi openwrt
 
 _repo-clean:
 	rm -rf out/_pages/$(BUILD_DIR)
@@ -199,7 +197,6 @@ _repo-index:
 	echo '<pre>' >> out/_pages/index.html
 	echo '<a href="all/">all/</a>' >> out/_pages/index.html
 	echo '<a href="aarch64/">aarch64/</a>' >> out/_pages/index.html
-	echo '<a href="armv7/">armv7/</a>' >> out/_pages/index.html
 	echo '<a href="mips/">mips/</a>' >> out/_pages/index.html
 	echo '<a href="mipsel/">mipsel/</a>' >> out/_pages/index.html
 	echo '<a href="openwrt/">openwrt/</a>' >> out/_pages/index.html
@@ -254,13 +251,6 @@ repo-aarch64:
 		FILENAME=nfqws-keenetic_$(VERSION)_aarch64-3.10.ipk \
 		_repository
 
-repo-armv7:
-	@make \
-		BUILD_DIR=armv7 \
-		ARCH=armv7-3.2 \
-		FILENAME=nfqws-keenetic_$(VERSION)_armv7-3.2.ipk \
-		_repository
-
 repo-multi:
 	@make \
 		BUILD_DIR=all \
@@ -275,12 +265,11 @@ repo-openwrt:
 		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
 		_repository
 
-repository: repo-mipsel repo-mips repo-aarch64 repo-armv7 repo-multi repo-openwrt _repo-index
+repository: repo-mipsel repo-mips repo-aarch64 repo-multi repo-openwrt _repo-index
 
 clean:
 	rm -rf out/mipsel
 	rm -rf out/mips
 	rm -rf out/aarch64
-	rm -rf out/armv7
 	rm -rf out/all
 	rm -rf out/openwrt
