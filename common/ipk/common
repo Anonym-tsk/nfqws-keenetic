@@ -86,15 +86,22 @@ remove_all_files_func() {
 
 install_binary_func() {
   OPKG_CONF="${ROOT_DIR}/etc/opkg.conf"
+  OWRT_FEEDS="${ROOT_DIR}/etc/opkg/distfeeds.conf"
 
   if [ -f "$OPKG_CONF" ]; then
-    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7|i386|i686|x86_64' | head -n 1)
+    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7|arm_|i386|i686|x86_64' | head -n 1)
+  fi
+  if [ -z "$ARCH" ] && [ -f "$OWRT_FEEDS" ]; then
+    ARCH=$(cat "$OWRT_FEEDS" | grep -oE 'mips_|mipsel_|aarch64_|arm_|i386|x86_64' | head -n 1)
+  fi
+  if [ -n "$ARCH" ]; then
     case "$ARCH" in
       "mips-3"|"mips_") ARCH="mips" ;;
       "mipsel-3"|"mipsel_") ARCH="mipsel" ;;
       "aarch64-3"|"aarch64_") ARCH="aarch64" ;;
-      "armv7") ARCH="armv7" ;;
+      "armv7"|"arm_") ARCH="armv7" ;;
       "i386"|"i686") ARCH="x86" ;;
+      "x86_64") ARCH="x86_64" ;;
     esac
   fi
 
@@ -102,8 +109,6 @@ install_binary_func() {
     ARCH=$(uname -m | grep -oE 'mips|mipsel|aarch64|armv7|i386|i686|x86_64')
     if [ "$ARCH" == "mips" ]; then
       if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
-        ARCH="mipsel"
-      elif grep -q 'mips32r1' /proc/cpuinfo; then
         ARCH="mipsel"
       fi
     elif [ "$ARCH" == "i386" ] || [ "$ARCH" == "i686" ]; then
