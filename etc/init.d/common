@@ -2,7 +2,7 @@ source "$CONFFILE"
 
 RULE_HTTP="-t mangle -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_HTTPS="-t mangle -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_QUIC="-t mangle -p udp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+RULE_QUIC="-t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_MASQ="-t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
 
 is_running() {
@@ -58,6 +58,17 @@ kernel_modules() {
       echo "nfnetlink_queue.ko loaded"
     else
       echo "Cannot find nfnetlink_queue.ko module"
+    fi
+  fi
+
+  if [ -z "$(lsmod 2>/dev/null | grep "xt_multiport ")" ]; then
+    multiport_mod_path=$(find "/lib/modules/$KERNEL" -name "xt_multiport.ko*")
+
+    if [ -n "$multiport_mod_path" ]; then
+      insmod "$multiport_mod_path" &> /dev/null
+      echo "xt_multiport.ko loaded"
+    else
+      echo "Cannot find xt_multiport.ko module"
     fi
   fi
 

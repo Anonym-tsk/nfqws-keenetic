@@ -12,7 +12,7 @@ echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
 NEED_MIGRATION_CONF=0
 NEED_MIGRATION_LIST=0
 
-CURRENT_VERSION=2  # TODO: Set from current config
+CURRENT_VERSION=3  # TODO: Set from current config
 INSTALLED_VERSION=$(grep -E '^CONFIG_VERSION=' "$CONFFILE" 2>/dev/null | grep -oE '[0-9]+$')
 
 if [ -z "$INSTALLED_VERSION" ]; then
