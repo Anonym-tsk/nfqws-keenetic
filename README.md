@@ -173,7 +173,7 @@ which nft
 ISP_INTERFACE="eth3"
 
 # Стратегии обработки HTTPS и QUIC трафика
-NFQWS_ARGS="--dpi-desync=fake,split2 --dpi-desync-autottl=2 --dpi-desync-split-pos=1 --dpi-desync-fooling=md5sig,badsum --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
+NFQWS_ARGS="--filter-udp=50000-65535 --dpi-desync=fake,tamper --dpi-desync-any-protocol --dpi-desync-cutoff=d4 --dpi-desync-repeats=6 --new --dpi-desync=fake,split2 --dpi-desync-autottl=2 --dpi-desync-split-pos=1 --dpi-desync-fooling=md5sig,badseq --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
 NFQWS_ARGS_QUIC="--dpi-desync=fake --dpi-desync-repeats=6 --dpi-desync-cutoff=d4 --dpi-desync-fooling=badsum --dpi-desync-fake-quic=/opt/etc/nfqws/quic_initial.bin"
 
 # Режим работы (auto, list, all)
@@ -187,6 +187,9 @@ HTTP_ENABLED=0
 
 # Обрабатывать ли QUIC
 QUIC_ENABLED=1
+
+# UDP порты для iptables
+UDP_PORTS=443,50000:65535
 
 # Логирование в Syslog
 LOG_LEVEL=0
