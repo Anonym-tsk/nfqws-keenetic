@@ -1,4 +1,8 @@
-source "$CONFFILE"
+if [ -f "$CONFFILE.run" ]; then
+  source "$CONFFILE.run"
+else
+  source "$CONFFILE"
+fi
 
 RULE_HTTP="-t mangle -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_HTTPS="-t mangle -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
@@ -45,6 +49,16 @@ reload_service() {
 
   echo 'Reloading NFQWS service...'
   kill -1 $(cat "$PIDFILE")
+}
+
+create_running_config() {
+  cp -f "$CONFFILE" "$CONFFILE.run"
+  source "$CONFFILE.run"
+}
+
+remove_running_config() {
+  rm -f "$CONFFILE.run"
+  source "$CONFFILE"
 }
 
 kernel_modules() {

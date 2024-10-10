@@ -4,6 +4,7 @@ start() {
     return 1
   fi
 
+  create_running_config
   kernel_modules
 
   $NFQWS_BIN --daemon --pidfile=$PIDFILE $(_startup_args)
@@ -26,6 +27,7 @@ stop() {
 
   echo 'Stopping NFQWS service...'
   kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+  remove_running_config
 }
 
 case "$1" in
