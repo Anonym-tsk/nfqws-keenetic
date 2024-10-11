@@ -64,6 +64,9 @@ remove_running_config() {
 kernel_modules() {
   KERNEL=$(uname -r)
 
+  # Try to load all modules (OpenWRT or Padavan)
+  modprobe -a -q nfnetlink_queue xt_multiport xt_connbytes xt_NFQUEUE &> /dev/null
+
   if [ -z "$(lsmod 2>/dev/null | grep "nfnetlink_queue ")" ]; then
     nfnetlink_mod_path=$(find "/lib/modules/$KERNEL" -name "nfnetlink_queue.ko*")
 
