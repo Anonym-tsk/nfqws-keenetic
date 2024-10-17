@@ -186,9 +186,13 @@ NFQWS_EXTRA_ARGS="--hostlist=/opt/etc/nfqws/user.list --hostlist-auto=/opt/etc/n
 IPV6_ENABLED=1
 
 # TCP порты для iptables
+# Оставьте пустым, если нужно отключить обработку TCP
+# Добавьте порт 80 для обработки HTTP (TCP_PORTS=443,80)
 TCP_PORTS=443
 
 # UDP порты для iptables
+# Оставьте пустым, если нужно отключить обработку UDP
+# Удалите порт 443, если не нужно обрабатывать QUIC
 UDP_PORTS=443,50000:50099
 
 # Логирование в Syslog
