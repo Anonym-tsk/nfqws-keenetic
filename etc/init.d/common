@@ -4,9 +4,8 @@ else
   source "$CONFFILE"
 fi
 
-RULE_HTTP="-t mangle -p tcp --dport 80 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_HTTPS="-t mangle -p tcp --dport 443 -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_QUIC="-t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+RULE_TCP="-t mangle -p tcp -m multiport --dports $TCP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+RULE_UDP="-t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 RULE_MASQ="-t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
 
 is_running() {
@@ -120,9 +119,14 @@ _startup_args() {
     args="--debug=syslog $args"
   fi
 
+  # UDP
+  if [ -n "$NFQWS_ARGS_UDP" ]; then
+    args="$args $NFQWS_ARGS_UDP --new"
+  fi
+
   # QUIC
-  if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-    args="$args --filter-udp=443 $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS --new"
+  if [ -n "$NFQWS_ARGS_QUIC" ]; then
+    args="$args $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS --new"
   fi
 
   # HTTP(S)
@@ -159,31 +163,27 @@ _ip6tables() {
 
 firewall_start_v4() {
   for IFACE in $ISP_INTERFACE; do
-    if [ -n "$HTTP_ENABLED" ] && [ "$HTTP_ENABLED" -eq "1" ]; then
-      _iptables -A POSTROUTING -o $IFACE $RULE_HTTP
-    fi
-
-    if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-      _iptables -A POSTROUTING -o $IFACE $RULE_QUIC
+    if [ -n "$UDP_PORTS" ]; then
+      _iptables -A POSTROUTING -o $IFACE $RULE_UDP
       _iptables -A POSTROUTING -o $IFACE $RULE_MASQ
     fi
 
-    _iptables -A POSTROUTING -o $IFACE $RULE_HTTPS
+    if [ -n "$TCP_PORTS" ]; then
+      _iptables -A POSTROUTING -o $IFACE $RULE_TCP
+    fi
   done
 }
 
 firewall_stop_v4() {
   for IFACE in $ISP_INTERFACE; do
-    if [ -n "$HTTP_ENABLED" ] && [ "$HTTP_ENABLED" -eq "1" ]; then
-      _iptables -D POSTROUTING -o $IFACE $RULE_HTTP
-    fi
-
-    if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-      _iptables -D POSTROUTING -o $IFACE $RULE_QUIC
+    if [ -n "$UDP_PORTS" ]; then
+      _iptables -D POSTROUTING -o $IFACE $RULE_UDP
       _iptables -D POSTROUTING -o $IFACE $RULE_MASQ
     fi
 
-    _iptables -D POSTROUTING -o $IFACE $RULE_HTTPS
+    if [ -n "$TCP_PORTS" ]; then
+      _iptables -D POSTROUTING -o $IFACE $RULE_TCP
+    fi
   done
 }
 
@@ -193,15 +193,13 @@ firewall_start_v6() {
   fi
 
   for IFACE in $ISP_INTERFACE; do
-    if [ -n "$HTTP_ENABLED" ] && [ "$HTTP_ENABLED" -eq "1" ]; then
-      _ip6tables -A POSTROUTING -o $IFACE $RULE_HTTP
+    if [ -n "$UDP_PORTS" ]; then
+      _ip6tables -A POSTROUTING -o $IFACE $RULE_UDP
     fi
 
-    if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-      _ip6tables -A POSTROUTING -o $IFACE $RULE_QUIC
+    if [ -n "$TCP_PORTS" ]; then
+      _ip6tables -A POSTROUTING -o $IFACE $RULE_TCP
     fi
-
-    _ip6tables -A POSTROUTING -o $IFACE $RULE_HTTPS
   done
 }
 
@@ -211,15 +209,13 @@ firewall_stop_v6() {
   fi
 
   for IFACE in $ISP_INTERFACE; do
-    if [ -n "$HTTP_ENABLED" ] && [ "$HTTP_ENABLED" -eq "1" ]; then
-      _ip6tables -D POSTROUTING -o $IFACE $RULE_HTTP
+    if [ -n "$UDP_PORTS" ]; then
+      _ip6tables -D POSTROUTING -o $IFACE $RULE_UDP
     fi
 
-    if [ -z "$QUIC_ENABLED" ] || [ "$QUIC_ENABLED" -eq "1" ]; then
-      _ip6tables -D POSTROUTING -o $IFACE $RULE_QUIC
+    if [ -n "$TCP_PORTS" ]; then
+      _ip6tables -D POSTROUTING -o $IFACE $RULE_TCP
     fi
-
-    _ip6tables -D POSTROUTING -o $IFACE $RULE_HTTPS
   done
 }
 
