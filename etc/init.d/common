@@ -4,9 +4,17 @@ else
   source "$CONFFILE"
 fi
 
-RULE_TCP="-t mangle -p tcp -m multiport --dports $TCP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_UDP="-t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
-RULE_MASQ="-t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
+_RULE_TCP() {
+  echo "POSTROUTING -o $IFACE -t mangle -p tcp -m multiport --dports $TCP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+}
+
+_RULE_UDP() {
+  echo "POSTROUTING -o $IFACE -t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark 0x40000000/0x40000000 -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+}
+
+_RULE_MASQ() {
+  echo "POSTROUTING -o $IFACE -t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
+}
 
 is_running() {
   PID_RUNNING=$(pgrep -nf "$NFQWS_BIN" 2>/dev/null)
@@ -164,12 +172,12 @@ _ip6tables() {
 firewall_start_v4() {
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _iptables -A POSTROUTING -o $IFACE $RULE_UDP
-      _iptables -A POSTROUTING -o $IFACE $RULE_MASQ
+      _iptables -A "$(_RULE_UDP)"
+      _iptables -A "$(_RULE_MASQ)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _iptables -A POSTROUTING -o $IFACE $RULE_TCP
+      _iptables -A "$(_RULE_TCP)"
     fi
   done
 }
@@ -177,12 +185,12 @@ firewall_start_v4() {
 firewall_stop_v4() {
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _iptables -D POSTROUTING -o $IFACE $RULE_UDP
-      _iptables -D POSTROUTING -o $IFACE $RULE_MASQ
+      _iptables -D "$(_RULE_UDP)"
+      _iptables -D "$(_RULE_MASQ)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _iptables -D POSTROUTING -o $IFACE $RULE_TCP
+      _iptables -D "$(_RULE_TCP)"
     fi
   done
 }
@@ -194,11 +202,11 @@ firewall_start_v6() {
 
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _ip6tables -A POSTROUTING -o $IFACE $RULE_UDP
+      _ip6tables -A "$(_RULE_UDP)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _ip6tables -A POSTROUTING -o $IFACE $RULE_TCP
+      _ip6tables -A "$(_RULE_TCP)"
     fi
   done
 }
@@ -210,11 +218,11 @@ firewall_stop_v6() {
 
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _ip6tables -D POSTROUTING -o $IFACE $RULE_UDP
+      _ip6tables -D "$(_RULE_UDP)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _ip6tables -D POSTROUTING -o $IFACE $RULE_TCP
+      _ip6tables -D "$(_RULE_TCP)"
     fi
   done
 }
