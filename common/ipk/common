@@ -45,12 +45,12 @@ fast_install_func() {
     install)
       # Interface
       DEF_IFACE=$(isp_interface_func)
-      sed -i -E "s#ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
+      sed -i -E "s#^ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
       echo "Detected ISP interface: $DEF_IFACE"
 
       # IPv6
       IPV6=$(ipv6_enabled_func "$DEF_IFACE" && echo 1 || echo 0)
-      sed -i -E "s#IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
+      sed -i -E "s#^IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
       echo "Detected IPv6: $IPV6"
 
       # Config paths
