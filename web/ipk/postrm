@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case "$1" in
+  upgrade)
+    # Do nothing
+    ;;
+  *)
+    echo -e "\nRemove automatically installed webserver? y/N"
+    read yn
+    case $yn in
+      [Yy]* )
+        /opt/etc/init.d/S80uhttpd stop
+        opkg remove --autoremove php8-cgi uhttpd_kn
+        ;;
+    esac
+
+    echo "Unnstallation successful"
+    ;;
+esac
+
+exit 0
