@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', '32M');
+
 function normalizeString(string $s): string {
     // Convert all line-endings to UNIX format.
     $s = str_replace(array("\r\n", "\r", "\n"), "\n", $s);
