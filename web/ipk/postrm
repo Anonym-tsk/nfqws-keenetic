@@ -5,15 +5,7 @@ case "$1" in
     # Do nothing
     ;;
   *)
-    echo -e "\nRemove automatically installed webserver? y/N"
-    read yn
-    case $yn in
-      [Yy]* )
-        /opt/etc/init.d/S80uhttpd stop
-        opkg remove --autoremove php8-cgi uhttpd_kn
-        ;;
-    esac
-
+    /opt/etc/init.d/S80uhttpd stop
     echo "Unnstallation successful"
     ;;
 esac
