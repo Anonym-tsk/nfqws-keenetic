@@ -43,6 +43,9 @@ jobs:
     - name: Build packages
       run: make packages
 
+    - name: Build web
+      run: make web-interface
+
     - name: Commit and push version file
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -112,6 +115,16 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
         asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release web
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_entware.ipk
+        asset_name: nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_entware.ipk
         asset_content_type: application/octet-stream
 
     - name: Build repository
