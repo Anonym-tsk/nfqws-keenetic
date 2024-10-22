@@ -32,6 +32,7 @@ input, select, button {
 a {
     color: #379dd8;
     text-decoration: inherit;
+    cursor: pointer;
 }
 
 a:hover {
@@ -178,4 +179,7 @@ footer {
 
 #version {
     float: right;
+}
+#version a {
+    padding: 0 0 0 7px;
 }
