@@ -33,6 +33,7 @@ _web-ipk:
 	# data.tar.gz
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)
 	cp -r web/share out/$(BUILD_DIR)/data$(ROOT_DIR)/share
+	sed -i -E "s#__VERSION__#v$(VERSION)#" out/$(BUILD_DIR)/data$(ROOT_DIR)/share/www/nfqws/index.html
 	cd out/$(BUILD_DIR)/data; tar czvf ../data.tar.gz .; cd ../../..
 
 	# ipk
