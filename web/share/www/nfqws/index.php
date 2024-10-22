@@ -9,11 +9,6 @@ function normalizeString(string $s): string {
     return $s . "\n";
 }
 
-function createToken(): string {
-    $file = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . basename(__FILE__);
-    return sha1_file($file) ?? 'nothing';
-}
-
 function getFiles($path = '/opt/etc/nfqws'): array {
     $files = array_filter(glob($path . '/*.{list,list-opkg,list-old,conf,conf-opkg,conf-old}', GLOB_BRACE), 'is_file');
     $basenames = array_map(fn($file) => basename($file), $files);
@@ -62,52 +57,66 @@ function restartNfqws() {
     return array('output' => $output, 'status' => $retval);
 }
 
+function authenticate($username, $password) {
+    $passwdFile = '/opt/etc/passwd';
+    $users = file($passwdFile);
+    $user = preg_grep("/^$username/", $users);
+
+    if ($user) {
+        list(, $passwdInDB) = explode(':', array_pop($user));
+        if (crypt($password, $passwdInDB) == $passwdInDB) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function main() {
-    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        if ($_POST['cmd'] !== 'filenames') {
-            if (!$_POST['token'] || $_POST['token'] !== createToken()) {
-                http_response_code(403);
-                exit();
-            }
-        }
-
-        switch ($_POST['cmd']) {
-            case 'filenames':
-                $files = getFiles();
-                $response = array('status' => 0, 'files' => $files, 'token' => createToken());
-                break;
-
-            case 'filecontent':
-                $content = getFileContent($_POST['filename']);
-                $response = array('status' => 0, 'content' => $content, 'filename' => $_POST['filename']);
-                break;
-
-            case 'filesave':
-                $result = saveFile($_POST['filename'], $_POST['content']);
-                $response = array('status' => $result ? 0 : 1, 'filename' => $_POST['filename']);
-                break;
-
-            case 'fileremove':
-                $result = removeFile($_POST['filename']);
-                $response = array('status' => $result ? 0 : 1, 'filename' => $_POST['filename']);
-                break;
-
-            case 'reload':
-                $response = reloadNfqws();
-                break;
-
-            case 'restart':
-                $response = restartNfqws();
-                break;
-
-            default:
-                http_response_code(405);
-                exit();
-        }
-    } else {
+    if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(302);
         header('Location: index.html');
         exit();
+    }
+
+    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+        header('WWW-Authenticate: Basic realm="nfqws-keenetic"');
+        header('HTTP/1.0 401 Unauthorized');
+        exit();
+    }
+
+    switch ($_POST['cmd']) {
+        case 'filenames':
+            $files = getFiles();
+            $response = array('status' => 0, 'files' => $files);
+            break;
+
+        case 'filecontent':
+            $content = getFileContent($_POST['filename']);
+            $response = array('status' => 0, 'content' => $content, 'filename' => $_POST['filename']);
+            break;
+
+        case 'filesave':
+            $result = saveFile($_POST['filename'], $_POST['content']);
+            $response = array('status' => $result ? 0 : 1, 'filename' => $_POST['filename']);
+            break;
+
+        case 'fileremove':
+            $result = removeFile($_POST['filename']);
+            $response = array('status' => $result ? 0 : 1, 'filename' => $_POST['filename']);
+            break;
+
+        case 'reload':
+            $response = reloadNfqws();
+            break;
+
+        case 'restart':
+            $response = restartNfqws();
+            break;
+
+        default:
+            http_response_code(405);
+            exit();
     }
 
     header('Content-Type: application/json; charset=utf-8');

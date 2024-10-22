@@ -1,5 +1,3 @@
-let token = '';
-
 class UI {
     constructor() {
         TLN.append_line_numbers('config');
@@ -282,7 +280,6 @@ function _debounce(func, ms) {
 
 async function _postData(data) {
     const formData = new FormData();
-    formData.append('token', token);
     for (const [key, value] of Object.entries(data)) {
         formData.append(key, value);
     }
@@ -303,7 +300,6 @@ async function _postData(data) {
 
 async function getFiles() {
     const data = await _postData({cmd: 'filenames'});
-    token = data.token;
     return data.files || [];
 }
 
@@ -355,6 +351,10 @@ async function main() {
     ui.version.checkUpdate();
 
     const files = await getFiles();
+    if (!files.length) {
+        return;
+    }
+
     for (const filename of files) {
         ui.tabs.add(filename);
     }
