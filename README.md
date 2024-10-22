@@ -97,23 +97,29 @@
    opkg install nfqws-keenetic
    ```
 
+4. Установите веб-интерфейс (опционально, только для Keenetic)
+   ```
+   opkg install nfqws-keenetic-web
+   ```
+
 ##### Обновление
 
 ```
 opkg update
-opkg upgrade nfqws-keenetic
+opkg upgrade nfqws-keenetic nfqws-keenetic-web
 ```
 
 ##### Удаление
 
 ```
-opkg remove nfqws-keenetic
+opkg remove nfqws-keenetic nfqws-keenetic-web
 ```
 
 ##### Информация об установленной версии
 
 ```
 opkg info nfqws-keenetic
+opkg info nfqws-keenetic-web
 ```
 
 ---
