@@ -14,7 +14,7 @@ case "$1" in
     # Remove all data
     remove_all_files_func
 
-    echo "Unnstallation successful"
+    echo "Uninstallation successful"
     ;;
 esac
 

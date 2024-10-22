@@ -6,7 +6,7 @@ case "$1" in
     ;;
   *)
     /opt/etc/init.d/S80uhttpd stop
-    echo "Unnstallation successful"
+    echo "Uninstallation successful"
     ;;
 esac
 
