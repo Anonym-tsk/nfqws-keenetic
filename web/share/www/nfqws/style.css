@@ -36,6 +36,10 @@ html, body, input, select, button, textarea {
     -webkit-tap-highlight-color: transparent;
 }
 
+textarea:disabled, textarea:read-only {
+    color: #777;
+}
+
 input, select, button {
     height: 34px;
     line-height: 100%;
@@ -56,6 +60,10 @@ a:hover {
 
 .hidden {
     display: none !important;
+}
+
+.disabled {
+    pointer-events: none !important;
 }
 
 header {
@@ -157,7 +165,6 @@ h1.logo {
 }
 .dropdown-item:hover {
     background: var(--color-nav);
-    cursor: pointer;
 }
 
 nav {

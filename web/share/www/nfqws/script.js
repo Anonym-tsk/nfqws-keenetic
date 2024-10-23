@@ -2,6 +2,9 @@ class UI {
     constructor() {
         TLN.append_line_numbers('config');
 
+        this.$header = document.querySelector('header');
+        this.$tabs = document.querySelector('nav');
+
         this.buttons = this._initButtons();
         this.tabs = this._initTabs();
         this.textarea = this._initTextarea();
@@ -10,7 +13,6 @@ class UI {
     }
 
     _initTabs() {
-        const element = document.querySelector('nav');
         const tabs = {};
         let currentFile = '';
 
@@ -19,7 +21,11 @@ class UI {
             tab.classList.add('nav-tab');
             tab.textContent = filename;
 
-            if (!filename.endsWith('.conf') && !filename.endsWith('.list')) {
+            const isConf = filename.endsWith('.conf');
+            const isList = filename.endsWith('.list');
+            const isLog = filename.endsWith('.log');
+
+            if (!isConf && !isList && !isLog) {
                 tab.classList.add('secondary');
                 const trash = document.createElement('div');
                 trash.classList.add('nav-trash');
@@ -51,7 +57,7 @@ class UI {
 
             tab.addEventListener('click', async () => this.loadFile(filename));
 
-            element.appendChild(tab);
+            this.$tabs.appendChild(tab);
             tabs[filename] = tab;
         };
 
@@ -105,14 +111,6 @@ class UI {
             this.buttons.toggle(false);
         };
 
-        const disable = () => {
-            element.setAttribute('disabled', 'disabled');
-        };
-
-        const enable = () => {
-            element.removeAttribute('disabled');
-        };
-
         element.addEventListener('input', _debounce(() => {
             textChanged = element.value !== originalText;
             this.buttons.toggle(textChanged);
@@ -140,8 +138,20 @@ class UI {
                 return textChanged;
             },
             save,
-            disable,
-            enable,
+            disabled(status) {
+                if (status) {
+                    element.setAttribute('disabled', 'disabled');
+                } else {
+                    element.removeAttribute('disabled');
+                }
+            },
+            readonly(status) {
+                if (status) {
+                    element.setAttribute('readonly', 'readonly');
+                } else {
+                    element.removeAttribute('readonly');
+                }
+            },
         };
     }
 
@@ -284,18 +294,21 @@ class UI {
 
         this.disableUI();
 
-        this.textarea.value = await getFileContent(filename);
         this.tabs.activate(filename);
+        this.textarea.value = await getFileContent(filename);
+        this.textarea.readonly(filename.endsWith('.log'));
 
         this.enableUI();
     }
 
     disableUI() {
-        this.textarea.disable();
+        this.textarea.disabled(true);
+        this.$header.classList.add('disabled');
     }
 
     enableUI() {
-        this.textarea.enable();
+        this.textarea.disabled(false);
+        this.$header.classList.remove('disabled');
     }
 }
 

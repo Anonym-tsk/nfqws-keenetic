@@ -13,9 +13,13 @@ function normalizeString(string $s): string {
 
 function getFiles($path = '/opt/etc/nfqws'): array {
     $files = array_filter(glob($path . '/*.{list,list-opkg,list-old,conf,conf-opkg,conf-old}', GLOB_BRACE), 'is_file');
+    $logfile = '/opt/var/log/nfqws.log';
     $basenames = array_map(fn($file) => basename($file), $files);
+    if (file_exists($logfile)) {
+        array_push($basenames, basename($logfile));
+    }
 
-    $priority = ['nfqws.conf' => -4, 'user.list' => -3, 'exclude.list' => -2, 'auto.list' => -1];
+    $priority = ['nfqws.conf' => -5, 'user.list' => -4, 'exclude.list' => -3, 'auto.list' => -2, 'nfqws.log' => -1];
     usort($basenames, fn($a, $b) => ($priority[$a] ?? 1) - ($priority[$b] ?? -1));
 
     return $basenames;
@@ -23,6 +27,12 @@ function getFiles($path = '/opt/etc/nfqws'): array {
 
 function getFileContent(string $filename, $path = '/opt/etc/nfqws'): string {
     return file_get_contents($path . '/' . basename($filename));
+}
+
+function getLogContent(string $filename, $path = '/opt/var/log'): string {
+    $file = file($path . '/' . basename($filename));
+    $file = array_reverse($file);
+    return implode("\n", $file);
 }
 
 function saveFile(string $filename, string $content, $path = '/opt/etc/nfqws') {
@@ -93,7 +103,11 @@ function main() {
             break;
 
         case 'filecontent':
-            $content = getFileContent($_POST['filename']);
+            if (str_ends_with($_POST['filename'], '.log')) {
+                $content = getLogContent($_POST['filename']);
+            } else {
+                $content = getFileContent($_POST['filename']);
+            }
             $response = array('status' => 0, 'content' => $content, 'filename' => $_POST['filename']);
             break;
 
