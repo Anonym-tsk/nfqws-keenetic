@@ -6,6 +6,7 @@ class UI {
         this.tabs = this._initTabs();
         this.textarea = this._initTextarea();
         this.version = this._initVersion();
+        this.status = this._initStatus();
     }
 
     _initTabs() {
@@ -181,6 +182,18 @@ class UI {
         }
     }
 
+    _initStatus() {
+        const statusOk = document.getElementById('status-running');
+        const statusFail = document.getElementById('status-stopped');
+
+        return {
+            set(status) {
+                statusOk.classList.toggle('hidden', !status);
+                statusFail.classList.toggle('hidden', status);
+            }
+        }
+    }
+
     _initButtons() {
         const btnReload = document.getElementById('reload');
         const btnRestart = document.getElementById('restart');
@@ -192,12 +205,17 @@ class UI {
 
         const nfqwsActionClick = async (action, text) => {
             this.disableUI();
-
             const yesno = confirm(text);
             if (yesno) {
                 const result = await serviceAction(action);
                 if (!result.status) {
                     alert(Array.from(result.output).join("\n"));
+
+                    if (action === 'stop') {
+                        this.status.set(false);
+                    } else if (action === 'start' || action === 'restart') {
+                        this.status.set(true);
+                    }
                 } else {
                     alert(`Error: ${result.status}`);
                 }
@@ -318,8 +336,7 @@ async function _postData(data) {
 }
 
 async function getFiles() {
-    const data = await _postData({cmd: 'filenames'});
-    return data.files || [];
+    return _postData({cmd: 'filenames'});
 }
 
 async function getFileContent(filename) {
@@ -365,12 +382,14 @@ async function main() {
     const ui = new UI();
     ui.version.checkUpdate();
 
-    const files = await getFiles();
-    if (!files.length) {
+    const response = await getFiles();
+    ui.status.set(response.service);
+
+    if (!response.files.length) {
         return;
     }
 
-    for (const filename of files) {
+    for (const filename of response.files) {
         ui.tabs.add(filename);
     }
     ui.tabs.activateFirst();

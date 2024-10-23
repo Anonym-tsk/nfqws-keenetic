@@ -3,6 +3,8 @@
     --color-text: #555;
     --color-text-light: #999;
     --color-text-lightest: #bbb;
+    --color-text-ok: #3e9500;
+    --color-text-fail: #cb2727;
     --color-accent: #379dd8;
     --color-btn-bg: #ecf5fa;
     --color-btn-alert: #cb2727;
@@ -58,15 +60,28 @@ header {
     justify-content: space-between;
     white-space: nowrap;
     position: relative;
+    line-height: 34px;
 }
 
 h1.logo {
     margin: 0;
     padding: 0;
-    font-size: 14px;
-    line-height: 34px;
     flex-grow: 1;
     width: 10px;
+    font-size: 14px;
+    line-height: 34px;
+}
+
+.status {
+    margin: 0 7px 0 0;
+    color: var(--color-text-ok);
+    font-weight: bold;
+}
+.status.hidden {
+    display: none;
+}
+#status-stopped {
+    color: var(--color-text-fail);
 }
 
 .button {
