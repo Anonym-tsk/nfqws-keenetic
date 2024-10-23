@@ -186,11 +186,14 @@ class UI {
         const statusOk = document.getElementById('status-running');
         const statusFail = document.getElementById('status-stopped');
 
+        const setStatus = (status) => {
+            statusOk.classList.toggle('hidden', !status);
+            statusFail.classList.toggle('hidden', status);
+            this.buttons.setServiceState(status);
+        };
+
         return {
-            set(status) {
-                statusOk.classList.toggle('hidden', !status);
-                statusFail.classList.toggle('hidden', status);
-            }
+            set: setStatus,
         }
     }
 
@@ -262,6 +265,11 @@ class UI {
                 if (!btnSave.classList.contains('hidden')) {
                     btnSave.click();
                 }
+            },
+            setServiceState(state) {
+                btnReload.classList.toggle('hidden', !state);
+                btnStop.classList.toggle('hidden', !state);
+                btnStart.classList.toggle('hidden', state);
             },
         };
     }

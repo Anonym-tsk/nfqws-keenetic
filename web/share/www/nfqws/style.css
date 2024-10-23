@@ -54,6 +54,10 @@ a:hover {
     text-decoration: underline;
 }
 
+.hidden {
+    display: none !important;
+}
+
 header {
     padding: 0 0 10px 0;
     display: flex;
@@ -75,10 +79,6 @@ h1.logo {
 .status {
     margin: 0 7px 0 0;
     color: var(--color-text-ok);
-    font-weight: bold;
-}
-.status.hidden {
-    display: none;
 }
 #status-stopped {
     color: var(--color-text-fail);
@@ -109,9 +109,6 @@ h1.logo {
 .button.red:hover {
     background-color: var(--color-btn-alert-border);
     var(--color-btn-alert-hover)
-}
-.button.hidden {
-    display: none;
 }
 
 #restart {
@@ -153,9 +150,6 @@ h1.logo {
     width: 123px;
     box-sizing: border-box;
     transition: visibility;
-}
-#dropdown-menu.hidden {
-    display: none;
 }
 .dropdown-item {
     padding: 4px 16px;
