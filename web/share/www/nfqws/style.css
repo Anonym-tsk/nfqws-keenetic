@@ -83,7 +83,9 @@ a:hover {
     display: none !important;
 }
 
-.disabled {
+body.disabled header,
+body.disabled nav,
+body.disabled article {
     pointer-events: none !important;
 }
 

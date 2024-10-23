@@ -304,12 +304,12 @@ class UI {
 
     disableUI() {
         this.textarea.disabled(true);
-        this.$header.classList.add('disabled');
+        document.body.classList.add('disabled');
     }
 
     enableUI() {
         this.textarea.disabled(false);
-        this.$header.classList.remove('disabled');
+        document.body.classList.remove('disabled');
     }
 
     toggleTheme() {
@@ -421,6 +421,7 @@ async function main() {
         ui.tabs.add(filename);
     }
     ui.tabs.activateFirst();
+    ui.enableUI();
 }
 
 main();
