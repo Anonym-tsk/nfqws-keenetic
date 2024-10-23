@@ -197,6 +197,13 @@ body.running #status {
     background: var(--color-nav);
 }
 
+#save {
+    display: none;
+}
+body.changed #save {
+    display: block;
+}
+
 #reload,
 #stop,
 body.running #start {

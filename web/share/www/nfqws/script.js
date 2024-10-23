@@ -107,12 +107,12 @@ class UI {
         const save = () => {
             originalText = element.value;
             textChanged = false;
-            this.buttons.toggle(false);
+            this.setChanged(false);
         };
 
         element.addEventListener('input', _debounce(() => {
             textChanged = element.value !== originalText;
-            this.buttons.toggle(textChanged);
+            this.setChanged(textChanged);
         }, 300));
 
         element.addEventListener('keydown', (e) => {
@@ -195,6 +195,14 @@ class UI {
         document.body.classList.toggle('running', status);
     }
 
+    setChanged(status) {
+        document.body.classList.toggle('changed', status);
+    }
+
+    isChanged() {
+        return document.body.classList.contains('changed');
+    }
+
     _initButtons() {
         const btnReload = document.getElementById('reload');
         const btnRestart = document.getElementById('restart');
@@ -244,6 +252,10 @@ class UI {
         menuDropdown.addEventListener('mouseenter', () => hideMenu.stop());
 
         btnSave.addEventListener('click', async () => {
+            if (!this.isChanged()) {
+                return;
+            }
+
             this.disableUI();
 
             const result = await saveFile(this.tabs.currentFileName, this.textarea.value);
@@ -257,13 +269,8 @@ class UI {
         });
 
         return {
-            toggle(enabled) {
-                btnSave.classList.toggle('hidden', !enabled);
-            },
             click() {
-                if (!btnSave.classList.contains('hidden')) {
-                    btnSave.click();
-                }
+                btnSave.click();
             },
         };
     }
