@@ -45,6 +45,12 @@ function removeFile(string $filename, $path = '/opt/etc/nfqws') {
     }
 }
 
+function nfqwsServiceStatus() {
+    $output = null;
+    exec('/opt/etc/init.d/S51nfqws status', $output);
+    return str_contains($output[0] ?? '', 'is running');
+}
+
 function nfqwsServiceAction(string $action) {
     $output = null;
     $retval = null;
@@ -83,7 +89,7 @@ function main() {
     switch ($_POST['cmd']) {
         case 'filenames':
             $files = getFiles();
-            $response = array('status' => 0, 'files' => $files);
+            $response = array('status' => 0, 'files' => $files, 'service' => nfqwsServiceStatus());
             break;
 
         case 'filecontent':
