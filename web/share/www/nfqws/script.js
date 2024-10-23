@@ -261,7 +261,6 @@ class UI {
             const result = await saveFile(this.tabs.currentFileName, this.textarea.value);
             if (!result.status) {
                 this.textarea.save();
-                this.buttons.toggle(true);
             } else {
                 alert(`Error: ${result.status}`);
             }
