@@ -215,6 +215,7 @@ class UI {
         const btnDropdown = document.getElementById('dropdown');
         const menuDropdown = document.getElementById('dropdown-menu');
         const btnSave = document.getElementById('save');
+        const btnTheme = document.getElementById('theme');
 
         const nfqwsActionClick = async (action, text) => {
             this.disableUI();
@@ -241,6 +242,7 @@ class UI {
         btnRestart.addEventListener('click', () => nfqwsActionClick('restart', 'Restart service?'));
         btnStop.addEventListener('click', () => nfqwsActionClick('stop', 'Stop service?'));
         btnStart.addEventListener('click', () => nfqwsActionClick('start', 'Start service?'));
+        btnTheme.addEventListener('click', () => this.toggleTheme());
 
         btnDropdown.addEventListener('click', () => {
             menuDropdown.classList.toggle('hidden');
@@ -309,6 +311,12 @@ class UI {
     enableUI() {
         this.textarea.disabled(false);
         this.$header.classList.remove('disabled');
+    }
+
+    toggleTheme() {
+        const theme = document.body.classList.contains('dark') ? 'light' : 'dark';
+        localStorage.setItem('theme', theme);
+        document.body.classList.toggle('dark', theme === 'dark');
     }
 }
 

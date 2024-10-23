@@ -15,9 +15,14 @@
     <link rel="stylesheet" href="style.css?v=__VERSION__">
 </head>
 <body>
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+</script>
+
 <header>
     <h1 class="logo">nfqws-keenetic</h1>
-
     <span class="status hidden" id="status-running">Running</span>
     <span class="status hidden" id="status-stopped">Stopped</span>
     <button class="button red hidden" id="save">Save</button>
@@ -41,6 +46,7 @@
 <footer>
     <a class="footer-tab" href="https://github.com/Anonym-tsk/nfqws-keenetic/" target="_blank">GitHub</a>
     <a class="footer-tab" href="https://anonym-tsk.github.io/nfqws-keenetic/" target="_blank">Repository</a>
+    <span id="theme"></span>
     <span id="version">__VERSION__</span>
 </footer>
 </body>
