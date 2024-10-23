@@ -32,7 +32,7 @@ function getFileContent(string $filename, $path = '/opt/etc/nfqws'): string {
 function getLogContent(string $filename, $path = '/opt/var/log'): string {
     $file = file($path . '/' . basename($filename));
     $file = array_reverse($file);
-    return implode("\n", $file);
+    return implode("", $file);
 }
 
 function saveFile(string $filename, string $content, $path = '/opt/etc/nfqws') {
