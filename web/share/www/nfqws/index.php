@@ -45,17 +45,10 @@ function removeFile(string $filename, $path = '/opt/etc/nfqws') {
     }
 }
 
-function reloadNfqws() {
+function nfqwsServiceAction(string $action) {
     $output = null;
     $retval = null;
-    exec('/opt/etc/init.d/S51nfqws reload', $output, $retval);
-    return array('output' => $output, 'status' => $retval);
-}
-
-function restartNfqws() {
-    $output = null;
-    $retval = null;
-    exec('/opt/etc/init.d/S51nfqws restart', $output, $retval);
+    exec("/opt/etc/init.d/S51nfqws $action", $output, $retval);
     return array('output' => $output, 'status' => $retval);
 }
 
@@ -109,11 +102,10 @@ function main() {
             break;
 
         case 'reload':
-            $response = reloadNfqws();
-            break;
-
         case 'restart':
-            $response = restartNfqws();
+        case 'stop':
+        case 'start':
+            $response = nfqwsServiceAction($_POST['cmd']);
             break;
 
         default:
