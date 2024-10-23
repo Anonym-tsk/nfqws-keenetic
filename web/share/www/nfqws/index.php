@@ -8,7 +8,13 @@ function normalizeString(string $s): string {
 
     // Don't allow out-of-control blank lines.
     $s = preg_replace("/\n{3,}/", "\n\n", $s);
-    return $s . "\n";
+
+    $lastChar = substr($s, -1);
+    if ($lastChar !== "\n") {
+        $s .= "\n";
+    }
+
+    return $s;
 }
 
 function getFiles($path = '/opt/etc/nfqws'): array {
