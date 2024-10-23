@@ -70,7 +70,9 @@ function nfqwsServiceAction(string $action) {
 
 function authenticate($username, $password) {
     $passwdFile = '/opt/etc/passwd';
-    $users = file($passwdFile);
+    $shadowFile = '/opt/etc/shadow';
+
+    $users = file(file_exists($shadowFile) ? $shadowFile : $passwdFile);
     $user = preg_grep("/^$username/", $users);
 
     if ($user) {
@@ -91,8 +93,8 @@ function main() {
     }
 
     if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+        http_response_code(401);
         header('WWW-Authenticate: Basic realm="nfqws-keenetic"');
-        header('HTTP/1.0 401 Unauthorized');
         exit();
     }
 
