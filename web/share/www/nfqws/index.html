@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="tln.min.css?v=__VERSION__">
     <link rel="stylesheet" href="style.css?v=__VERSION__">
 </head>
-<body class="disabled">
+<body class="disabled unknown">
 <script>
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark');
@@ -22,15 +22,13 @@
 </script>
 
 <header>
-    <h1 class="logo">nfqws-keenetic</h1>
-    <span class="status hidden" id="status-running">Running</span>
-    <span class="status hidden" id="status-stopped">Stopped</span>
+    <h1 class="logo">nfqws-keenetic <span id="status"></span></h1>
     <button class="button red hidden" id="save">Save</button>
     <button class="button" id="restart">Restart</button>
     <button class="button" id="dropdown"></button>
     <ul id="dropdown-menu" class="hidden">
-        <li class="dropdown-item hidden" id="reload">Reload</li>
-        <li class="dropdown-item hidden" id="stop">Stop</li>
+        <li class="dropdown-item" id="reload">Reload</li>
+        <li class="dropdown-item" id="stop">Stop</li>
         <li class="dropdown-item" id="start">Start</li>
     </ul>
 </header>

@@ -9,7 +9,6 @@ class UI {
         this.tabs = this._initTabs();
         this.textarea = this._initTextarea();
         this.version = this._initVersion();
-        this.status = this._initStatus();
     }
 
     _initTabs() {
@@ -192,19 +191,8 @@ class UI {
         }
     }
 
-    _initStatus() {
-        const statusOk = document.getElementById('status-running');
-        const statusFail = document.getElementById('status-stopped');
-
-        const setStatus = (status) => {
-            statusOk.classList.toggle('hidden', !status);
-            statusFail.classList.toggle('hidden', status);
-            this.buttons.setServiceState(status);
-        };
-
-        return {
-            set: setStatus,
-        }
+    setStatus(status) {
+        document.body.classList.toggle('running', status);
     }
 
     _initButtons() {
@@ -226,9 +214,9 @@ class UI {
                     alert(Array.from(result.output).join("\n"));
 
                     if (action === 'stop') {
-                        this.status.set(false);
+                        this.setStatus(false);
                     } else if (action === 'start' || action === 'restart') {
-                        this.status.set(true);
+                        this.setStatus(true);
                     }
                 } else {
                     alert(`Error: ${result.status}`);
@@ -277,11 +265,6 @@ class UI {
                     btnSave.click();
                 }
             },
-            setServiceState(state) {
-                btnReload.classList.toggle('hidden', !state);
-                btnStop.classList.toggle('hidden', !state);
-                btnStart.classList.toggle('hidden', state);
-            },
         };
     }
 
@@ -309,7 +292,7 @@ class UI {
 
     enableUI() {
         this.textarea.disabled(false);
-        document.body.classList.remove('disabled');
+        document.body.classList.remove('disabled', 'unknown');
     }
 
     toggleTheme() {
@@ -411,7 +394,7 @@ async function main() {
     ui.version.checkUpdate();
 
     const response = await getFiles();
-    ui.status.set(response.service);
+    ui.setStatus(response.service);
 
     if (!response.files.length) {
         return;
