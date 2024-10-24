@@ -74,6 +74,16 @@ function nfqwsServiceAction(string $action) {
     return array('output' => $output, 'status' => $retval);
 }
 
+function opkgAction(string $action) {
+    $output = null;
+    $retval = null;
+    exec("opkg $action", $output, $retval);
+    if (empty($output)) {
+        $output[] = 'Nothing to upgrade';
+    }
+    return array('output' => $output, 'status' => $retval);
+}
+
 function authenticate($username, $password) {
     $passwdFile = '/opt/etc/passwd';
     $shadowFile = '/opt/etc/shadow';
@@ -134,6 +144,14 @@ function main() {
         case 'stop':
         case 'start':
             $response = nfqwsServiceAction($_POST['cmd']);
+            break;
+
+        case 'update':
+            $response = opkgAction('update');
+            break;
+
+        case 'upgrade':
+            $response = opkgAction('upgrade nfqws-keenetic nfqws-keenetic-web');
             break;
 
         default:

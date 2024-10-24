@@ -228,7 +228,7 @@ body.running #status {
 #restart {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    width: 90px;
+    width: 100px;
     padding: 0;
 }
 
@@ -261,7 +261,7 @@ body.running #status {
     padding: 10px 0 0 0;
     margin: 0;
     z-index: 7;
-    width: 123px;
+    width: 133px;
     box-sizing: border-box;
 }
 .dropdown-item {
