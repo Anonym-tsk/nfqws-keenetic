@@ -10,6 +10,7 @@ _web-control:
 	echo "Package: nfqws-keenetic-web" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
 	echo "Depends: nfqws-keenetic, php8-cgi, uhttpd_kn" >> out/$(BUILD_DIR)/control/control
+	echo "Conflicts: uhttpd" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
