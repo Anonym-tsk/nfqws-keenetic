@@ -7,6 +7,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <meta name="MobileOptimized" content="320">
     <meta name="HandheldFriendly" content="true">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b2434">
+    <meta name="color-scheme" content="light dark">
 
     <script defer src="tln.min.js?v=__VERSION__"></script>
     <script defer src="script.js?v=__VERSION__" type="module"></script>
@@ -16,8 +19,10 @@
 </head>
 <body class="disabled unknown">
 <script>
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark');
+    const theme = localStorage.getItem('theme');
+    if (theme) {
+        const root = document.querySelector(':root');
+        root.dataset.theme = theme;
     }
 </script>
 

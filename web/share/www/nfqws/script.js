@@ -303,9 +303,10 @@ class UI {
     }
 
     toggleTheme() {
-        const theme = document.body.classList.contains('dark') ? 'light' : 'dark';
+        const root = document.querySelector(':root');
+        const theme = (root.dataset.theme === 'dark') ? 'light' : 'dark';
         localStorage.setItem('theme', theme);
-        document.body.classList.toggle('dark', theme === 'dark');
+        root.dataset.theme = theme;
     }
 }
 
