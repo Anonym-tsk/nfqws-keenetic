@@ -480,7 +480,7 @@ async function main() {
     const response = await getFiles();
     ui.setStatus(response.service);
 
-    if (!response.files.length) {
+    if (!response.files?.length) {
         return;
     }
 
