@@ -182,12 +182,6 @@ a:hover {
     display: none !important;
 }
 
-body.disabled header,
-body.disabled nav,
-body.disabled article {
-    pointer-events: none !important;
-}
-
 header {
     padding: 0 0 10px 0;
     display: flex;
@@ -417,9 +411,24 @@ footer {
     background-position: bottom center;
 }
 
+#overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    opacity: 0.7;
+    z-index: 100;
+    display: none;
+}
+body.disabled #overlay {
+    display: block;
+}
+
 #alert {
     position: absolute;
-    z-index: 20;
+    z-index: 101;
     width: 85%;
     max-width: 500px;
     height: auto;
@@ -458,6 +467,7 @@ footer {
 }
 #alert.locked .alert-footer {
     pointer-events: none;
+    opacity: 0.5;
 }
 #alert button {
     display: none;
