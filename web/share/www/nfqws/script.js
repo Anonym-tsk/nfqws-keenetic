@@ -2,7 +2,6 @@ class UI {
     constructor() {
         TLN.append_line_numbers('config');
 
-        this.$header = document.querySelector('header');
         this.$tabs = document.querySelector('nav');
 
         this.buttons = this._initButtons();
@@ -63,7 +62,7 @@ class UI {
         const remove = (filename) => {
             for (const [key, tab] of Object.entries(tabs)) {
                 if (key === filename) {
-                    element.removeChild(tab);
+                    tab.parentNode.removeChild(tab);
                     delete tabs[key];
 
                     if (filename === currentFile) {
