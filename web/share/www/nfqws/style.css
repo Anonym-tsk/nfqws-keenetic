@@ -443,7 +443,6 @@ body.disabled #overlay {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 2px 4px var(--color-border);
 }
 #alert.confirm {
     max-width: 400px;
