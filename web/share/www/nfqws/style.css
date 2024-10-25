@@ -29,6 +29,7 @@
     --dark-color-nav-hover: #445270;
     --light-color-border: #c1dded;
     --dark-color-border: #379dd8;
+    --border-radius: 7px;
 }
 
 :root {
@@ -131,17 +132,40 @@ html, body, input, select, button, textarea {
     color: var(--color-text);
     background: var(--color-bg);
 }
-
-textarea:disabled, textarea:read-only {
-    color: var(--color-text-disabled);
-}
-
 input, select, button {
     height: 34px;
     line-height: 100%;
     padding: 0 5px;
     box-sizing: border-box;
     vertical-align: middle;
+}
+button {
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    color: var(--color-accent);
+    background: var(--color-btn-bg);
+    padding: 0 14px;
+    transition: background-color 100ms linear, color 100ms linear, border-color 100ms linear;
+}
+button:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-btn-active);
+}
+button.red {
+    background-color: var(--color-btn-alert);
+    border-color: var(--color-btn-alert-border);
+    color: var(--color-btn-active);
+}
+button.red:hover {
+    background-color: var(--color-btn-alert-border);
+    var(--color-btn-alert-hover)
+}
+
+textarea:disabled, textarea:read-only {
+    color: var(--color-text-disabled);
 }
 
 a {
@@ -199,30 +223,8 @@ body.running #status {
 }
 
 .button {
-    display: inline-block;
-    border: 1px solid var(--color-accent);
-    border-radius: 7px;
-    color: var(--color-accent);
-    background: var(--color-btn-bg);
-    padding: 0 14px;
     margin: 0 0 0 7px;
-    cursor: pointer;
-    transition: background-color 100ms linear, color 100ms linear, border-color 100ms linear;
     z-index: 10;
-}
-.button:hover {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent);
-    color: var(--color-btn-active);
-}
-.button.red {
-    background-color: var(--color-btn-alert);
-    border-color: var(--color-btn-alert-border);
-    color: var(--color-btn-active);
-}
-.button.red:hover {
-    background-color: var(--color-btn-alert-border);
-    var(--color-btn-alert-hover)
 }
 
 #restart {
@@ -299,7 +301,7 @@ nav {
 .nav-tab {
     border: 1px solid var(--color-border);
     border-bottom: none;
-    border-radius: 7px 0 0 0;
+    border-radius: var(--border-radius) 0 0 0;
     padding: 5px 11px 12px 11px;
     cursor: pointer;
     background: var(--color-nav);
@@ -413,4 +415,62 @@ footer {
 }
 [data-theme="dark"] #theme {
     background-position: bottom center;
+}
+
+#alert {
+    position: absolute;
+    z-index: 20;
+    width: 85%;
+    max-width: 500px;
+    height: auto;
+    min-height: 150px;
+    max-height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-nav);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 4px var(--color-border);
+}
+#alert.confirm {
+    max-width: 400px;
+}
+.alert-content {
+    flex-grow: 1;
+    padding: 9px;
+    margin: 10px 10px 0 10px;
+    line-height: 1.5em;
+    overflow: auto;
+}
+#alert.alert .alert-content {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-size: 12px;
+}
+.alert-footer {
+    padding: 10px;
+    text-align: center;
+}
+#alert.locked .alert-footer {
+    pointer-events: none;
+}
+#alert button {
+    display: none;
+    margin: 0 3px;
+    padding: 0 20px;
+}
+#alert.alert .alert-close {
+    display: inline-block;
+}
+#alert.confirm .confirm-content {
+    display: block;
+}
+#alert.confirm .alert-yes,
+#alert.confirm .alert-no {
+    display: inline-block;
 }

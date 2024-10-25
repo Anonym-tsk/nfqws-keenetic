@@ -9,6 +9,7 @@ class UI {
         this.tabs = this._initTabs();
         this.textarea = this._initTextarea();
         this.version = this._initVersion();
+        this.popup = this._initPopups();
     }
 
     _initTabs() {
@@ -34,21 +35,20 @@ class UI {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    const yesno = confirm('Delete file?');
+                    const yesno = await this.popup.confirm('Delete file?');
                     if (!yesno) {
                         return;
                     }
 
                     this.disableUI();
-
                     const result = await removeFile(filename);
+                    this.enableUI();
+
                     if (!result.status) {
                         remove(filename);
                     } else {
-                        alert(`Error: ${result.status}`);
+                        this.popup.alert(`remove ${filename}`, `Error: ${result.status}`);
                     }
-
-                    this.enableUI();
                 });
 
                 tab.appendChild(trash);
@@ -191,6 +191,79 @@ class UI {
         }
     }
 
+    _initPopups() {
+        const element = document.getElementById('alert');
+        const alertContent = element.querySelector('.alert-content');
+        const buttonClose = element.querySelector('.alert-close');
+        const buttonYes = element.querySelector('.alert-yes');
+        const buttonNo = element.querySelector('.alert-no');
+
+        const alert = (...text) => {
+            this.disableUI();
+            alertContent.textContent = `> ${text.join("\n")}`;
+            element.classList.add('alert');
+            element.classList.remove('hidden', 'confirm', 'locked');
+        };
+
+        const hide = () => {
+            element.classList.add('hidden');
+            element.classList.remove('locked');
+            this.enableUI();
+        }
+
+        const confirm = async (text) => {
+            this.disableUI();
+            alertContent.textContent = text;
+            element.classList.add('confirm');
+            element.classList.remove('hidden', 'alert', 'locked');
+
+            return new Promise((resolve) => {
+                buttonYes.addEventListener('click', function ok() {
+                    buttonYes.removeEventListener('click', ok);
+                    resolve(true);
+                });
+                buttonNo.addEventListener('click', function fail() {
+                    buttonNo.removeEventListener('click', fail);
+                    resolve(false);
+                });
+            });
+        };
+
+        const process = async (text, fn, ...args) => {
+            this.disableUI();
+            alertContent.textContent = `> ${text}\n`;
+            element.classList.add('alert', 'locked');
+            element.classList.remove('hidden', 'confirm');
+            let status = true;
+
+            const result = await fn(...args);
+            if (!result.status) {
+                alertContent.textContent += Array.from(result.output).join("\n");
+            } else {
+                alertContent.textContent += `Error: ${result.status}`;
+                status = false;
+            }
+            element.classList.remove('locked');
+
+            return new Promise((resolve) => {
+                buttonClose.addEventListener('click', function close() {
+                    buttonYes.removeEventListener('click', close);
+                    resolve(status);
+                });
+            });
+        };
+
+        buttonClose.addEventListener('click', hide);
+        buttonYes.addEventListener('click', hide);
+        buttonNo.addEventListener('click', hide);
+
+        return {
+            alert,
+            confirm,
+            process,
+        }
+    }
+
     setStatus(status) {
         document.body.classList.toggle('running', status);
     }
@@ -216,24 +289,21 @@ class UI {
         const btnUpgrade = document.getElementById('upgrade');
 
         const nfqwsActionClick = async (action, text) => {
-            this.disableUI();
-            const yesno = confirm(text);
-            if (yesno) {
-                const result = await serviceAction(action);
-                if (!result.status) {
-                    alert(Array.from(result.output).join("\n"));
+            const yesno = await this.popup.confirm(text);
+            if (!yesno) {
+                return;
+            }
 
-                    if (action === 'stop') {
-                        this.setStatus(false);
-                    } else if (action === 'start' || action === 'restart') {
-                        this.setStatus(true);
-                    }
-                } else {
-                    alert(`Error: ${result.status}`);
+            const result = await this.popup.process(`nfqws-keenetic ${action}`, serviceAction, action);
+            if (result) {
+                if (action === 'stop') {
+                    this.setStatus(false);
+                } else if (action === 'start' || action === 'restart') {
+                    this.setStatus(true);
                 }
             }
 
-            this.enableUI();
+            return result;
         };
 
         btnReload.addEventListener('click', () => nfqwsActionClick('reload', 'Reload service?'));
@@ -243,9 +313,11 @@ class UI {
         btnTheme.addEventListener('click', () => this.toggleTheme());
         btnUpdate.addEventListener('click', () => nfqwsActionClick('update', 'Update packages list?'));
         btnUpgrade.addEventListener('click', async () => {
-            await nfqwsActionClick('upgrade', 'Upgrade nfqws-keenetic?');
-            // Not using window.location.reload() because need clear cache
-            window.location.href = window.location.href;
+            const result = await nfqwsActionClick('upgrade', 'Upgrade nfqws-keenetic?');
+            if (result) {
+                // Not using window.location.reload() because need clear cache
+                window.location.href = window.location.href;
+            }
         });
 
         btnDropdown.addEventListener('click', () => {
@@ -265,15 +337,14 @@ class UI {
             }
 
             this.disableUI();
-
             const result = await saveFile(this.tabs.currentFileName, this.textarea.value);
+            this.enableUI();
+
             if (!result.status) {
                 this.textarea.save();
             } else {
-                alert(`Error: ${result.status}`);
+                this.popup.alert(`save ${this.tabs.currentFileName}`, `Error: ${result.status}`);
             }
-
-            this.enableUI();
         });
 
         return {
@@ -285,18 +356,16 @@ class UI {
 
     async loadFile(filename) {
         if (this.textarea.changed) {
-            const yesno = confirm('File is not saved, close?');
+            const yesno = await this.popup.confirm('File is not saved, close?');
             if (!yesno) {
                 return;
             }
         }
 
         this.disableUI();
-
         this.tabs.activate(filename);
         this.textarea.value = await getFileContent(filename);
         this.textarea.readonly(filename.endsWith('.log'));
-
         this.enableUI();
     }
 
