@@ -162,6 +162,11 @@ function main() {
             $response = array('status' => 0);
             break;
 
+        case 'logout':
+            $_SESSION['auth'] = false;
+            $response = array('status' => 0);
+            break;
+
         default:
             http_response_code(405);
             exit();

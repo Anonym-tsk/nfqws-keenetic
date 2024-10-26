@@ -295,7 +295,11 @@ class UI {
                 login.value = '';
                 password.value = '';
                 element.classList.remove('hidden');
-            }
+            },
+            async logout() {
+                await _postData({cmd: 'logout'});
+                location.reload();
+            },
         }
     }
 
@@ -322,6 +326,7 @@ class UI {
         const btnTheme = document.getElementById('theme');
         const btnUpdate = document.getElementById('update');
         const btnUpgrade = document.getElementById('upgrade');
+        const btnLogout = document.getElementById('logout');
 
         const nfqwsActionClick = async (action, text) => {
             const yesno = await this.popup.confirm(text);
@@ -354,6 +359,7 @@ class UI {
                 window.location.href = window.location.href;
             }
         });
+        btnLogout.addEventListener('click', () => this.login.logout());
 
         btnDropdown.addEventListener('click', () => {
             menuDropdown.classList.toggle('hidden');

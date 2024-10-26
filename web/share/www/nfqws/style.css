@@ -384,7 +384,7 @@ footer {
 }
 
 .footer-tab {
-    padding: 0 7px 0 0;
+    margin: 0 7px 0 0;
 }
 
 #version {
@@ -417,6 +417,31 @@ footer {
 }
 [data-theme="dark"] #theme {
     background-position: bottom center;
+}
+
+#logout {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABQCAMAAABcUcfzAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAGDUExURUdwTDaf2f///zad2P///zad2P///zac2P///zie2P///////zed1zed1////zee2P///////////////zec2P///zec1zae1zed1////zec1////zed1zec1////////1Wq/y6i0Tae2Ded1iqq1f///zac1////////////////zec1////////zie1jac2P///zed2P///////zad2ACA/////zed2Dib1zed2f///////zic2P///////zed2Ded1zid2P///////zec2P///zef2f///////zac2v///zed2P///z2e2zac1zee2f///////zec2f///zad2Dac1zac2P///////zad2f///////////////zee2zed2f///zee2P///zie2P///zad2P///////zed1////////zWa1Tqi3P///zWd2P///zie2jad2f///zad2P///zee2P///zid2f///zeb1v///////zab1jae2P///zed2P///5FhbbIAAAB/dFJOUwA9PfKq8/NVVary8PD9/WFhTL109PTdTL3ddPHe8d4DAwuIyQaIZwYLyWf+/jIyhISCgnV1AgJBQDw8QTs7QPVzvEv177xKSu9Lc76+FV/Hx2pqX8VstcUqLy+1FWwqa2uYnm6YaCtutBZoKxa0njc3Xl40NIODhYU4OKmpdnZ880FvAAABnElEQVRIx+2UV1NCQQyFVxFQqiIiqChWBJUm9t5777333rvJT/d578a5meHB0fE8Zr7ZMyfZRIg/qBxXHkoqnM4uIbgYEloLqu8hqUoFHEccHs2UFPYhFlZrQQtirra27EDHuraIiJmKzUZoRrBASimCt7t1LLCuFk3pHPAVUSFp62eV/CZMAhH72giw8TNDlgkRTa0qmE1OvJgL+gjr+jfCukM/zCMi5nXqp44x23PPbfgVMkcowvurP/Qfj0LbgrNchw6sPdEWXYjWenldT4sRrcq69nIPgEhQ3EWQiDM0YJEp69JcifjXL1K+1w2S/FPOAMFFgdBihfoekCpTwDGA/m6zpCoPgL9UCxoACrS1TTvYJ7RFADArNgvls4IFUkoRvLmMsMBIDRjTOOALgELS1k8q+U2YOAB0NRFgw0eWLCMAGFtU0ElOvIgLegjr5Dth3a4f5gEA3M36qaPM9txxG34NzBGKqp2VH/qPe+VbgrNcZ3aoOdcWvQC2pLyuB0UANmVdR7gHQMQp7riCiDPYY5Ap2/xk4M+e5C/kuifymJlFEAAAAABJRU5ErkJggg==") no-repeat bottom center;
+    background-size: 20px 40px;
+    cursor: pointer;
+    transition: transform 100ms linear;
+}
+#logout:hover {
+    transform: scale(1.1);
+}
+@media(prefers-color-scheme: dark) {
+    #logout {
+        background-position: top center;
+    }
+    [data-theme="light"] #logout {
+        background-position: bottom center;
+    }
+}
+[data-theme="dark"] #logout {
+    background-position: top center;
 }
 
 #overlay {
