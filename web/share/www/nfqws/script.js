@@ -9,6 +9,7 @@ class UI {
         this.textarea = this._initTextarea();
         this.version = this._initVersion();
         this.popup = this._initPopups();
+        this.login = this._initLoginForm();
     }
 
     _initTabs() {
@@ -39,10 +40,7 @@ class UI {
                         return;
                     }
 
-                    this.disableUI();
                     const result = await removeFile(filename);
-                    this.enableUI();
-
                     if (!result.status) {
                         remove(filename);
                     } else {
@@ -192,10 +190,10 @@ class UI {
 
     _initPopups() {
         const element = document.getElementById('alert');
-        const alertContent = element.querySelector('.alert-content');
-        const buttonClose = element.querySelector('.alert-close');
-        const buttonYes = element.querySelector('.alert-yes');
-        const buttonNo = element.querySelector('.alert-no');
+        const alertContent = element.querySelector('.popup-content');
+        const buttonClose = element.querySelector('.popup-close');
+        const buttonYes = element.querySelector('.popup-yes');
+        const buttonNo = element.querySelector('.popup-no');
 
         const alert = (...text) => {
             this.disableUI();
@@ -260,6 +258,44 @@ class UI {
             alert,
             confirm,
             process,
+        }
+    }
+
+    _initLoginForm() {
+        // TODO: logout
+        const element = document.getElementById('login-form');
+        const login = document.getElementById('login');
+        const password = document.getElementById('password');
+        const buttonYes = element.querySelector('.popup-yes');
+
+        const submit = async () => {
+            element.classList.add('hidden');
+            const result = await _postData({cmd: 'login', user: login.value, password: password.value});
+            if (!result.status) {
+                location.reload();
+            }
+        };
+
+        login.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submit()
+            }
+        });
+
+        password.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submit()
+            }
+        });
+
+        buttonYes.addEventListener('click', submit);
+
+        return {
+            show() {
+                login.value = '';
+                password.value = '';
+                element.classList.remove('hidden');
+            }
         }
     }
 
@@ -335,10 +371,7 @@ class UI {
                 return;
             }
 
-            this.disableUI();
             const result = await saveFile(this.tabs.currentFileName, this.textarea.value);
-            this.enableUI();
-
             if (!result.status) {
                 this.textarea.save();
             } else {
@@ -361,11 +394,9 @@ class UI {
             }
         }
 
-        this.disableUI();
         this.tabs.activate(filename);
         this.textarea.value = await getFileContent(filename);
         this.textarea.readonly(filename.endsWith('.log'));
-        this.enableUI();
     }
 
     disableUI() {
@@ -415,17 +446,27 @@ async function _postData(data) {
     for (const [key, value] of Object.entries(data)) {
         formData.append(key, value);
     }
+
+    ui.disableUI();
     try {
         const response = await fetch('index.php', {
             method: 'POST',
             body: formData,
         });
+
         if (response.ok) {
+            ui.enableUI();
             return await response.json();
-        } else {
-            return {status: response.status, statusText: response.statusText};
         }
+
+        if (response.status === 401) {
+            ui?.login.show();
+        } else {
+            ui.enableUI();
+        }
+        return {status: response.status, statusText: response.statusText};
     } catch (e) {
+        ui.enableUI();
         return {status: 975};
     }
 }
@@ -473,22 +514,15 @@ function compareVersions(current, latest) {
     return false;
 }
 
-async function main() {
-    const ui = new UI();
-    ui.version.checkUpdate();
+const ui = new UI();
+ui.version.checkUpdate();
 
-    const response = await getFiles();
-    ui.setStatus(response.service);
+const response = await getFiles();
+ui.setStatus(response.service);
 
-    if (!response.files?.length) {
-        return;
-    }
-
+if (response.files?.length) {
     for (const filename of response.files) {
         ui.tabs.add(filename);
     }
     ui.tabs.activateFirst();
-    ui.enableUI();
 }
-
-main();

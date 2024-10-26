@@ -108,10 +108,14 @@ function main() {
         exit();
     }
 
-    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || !authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-        http_response_code(401);
-        header('WWW-Authenticate: Basic realm="nfqws-keenetic"');
-        exit();
+    session_start();
+    if (!isset($_SESSION['auth']) || !$_SESSION['auth']) {
+        if ($_POST['cmd'] !== 'login' || !isset($_POST['user']) || !isset($_POST['password']) || !authenticate($_POST['user'], $_POST['password'])) {
+            http_response_code(401);
+            exit();
+        } else {
+            $_SESSION['auth'] = true;
+        }
     }
 
     switch ($_POST['cmd']) {
@@ -152,6 +156,10 @@ function main() {
 
         case 'upgrade':
             $response = opkgAction('upgrade nfqws-keenetic nfqws-keenetic-web');
+            break;
+
+        case 'login':
+            $response = array('status' => 0);
             break;
 
         default:

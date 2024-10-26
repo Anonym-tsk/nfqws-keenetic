@@ -66,7 +66,7 @@ _repository:
 	@if [[ -n "$(WEB)" ]]; then \
 		echo "Package: nfqws-keenetic-web" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Depends: nfqws-keenetic, php8-cgi, uhttpd_kn" >> out/_pages/$(BUILD_DIR)/Packages; \
+		echo "Depends: nfqws-keenetic, php8-cgi, php8-mod-session, uhttpd_kn" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "Conflicts: uhttpd" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "Architecture: all" >> out/_pages/$(BUILD_DIR)/Packages; \

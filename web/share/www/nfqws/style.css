@@ -135,15 +135,15 @@ html, body, input, select, button, textarea {
 input, select, button {
     height: 34px;
     line-height: 100%;
-    padding: 0 5px;
+    padding: 0 10px;
     box-sizing: border-box;
     vertical-align: middle;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
 }
 button {
     cursor: pointer;
     display: inline-block;
-    border: 1px solid var(--color-accent);
-    border-radius: var(--border-radius);
     color: var(--color-accent);
     background: var(--color-btn-bg);
     padding: 0 14px;
@@ -162,6 +162,14 @@ button.red {
 button.red:hover {
     background-color: var(--color-btn-alert-border);
     var(--color-btn-alert-hover)
+}
+
+button:focus,
+button:active,
+input:focus,
+input:active {
+    outline: none;
+    box-shadow: 0 0 1px 1px var(--color-accent);
 }
 
 textarea:disabled, textarea:read-only {
@@ -426,11 +434,11 @@ body.disabled #overlay {
     display: block;
 }
 
-#alert {
+.popup {
     position: absolute;
     z-index: 101;
     width: 85%;
-    max-width: 500px;
+    max-width: 400px;
     height: auto;
     min-height: 150px;
     max-height: 400px;
@@ -444,42 +452,51 @@ body.disabled #overlay {
     display: flex;
     flex-direction: column;
 }
-#alert.confirm {
-    max-width: 400px;
+#alert.alert {
+    max-width: 500px;
 }
-.alert-content {
+.popup-content {
     flex-grow: 1;
     padding: 9px;
     margin: 10px 10px 0 10px;
     line-height: 1.5em;
     overflow: auto;
 }
-#alert.alert .alert-content {
+#alert.alert .popup-content {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     font-size: 12px;
 }
-.alert-footer {
+.popup-footer {
     padding: 10px;
     text-align: center;
 }
-#alert.locked .alert-footer {
+.popup.locked .popup-footer {
     pointer-events: none;
     opacity: 0.5;
 }
-#alert button {
-    display: none;
+.popup button {
     margin: 0 3px;
     padding: 0 20px;
 }
-#alert.alert .alert-close {
+.popup-close {
+    display: none;
+}
+#alert.alert .popup-close {
     display: inline-block;
 }
-#alert.confirm .confirm-content {
-    display: block;
+#alert.alert .popup-yes,
+#alert.alert .popup-no {
+    display: none;
 }
-#alert.confirm .alert-yes,
-#alert.confirm .alert-no {
-    display: inline-block;
+#login-form {
+    max-width: 260px;
+}
+.login-input {
+    margin: 0 0 10px 0;
+    width: 100%;
+}
+.login-input:last-child {
+    margin-bottom: 0;
 }

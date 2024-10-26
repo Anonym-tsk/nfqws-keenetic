@@ -56,13 +56,25 @@
 </footer>
 
 <div id="overlay"></div>
-<div id="alert" class="hidden">
-    <pre class="alert-content"></pre>
-    <div class="alert-footer">
-        <button class="alert-yes">Yes</button>
-        <button class="alert-no">No</button>
-        <button class="alert-close">Close</button>
+
+<div id="alert" class="popup hidden">
+    <pre class="popup-content"></pre>
+    <div class="popup-footer">
+        <button class="popup-yes">Yes</button>
+        <button class="popup-no">No</button>
+        <button class="popup-close">Close</button>
     </div>
 </div>
+
+<div id="login-form" class="popup hidden">
+    <div class="popup-content">
+        <input type="text" class="login-input" id="login" autocomplete="false" autofocus placeholder="Login" />
+        <input type="password" class="login-input" id="password" placeholder="Password" />
+    </div>
+    <div class="popup-footer">
+        <button class="popup-yes">Login</button>
+    </div>
+</div>
+
 </body>
 </html>
