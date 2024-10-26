@@ -276,6 +276,13 @@ class UI {
             }
         };
 
+        const show = () => {
+            this.disableUI();
+            login.value = '';
+            password.value = '';
+            element.classList.remove('hidden');
+        };
+
         login.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 submit()
@@ -291,11 +298,7 @@ class UI {
         buttonYes.addEventListener('click', submit);
 
         return {
-            show() {
-                login.value = '';
-                password.value = '';
-                element.classList.remove('hidden');
-            },
+            show,
             async logout() {
                 await _postData({cmd: 'logout'});
                 location.reload();
@@ -453,7 +456,6 @@ async function _postData(data) {
         formData.append(key, value);
     }
 
-    ui.disableUI();
     try {
         const response = await fetch('index.php', {
             method: 'POST',
@@ -461,18 +463,14 @@ async function _postData(data) {
         });
 
         if (response.ok) {
-            ui.enableUI();
             return await response.json();
         }
 
         if (response.status === 401) {
             ui?.login.show();
-        } else {
-            ui.enableUI();
         }
         return {status: response.status, statusText: response.statusText};
     } catch (e) {
-        ui.enableUI();
         return {status: 975};
     }
 }
@@ -531,4 +529,5 @@ if (response.files?.length) {
         ui.tabs.add(filename);
     }
     ui.tabs.activateFirst();
+    ui.enableUI();
 }
