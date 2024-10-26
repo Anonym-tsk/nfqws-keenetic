@@ -19,7 +19,6 @@ _web-control:
 	echo "" >> out/$(BUILD_DIR)/control/control
 
 _web-scripts:
-	cp web/ipk/postrm out/$(BUILD_DIR)/control/postrm
 	cp web/ipk/postinst out/$(BUILD_DIR)/control/postinst
 
 _web-ipk:
