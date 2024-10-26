@@ -101,6 +101,39 @@ function authenticate($username, $password) {
     return false;
 }
 
+function opkgUpdate() {
+    $output = null;
+    $retval = null;
+    exec('opkg update', $output, $retval);
+    return array('output' => $output, 'status' => $retval);
+}
+
+function opkgUpgrade() {
+    $code = <<<'CODE'
+<?php
+$output = null;
+$retval = null;
+exec('opkg upgrade nfqws-keenetic nfqws-keenetic-web', $output, $retval);
+if (empty($output)) {
+    $output[] = 'Nothing to upgrade';
+}
+$response = array('output' => $output, 'status' => $retval);
+header('Content-Type: application/json; charset=utf-8');
+http_response_code(200);
+echo json_encode($response);
+unlink('/opt/share/www/nfqws/opkg.php');
+exit();
+CODE;
+
+    $file = fopen('/opt/share/www/nfqws/opkg.php', 'w');
+    fwrite($file, $code);
+    fclose($file);
+
+    http_response_code(302);
+    header('Location: opkg.php');
+    exit();
+}
+
 function main() {
     if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(302);
@@ -151,11 +184,11 @@ function main() {
             break;
 
         case 'update':
-            $response = opkgAction('update');
+            $response = opkgUpdate();
             break;
 
         case 'upgrade':
-            $response = opkgAction('upgrade nfqws-keenetic nfqws-keenetic-web');
+            opkgUpgrade();
             break;
 
         case 'login':
