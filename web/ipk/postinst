@@ -1,8 +1,8 @@
 #!/bin/sh
 
-/opt/etc/init.d/S80uhttpd start
+/opt/etc/init.d/S80lighttpd start
 
 ip_addr=$(ip -f inet addr show dev br0 2>/dev/null | grep inet | sed -n 's/.*inet \([0-9.]\+\).*/\1/p')
-echo "NFQWS Web Interface installed: http://$ip_addr:88/nfqws/"
+echo "NFQWS Web Interface installed: http://$ip_addr:90"
 
 exit 0

@@ -9,7 +9,7 @@ _web-conffiles:
 _web-control:
 	echo "Package: nfqws-keenetic-web" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
-	echo "Depends: nfqws-keenetic, php8-cgi, php8-mod-session, uhttpd_kn" >> out/$(BUILD_DIR)/control/control
+	echo "Depends: nfqws-keenetic, php8-cgi, php8-mod-session, lighttpd, lighttpd-mod-cgi, lighttpd-mod-setenv, lighttpd-mod-rewrite, lighttpd-mod-redirect" >> out/$(BUILD_DIR)/control/control
 	echo "Conflicts: uhttpd" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
