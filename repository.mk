@@ -72,7 +72,7 @@ _repository:
 		echo "Filename: $(WEB)" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "Size: $(shell wc -c out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "SHA256sum: $(shell sha256sum out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Description:  NFQWS service web interface (Keenetic only)" >> out/_pages/$(BUILD_DIR)/Packages; \
+		echo "Description:  NFQWS service web interface" >> out/_pages/$(BUILD_DIR)/Packages; \
 		echo "" >> out/_pages/$(BUILD_DIR)/Packages; \
 	fi
 
@@ -117,6 +117,7 @@ repo-openwrt:
 		BUILD_DIR=openwrt \
 		ARCH=all \
 		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
+		WEB=nfqws-keenetic-web_$(VERSION)_all_openwrt.ipk \
 		_repository
 
 repository: repo-mipsel repo-mips repo-aarch64 repo-multi repo-openwrt _repo-index

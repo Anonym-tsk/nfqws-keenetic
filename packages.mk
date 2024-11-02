@@ -101,7 +101,6 @@ _ipk:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/run
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
 
-
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
 	make _startup
 

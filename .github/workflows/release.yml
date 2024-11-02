@@ -117,7 +117,7 @@ jobs:
         asset_name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
         asset_content_type: application/octet-stream
 
-    - name: Upload Release web
+    - name: Upload Release web-entware
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,6 +125,16 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./out/nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_entware.ipk
         asset_name: nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_entware.ipk
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release web-openwrt
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./out/nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_openwrt.ipk
+        asset_name: nfqws-keenetic-web_${{ steps.version.outputs.content }}_all_openwrt.ipk
         asset_content_type: application/octet-stream
 
     - name: Build repository
