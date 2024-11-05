@@ -97,7 +97,7 @@
    opkg install nfqws-keenetic
    ```
 
-4. Установите веб-интерфейс (опционально, только для Keenetic)
+4. Установите веб-интерфейс (опционально)
    ```
    opkg install nfqws-keenetic-web
    ```
@@ -170,6 +170,11 @@ which nft
    ```
    opkg update
    opkg install nfqws-keenetic
+   ```
+
+5. Установите веб-интерфейс (опционально)
+   ```
+   opkg install nfqws-keenetic-web
    ```
 
 > NB: Все пути файлов, описанные в этой инструкции, начинающиеся с `/opt`, на OpenWRT будут начинаться с корня `/`.
