@@ -2,7 +2,7 @@
 
 ini_set('memory_limit', '32M');
 
-define('ROOT_DIR', file_exists('/opt/etc/nfqws.conf') ? '/opt' : '');
+define('ROOT_DIR', file_exists('/opt/etc/nfqws/nfqws.conf') ? '/opt' : '');
 define('SCRIPT_NAME', ROOT_DIR ? 'S51nfqws' : 'nfqws-keenetic');
 
 function normalizeString(string $s): string {
