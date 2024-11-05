@@ -262,7 +262,6 @@ class UI {
     }
 
     _initLoginForm() {
-        // TODO: logout
         const element = document.getElementById('login-form');
         const login = document.getElementById('login');
         const password = document.getElementById('password');

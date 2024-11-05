@@ -2,6 +2,9 @@
 
 ini_set('memory_limit', '32M');
 
+define('ROOT_DIR', file_exists('/opt/etc/nfqws.conf') ? '/opt' : '');
+define('SCRIPT_NAME', ROOT_DIR ? 'S51nfqws' : 'nfqws-keenetic');
+
 function normalizeString(string $s): string {
     // Convert all line-endings to UNIX format.
     $s = str_replace(array("\r\n", "\r", "\n"), "\n", $s);
@@ -17,9 +20,12 @@ function normalizeString(string $s): string {
     return $s;
 }
 
-function getFiles($path = '/opt/etc/nfqws'): array {
-    $files = array_filter(glob($path . '/*.{list,list-opkg,list-old,conf,conf-opkg,conf-old}', GLOB_BRACE), 'is_file');
-    $logfile = '/opt/var/log/nfqws.log';
+function getFiles($path = ROOT_DIR . '/etc/nfqws'): array {
+    // GLOB_BRACE is unsupported in openwrt
+    $files = array_filter(glob($path . '/*'), function ($file) {
+        return is_file($file) && preg_match('/\.(list|list-opkg|list-old|conf|conf-opkg|conf-old)$/i', $file);
+    });
+    $logfile = ROOT_DIR . '/var/log/nfqws.log';
     $basenames = array_map(fn($file) => basename($file), $files);
     if (file_exists($logfile)) {
         array_push($basenames, basename($logfile));
@@ -31,17 +37,17 @@ function getFiles($path = '/opt/etc/nfqws'): array {
     return $basenames;
 }
 
-function getFileContent(string $filename, $path = '/opt/etc/nfqws'): string {
+function getFileContent(string $filename, $path = ROOT_DIR . '/etc/nfqws'): string {
     return file_get_contents($path . '/' . basename($filename));
 }
 
-function getLogContent(string $filename, $path = '/opt/var/log'): string {
+function getLogContent(string $filename, $path = ROOT_DIR . '/var/log'): string {
     $file = file($path . '/' . basename($filename));
     $file = array_reverse($file);
     return implode("", $file);
 }
 
-function saveFile(string $filename, string $content, $path = '/opt/etc/nfqws') {
+function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nfqws') {
     $filename = basename($filename);
     $file = $path . '/' . $filename;
     if (file_exists($file)) {
@@ -51,7 +57,7 @@ function saveFile(string $filename, string $content, $path = '/opt/etc/nfqws') {
     }
 }
 
-function removeFile(string $filename, $path = '/opt/etc/nfqws') {
+function removeFile(string $filename, $path = ROOT_DIR . '/etc/nfqws') {
     $filename = basename($filename);
     $file = $path . '/' . $filename;
     if (file_exists($file)) {
@@ -63,14 +69,14 @@ function removeFile(string $filename, $path = '/opt/etc/nfqws') {
 
 function nfqwsServiceStatus() {
     $output = null;
-    exec('/opt/etc/init.d/S51nfqws status', $output);
+    exec(ROOT_DIR . "/etc/init.d/" . SCRIPT_NAME . " status", $output);
     return str_contains($output[0] ?? '', 'is running');
 }
 
 function nfqwsServiceAction(string $action) {
     $output = null;
     $retval = null;
-    exec("/opt/etc/init.d/S51nfqws $action", $output, $retval);
+    exec(ROOT_DIR . "/etc/init.d/" . SCRIPT_NAME . " $action", $output, $retval);
     return array('output' => $output, 'status' => $retval);
 }
 
@@ -85,14 +91,17 @@ function opkgAction(string $action) {
 }
 
 function authenticate($username, $password) {
-    $passwdFile = '/opt/etc/passwd';
-    $shadowFile = '/opt/etc/shadow';
+    $passwdFile = ROOT_DIR . '/etc/passwd';
+    $shadowFile = ROOT_DIR . '/etc/shadow';
 
     $users = file(file_exists($shadowFile) ? $shadowFile : $passwdFile);
     $user = preg_grep("/^$username/", $users);
 
     if ($user) {
         list(, $passwdInDB) = explode(':', array_pop($user));
+        if (empty($passwdInDB)) {
+            return empty($password);
+        }
         if (crypt($password, $passwdInDB) == $passwdInDB) {
             return true;
         }
