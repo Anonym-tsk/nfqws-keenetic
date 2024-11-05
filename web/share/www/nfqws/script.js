@@ -271,7 +271,7 @@ class UI {
             element.classList.add('hidden');
             const result = await _postData({cmd: 'login', user: login.value, password: password.value});
             if (!result.status) {
-                location.reload();
+                window.location.reload();
             }
         };
 
@@ -300,7 +300,7 @@ class UI {
             show,
             async logout() {
                 await _postData({cmd: 'logout'});
-                location.reload();
+                window.location.reload();
             },
         }
     }
@@ -357,8 +357,7 @@ class UI {
         btnUpgrade.addEventListener('click', async () => {
             const result = await nfqwsActionClick('upgrade', 'Upgrade nfqws-keenetic?');
             if (result) {
-                // Not using window.location.reload() because need clear cache
-                window.location.href = window.location.href;
+                window.location.reload();
             }
         });
         btnLogout.addEventListener('click', () => this.login.logout());
