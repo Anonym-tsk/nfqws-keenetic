@@ -123,7 +123,7 @@ opkg upgrade nfqws-keenetic-web
 ##### Удаление
 
 ```
-opkg remove --autoremove nfqws-keenetic nfqws-keenetic-web
+opkg remove --autoremove nfqws-keenetic-web nfqws-keenetic
 ```
 
 ##### Информация об установленной версии
