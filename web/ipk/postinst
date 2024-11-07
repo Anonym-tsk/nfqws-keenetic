@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Fix conflict with keenetic webdav server: https://github.com/Entware/entware-packages/pull/27
+sed -i -E "s/^PROCS=lighttpd$/PROCS=\/opt\/sbin\/lighttpd/" /opt/etc/init.d/S80lighttpd
+
 /opt/etc/init.d/S80lighttpd start
 /opt/etc/init.d/S80lighttpd reconfigure
 
