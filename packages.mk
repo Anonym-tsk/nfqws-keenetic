@@ -1,14 +1,16 @@
-URL_MIPSEL := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-lsb/nfqws
-URL_MIPS := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/mips32r1-msb/nfqws
-URL_AARCH64 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/aarch64/nfqws
-URL_ARMV7 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/arm/nfqws
-URL_X86 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/x86/nfqws
-URL_X86_64 := https://raw.githubusercontent.com/bol-van/zapret/master/binaries/x86_64/nfqws
-
 _clean:
 	rm -rf out/$(BUILD_DIR)
 	mkdir -p out/$(BUILD_DIR)/control
 	mkdir -p out/$(BUILD_DIR)/data
+
+_download_bins: TARGET_URL=$(shell curl 'https://api.github.com/repos/bol-van/zapret/releases?per_page=1' | jq -r '.[].assets[].browser_download_url | select(. | endswith("tar.gz"))')
+_download_bins:
+	rm -f out/zapret.tar.gz
+	rm -rf out/zapret
+	curl -sSL $(TARGET_URL) -o out/zapret.tar.gz
+	mkdir -p out/zapret
+	tar -C out/zapret -xzf "out/zapret.tar.gz"
+	cd out/zapret/*/; mv binaries/ ../; cd ..
 
 _conffiles:
 	echo "$(ROOT_DIR)/etc/nfqws/nfqws.conf" > out/$(BUILD_DIR)/control/conffiles
@@ -57,19 +59,19 @@ _scripts:
 
 _binary:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin
-	curl -sSL $(URL) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin/nfqws
+	cp out/zapret/binaries/$(BIN)/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin/nfqws
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin/nfqws
 
 _binary-multi:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary
 
-	curl -sSL $(URL_MIPSEL) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
-	curl -sSL $(URL_MIPS) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
-	curl -sSL $(URL_AARCH64) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
-	curl -sSL $(URL_ARMV7) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
-	curl -sSL $(URL_X86) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
-	curl -sSL $(URL_X86_64) -o out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
+	cp out/zapret/binaries/mips32r1-lsb/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
+	cp out/zapret/binaries/mips32r1-msb/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
+	cp out/zapret/binaries/aarch64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
+	cp out/zapret/binaries/arm/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
+	cp out/zapret/binaries/x86/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
+	cp out/zapret/binaries/x86_64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
@@ -122,38 +124,38 @@ _ipk:
 	tar czvf ../$(FILENAME) control.tar.gz data.tar.gz debian-binary; \
 	cd ../..
 
-mipsel:
+mipsel: _download_bins
 	@make \
 		BUILD_DIR=mipsel \
 		ARCH=mipsel-3.4 \
 		FILENAME=nfqws-keenetic_$(VERSION)_mipsel-3.4.ipk \
-		URL="$(URL_MIPSEL)" \
+		BIN=mips32r1-lsb \
 		_ipk
 
-mips:
+mips: _download_bins
 	@make \
 		BUILD_DIR=mips \
 		ARCH=mips-3.4 \
 		FILENAME=nfqws-keenetic_$(VERSION)_mips-3.4.ipk \
-		URL="$(URL_MIPS)" \
+		BIN=mips32r1-msb \
 		_ipk
 
-aarch64:
+aarch64: _download_bins
 	@make \
 		BUILD_DIR=aarch64 \
 		ARCH=aarch64-3.10 \
 		FILENAME=nfqws-keenetic_$(VERSION)_aarch64-3.10.ipk \
-		URL="$(URL_AARCH64)" \
+		BIN=aarch64 \
 		_ipk
 
-multi:
+multi: _download_bins
 	@make \
 		BUILD_DIR=all \
 		ARCH=all \
 		FILENAME=nfqws-keenetic_$(VERSION)_all_entware.ipk \
 		_ipk
 
-openwrt:
+openwrt: _download_bins
 	@make \
 		BUILD_DIR=openwrt \
 		ARCH=all \

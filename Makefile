@@ -16,3 +16,5 @@ clean:
 	rm -rf out/all
 	rm -rf out/openwrt
 	rm -rf out/web
+	rm -rf out/zapret
+	rm -rf out/zapret.tar.gz
