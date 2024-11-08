@@ -33,5 +33,7 @@ jobs:
       run: |
         echo "Version: ${{ steps.get_bins.outputs.version }}"
         echo "Name: ${{ steps.get_bins.outputs.name }}"
-        ls -la zapret/
+        cd zapret/
+        tar –xvzf zapret-${{ steps.get_bins.outputs.version }}.tar.gz
+        ls -la zapret-${{ steps.get_bins.outputs.version }}
 
