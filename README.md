@@ -286,4 +286,4 @@ NFQWS_ARGS="--filter-tcp=443 --dpi-desync=fake,split2 --hostlist=custom.list --n
 
 ---
 
-Нравится проект? [Поддержи автора](https://yoomoney.ru/to/410019180291197)! Купи ему немного :beers: или :coffee:!
+Нравится проект? Поддержи автора [здесь](https://yoomoney.ru/to/410019180291197) или [тут](https://pay.cloudtips.ru/p/054d0666). Купи ему немного :beers: или :coffee:!
