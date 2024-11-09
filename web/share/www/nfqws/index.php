@@ -15,8 +15,6 @@ function normalizeString(string $s): string {
     $lastChar = substr($s, -1);
     if ($lastChar !== "\n" && !empty($s)) {
         $s .= "\n";
-    } else {
-        $s .= "";
     }
 
     return $s;
