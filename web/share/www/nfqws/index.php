@@ -13,8 +13,10 @@ function normalizeString(string $s): string {
     $s = preg_replace("/\n{3,}/", "\n\n", $s);
 
     $lastChar = substr($s, -1);
-    if ($lastChar !== "\n") {
+    if ($lastChar !== "\n" && !empty($s)) {
         $s .= "\n";
+    } else {
+        $s .= "";
     }
 
     return $s;
@@ -51,7 +53,9 @@ function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nf
     $filename = basename($filename);
     $file = $path . '/' . $filename;
     if (file_exists($file)) {
-        return file_put_contents($file, normalizeString($content));
+        if (file_put_contents($file, normalizeString($content)) !== false) {
+        return true;
+        }
     } else {
         return false;
     }
