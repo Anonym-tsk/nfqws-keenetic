@@ -54,6 +54,7 @@ function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nf
         if (file_put_contents($file, normalizeString($content)) !== false) {
             return true;
         }
+        return false;
     } else {
         return false;
     }
