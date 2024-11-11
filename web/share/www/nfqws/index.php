@@ -50,14 +50,7 @@ function getLogContent(string $filename, $path = ROOT_DIR . '/var/log'): string 
 function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nfqws') {
     $filename = basename($filename);
     $file = $path . '/' . $filename;
-    if (file_exists($file)) {
-        if (file_put_contents($file, normalizeString($content)) !== false) {
-            return true;
-        }
-        return false;
-    } else {
-        return false;
-    }
+    return file_exists($file) && file_put_contents($file, normalizeString($content)) !== false;
 }
 
 function removeFile(string $filename, $path = ROOT_DIR . '/etc/nfqws') {
