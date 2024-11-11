@@ -53,6 +53,10 @@ function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nf
     return file_exists($file) && file_put_contents($file, normalizeString($content)) !== false;
 }
 
+function saveLog(string $filename, string $content, $path = ROOT_DIR . '/var/log') {
+    return saveFile($filename, $content, $path);
+}
+
 function removeFile(string $filename, $path = ROOT_DIR . '/etc/nfqws') {
     $filename = basename($filename);
     $file = $path . '/' . $filename;
@@ -139,7 +143,11 @@ function main() {
             break;
 
         case 'filesave':
-            $result = saveFile($_POST['filename'], $_POST['content']);
+            if (str_ends_with($_POST['filename'], '.log')) {
+                $result = saveLog($_POST['filename'], $_POST['content']);
+            } else {
+                $result = saveFile($_POST['filename'], $_POST['content']);
+            }
             $response = array('status' => $result ? 0 : 1, 'filename' => $_POST['filename']);
             break;
 

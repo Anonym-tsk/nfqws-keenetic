@@ -25,7 +25,32 @@ class UI {
             const isList = filename.endsWith('.list');
             const isLog = filename.endsWith('.log');
 
-            if (!isConf && !isList && !isLog) {
+            if (isLog) {
+                const clear = document.createElement('div');
+                clear.classList.add('nav-clear');
+                clear.setAttribute('title', 'Clear log');
+
+                clear.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const yesno = await this.popup.confirm('Clear log?');
+                    if (!yesno) {
+                        return;
+                    }
+
+                    const result = await saveFile(filename, '');
+                    if (!result.status) {
+                        if (filename === currentFile) {
+                            this.textarea.value = '';
+                        }
+                    } else {
+                        this.popup.alert(`clear ${filename}`, `Error: ${result.status}`);
+                    }
+                });
+
+                tab.appendChild(clear);
+            } else if (!isConf && !isList) {
                 tab.classList.add('secondary');
                 const trash = document.createElement('div');
                 trash.classList.add('nav-trash');
