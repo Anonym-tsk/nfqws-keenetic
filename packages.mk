@@ -7,8 +7,8 @@ _download_bins: TARGET_URL=$(shell curl 'https://api.github.com/repos/bol-van/za
 _download_bins:
 	rm -f out/zapret.tar.gz
 	rm -rf out/zapret
-	curl -sSL $(TARGET_URL) -o out/zapret.tar.gz
 	mkdir -p out/zapret
+	curl -sSL $(TARGET_URL) -o out/zapret.tar.gz
 	tar -C out/zapret -xzf "out/zapret.tar.gz"
 	cd out/zapret/*/; mv binaries/ ../; cd ..
 
