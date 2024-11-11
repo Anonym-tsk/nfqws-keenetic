@@ -13,7 +13,7 @@ function normalizeString(string $s): string {
     $s = preg_replace("/\n{3,}/", "\n\n", $s);
 
     $lastChar = substr($s, -1);
-    if ($lastChar !== "\n") {
+    if ($lastChar !== "\n" && !empty($s)) {
         $s .= "\n";
     }
 
@@ -50,11 +50,7 @@ function getLogContent(string $filename, $path = ROOT_DIR . '/var/log'): string 
 function saveFile(string $filename, string $content, $path = ROOT_DIR . '/etc/nfqws') {
     $filename = basename($filename);
     $file = $path . '/' . $filename;
-    if (file_exists($file)) {
-        return file_put_contents($file, normalizeString($content));
-    } else {
-        return false;
-    }
+    return file_exists($file) && file_put_contents($file, normalizeString($content)) !== false;
 }
 
 function removeFile(string $filename, $path = ROOT_DIR . '/etc/nfqws') {
