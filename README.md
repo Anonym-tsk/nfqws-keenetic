@@ -294,6 +294,7 @@ NFQWS_ARGS="--filter-tcp=443 --dpi-desync=fake,split2 --hostlist=custom.list --n
 
 1. Запустить скрипт и следовать его инструкциям
    ```
+   opkg install curl
    /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/common/strategy.sh)"
    ```
    Подробнее можно почитать на [исходной странице](https://github.com/bol-van/zapret?tab=readme-ov-file#%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%BF%D1%80%D0%BE%D0%B2%D0%B0%D0%B9%D0%B4%D0%B5%D1%80%D0%B0)
