@@ -3,7 +3,7 @@ _clean:
 	mkdir -p out/$(BUILD_DIR)/control
 	mkdir -p out/$(BUILD_DIR)/data
 
-_download_bins: TARGET_URL=$(shell curl 'https://api.github.com/repos/bol-van/zapret/releases?per_page=1' | jq -r '.[].assets[].browser_download_url | select(. | endswith("tar.gz"))')
+_download_bins: TARGET_URL=$(shell curl 'https://api.github.com/repos/bol-van/zapret/releases?per_page=1' | jq -r '.[].assets[].browser_download_url | select(. | endswith("embedded.tar.gz"))')
 _download_bins:
 	rm -f out/zapret.tar.gz
 	rm -rf out/zapret
