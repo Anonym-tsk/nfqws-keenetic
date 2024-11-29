@@ -11,7 +11,7 @@ fi
 mkdir -p "$ROOT_DIR/tmp/nfqws-keenetic/strategy/zapret"
 cd "$ROOT_DIR/tmp/nfqws-keenetic/strategy"
 
-RELEASE_URL=`curl -s https://api.github.com/repos/bol-van/zapret/releases/latest | grep browser_download_url | grep '.tar.gz' | cut -d '"' -f 4`
+RELEASE_URL=`curl -s https://api.github.com/repos/bol-van/zapret/releases/latest | grep browser_download_url | grep 'embedded.tar.gz' | cut -d '"' -f 4`
 curl -SL# $RELEASE_URL -o zapret.tar.gz
 tar -C zapret -xzf zapret.tar.gz
 cd zapret/*/
