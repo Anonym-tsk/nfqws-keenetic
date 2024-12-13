@@ -140,6 +140,15 @@ _init_policy_rule() {
 _startup_args() {
   local args="--user=$USER --qnum=$NFQUEUE_NUM"
 
+  # Fix bind multiple interfaces
+  local iface_count=$(echo $ISP_INTERFACE | wc -w)
+  if [ "$iface_count" -gt "1" ]; then
+    args="$args --bind-fix4"
+    if [ -n "$IPV6_ENABLED" ] && [ "$IPV6_ENABLED" -ne "0" ]; then
+      args="$args --bind-fix6"
+    fi
+  fi
+
   # Logging
   if [ "$LOG_LEVEL" -eq "1" ]; then
     args="--debug=syslog $args"
@@ -214,7 +223,7 @@ firewall_stop_v4() {
 }
 
 firewall_start_v6() {
-  if [ -n "$IPV6_ENABLED" ] && [ "$IPV6_ENABLED" -ne "1" ]; then
+  if [ -z "$IPV6_ENABLED" ] || [ "$IPV6_ENABLED" -eq "0" ]; then
     return
   fi
 
@@ -230,7 +239,7 @@ firewall_start_v6() {
 }
 
 firewall_stop_v6() {
-  if [ -n "$IPV6_ENABLED" ] && [ "$IPV6_ENABLED" -ne "1" ]; then
+  if [ -z "$IPV6_ENABLED" ] || [ "$IPV6_ENABLED" -eq "0" ]; then
     return
   fi
 
