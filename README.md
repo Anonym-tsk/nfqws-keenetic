@@ -206,33 +206,33 @@ which nft
 # Заполняется автоматически при установке
 # Можно ввести несколько интерфейсов, например ISP_INTERFACE="eth3 nwg1"
 # Для поиска интерфейса можно воспользоваться командами `route` или `ifconfig`
-ISP_INTERFACE="eth3"
+ISP_INTERFACE="..."
 
 # Стратегии обработки HTTPS и QUIC трафика
-NFQWS_ARGS="--dpi-desync=fake,split2 --dpi-desync-ttl=0 --dpi-desync-repeats=16 --dpi-desync-split-pos=1 --dpi-desync-fooling=md5sig,badseq --dpi-desync-cutoff=d4 --dpi-desync-fake-tls=/opt/etc/nfqws/tls_clienthello.bin"
-NFQWS_ARGS_QUIC="--filter-udp=443 --dpi-desync=fake --dpi-desync-repeats=11 --dpi-desync-cutoff=d4 --dpi-desync-fake-quic=/opt/etc/nfqws/quic_initial.bin"
+NFQWS_ARGS="..."
+NFQWS_ARGS_QUIC="..."
 
 # Стратегия обработки UDP трафика (не использует параметры из NFQWS_EXTRA_ARGS)
-NFQWS_ARGS_UDP="--filter-udp=50000-50099 --dpi-desync=fake --dpi-desync-any-protocol --dpi-desync-repeats=6 --dpi-desync-cutoff=n2"
+NFQWS_ARGS_UDP="..."
 
 # Режим работы (auto, list, all)
-NFQWS_EXTRA_ARGS="--hostlist=/opt/etc/nfqws/user.list --hostlist-auto=/opt/etc/nfqws/auto.list --hostlist-auto-debug=/opt/var/log/nfqws.log --hostlist-exclude=/opt/etc/nfqws/exclude.list"
+NFQWS_EXTRA_ARGS="..."
 
 # Обрабатывать ли IPv6 соединения
-IPV6_ENABLED=1
+IPV6_ENABLED=0|1
 
 # TCP порты для iptables
 # Оставьте пустым, если нужно отключить обработку TCP
 # Добавьте порт 80 для обработки HTTP (TCP_PORTS=443,80)
-TCP_PORTS=443
+TCP_PORTS=443(,80)
 
 # UDP порты для iptables
 # Оставьте пустым, если нужно отключить обработку UDP
 # Удалите порт 443, если не нужно обрабатывать QUIC
-UDP_PORTS=443,50000:50099
+UDP_PORTS=443(,50000:50099)
 
 # Логирование в Syslog
-LOG_LEVEL=0
+LOG_LEVEL=0|1
 ```
 
 Стратегии применяются ко всем доменам из `user.list` и `auto.list`, за исключением доменов из `exclude.list`.
