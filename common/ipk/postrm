@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -f "/opt/etc/init.d/S51nfqws" ]; then
+if [ -f "/opt/bin/opkg" ]; then
     ROOT_DIR=/opt
 else
     ROOT_DIR=

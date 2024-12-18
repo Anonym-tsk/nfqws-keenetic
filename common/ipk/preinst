@@ -1,12 +1,16 @@
 #!/bin/sh
 
-source $(dirname $0)/env
+if [ -f "/opt/bin/opkg" ]; then
+    ROOT_DIR=/opt
+else
+    ROOT_DIR=
+fi
 
 CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
 LISTFILE="${ROOT_DIR}/etc/nfqws/user.list"
 
 # Set `install` or `upgrade` for postinst script
-echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"
+echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"  # TODO: maybe we have system variable for this?
 
 # Migrations
 NEED_MIGRATION_CONF=0
