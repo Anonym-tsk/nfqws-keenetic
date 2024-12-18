@@ -3,7 +3,7 @@ _clean:
 	mkdir -p out/$(BUILD_DIR)/control
 	mkdir -p out/$(BUILD_DIR)/data
 
-_download_bins: TARGET_URL=$(shell curl -s 'https://api.github.com/repos/bol-van/zapret/releases/latest' | jq -r '.assets[].browser_download_url | select(. | endswith("embedded.tar.gz"))')
+_download_bins: TARGET_URL=$(shell curl -s 'https://api.github.com/repos/bol-van/zapret/releases/latest' | grep 'browser_download_url' | grep 'embedded.tar.gz' | cut -d '"' -f 4)
 _download_bins:
 	rm -f out/zapret.tar.gz
 	rm -rf out/zapret
@@ -81,7 +81,7 @@ _binary-multi:
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 _startup:
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]] || [[ "$(BUILD_DIR)" == "openwrt-new" ]]; then \
   		cat etc/init.d/openwrt-start etc/init.d/common etc/init.d/openwrt-end > out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
   		chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
 	else \
@@ -124,6 +124,17 @@ _ipk:
 	tar czvf ../$(FILENAME) control.tar.gz data.tar.gz debian-binary; \
 	cd ../..
 
+_apk:
+	make _clean
+
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/log
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/run
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
+
+	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
+	make _startup
+	make _binary-multi
+
 mipsel: _download_bins
 	@make \
 		BUILD_DIR=mipsel \
@@ -162,5 +173,12 @@ openwrt: _download_bins
 		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
 		ROOT_DIR= \
 		_ipk
+
+openwrt_new: _download_bins
+	@make \
+		BUILD_DIR=openwrt-new \
+		ARCH=all \
+		ROOT_DIR= \
+		_apk
 
 packages: mipsel mips aarch64 multi openwrt
