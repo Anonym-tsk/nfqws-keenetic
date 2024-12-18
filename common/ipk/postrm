@@ -1,21 +1,37 @@
 #!/bin/sh
 
-source $(dirname $0)/nfqws-keenetic.env
-source $(dirname $0)/nfqws-keenetic.common
+if [ -f "/opt/etc/init.d/S51nfqws" ]; then
+    ROOT_DIR=/opt
+else
+    ROOT_DIR=
+fi
+
+CONFDIR="${ROOT_DIR}/etc/nfqws"
+NFQWS_BIN="${ROOT_DIR}/usr/bin/nfqws"
+LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
+
+remove_binary_func() {
+  rm -f "$NFQWS_BIN"
+}
+
+remove_all_files_func() {
+  rm -f $LISTLOG
+  echo -e "\nRemove lists and config? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      rm -rf $CONFDIR
+      ;;
+  esac
+}
 
 # Remove binary file
 remove_binary_func
 
-case "$1" in
-  upgrade)
-    # Do nothing
-    ;;
-  *)
-    # Remove all data
-    remove_all_files_func
+[ "${PKG_UPGRADE}" = "1" ] && exit 0
 
-    echo "Uninstallation successful"
-    ;;
-esac
+# Remove all data
+remove_all_files_func
 
+echo "Uninstallation successful"
 exit 0

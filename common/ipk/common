@@ -2,10 +2,8 @@
 
 CONFDIR="${ROOT_DIR}/etc/nfqws"
 CONFFILE=$CONFDIR/nfqws.conf
-LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
 INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
 INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
-NFQWS_BIN="${ROOT_DIR}/usr/bin/nfqws"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
@@ -65,21 +63,6 @@ fast_install_func() {
       ;;
     *)
       # Do nothing
-      ;;
-  esac
-}
-
-remove_binary_func() {
-  rm -f "$NFQWS_BIN"
-}
-
-remove_all_files_func() {
-  rm -f $LISTLOG
-  echo -e "\nRemove lists and config? y/N"
-  read yn
-  case $yn in
-    [Yy]* )
-      rm -rf $CONFDIR
       ;;
   esac
 }
