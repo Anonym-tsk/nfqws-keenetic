@@ -1,9 +1,26 @@
 #!/bin/sh
 
-source $(dirname $0)/nfqws-keenetic.env
-source $(dirname $0)/nfqws-keenetic.common
+if [ -f "/opt/bin/opkg" ]; then
+    ROOT_DIR=/opt
+else
+    ROOT_DIR=
+fi
 
-# Stop service if exist
-stop_func
+INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
+INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
+
+stop_func() {
+  if [ -f "$INIT_SCRIPT" ]; then
+    $INIT_SCRIPT stop
+  elif [ -f "$INIT_SCRIPT_OWRT" ]; then
+    $INIT_SCRIPT_OWRT stop
+  fi
+}
+
+
+# Stop entware service
+if [ -f "$INIT_SCRIPT" ]; then
+  stop_func
+fi
 
 exit 0

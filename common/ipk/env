@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# Entware base root is in /opt
-ROOT_DIR=/opt

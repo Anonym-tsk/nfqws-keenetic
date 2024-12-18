@@ -1,15 +1,140 @@
 #!/bin/sh
 
-source $(dirname $0)/nfqws-keenetic.env
-source $(dirname $0)/nfqws-keenetic.common
+if [ -f "/opt/bin/opkg" ]; then
+    ROOT_DIR=/opt
+else
+    ROOT_DIR=
+fi
 
-# Stop service if exist
-stop_func
+CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
+INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
+INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
+BINFILE="${ROOT_DIR}/usr/bin/nfqws"
+
+stop_func() {
+  if [ -f "$INIT_SCRIPT" ]; then
+    $INIT_SCRIPT stop
+  elif [ -f "$INIT_SCRIPT_OWRT" ]; then
+    $INIT_SCRIPT_OWRT stop
+  fi
+}
+
+start_func() {
+  if [ -f "$INIT_SCRIPT" ]; then
+    $INIT_SCRIPT start
+  elif [ -f "$INIT_SCRIPT_OWRT" ]; then
+    $INIT_SCRIPT_OWRT start
+  fi
+}
+
+isp_interface_func() {
+  route | grep '^default' | grep -o '[^ ]*$'
+}
+
+ipv6_enabled_func() {
+  # $1 - interface, e.g. eth3
+  enabled=$(ip -f inet6 addr show dev "$1" 2>/dev/null | grep "scope global")
+  return $([ -z "$enabled" ])
+}
+
+fast_install_func() {
+  local NFQWS_INSTALL_TYPE="install"
+  if [ -f "${ROOT_DIR}/tmp/nfqws_install_type" ]; then
+    # Set in preinst script
+    NFQWS_INSTALL_TYPE=$(cat "${ROOT_DIR}/tmp/nfqws_install_type")
+    rm -f "${ROOT_DIR}/tmp/nfqws_install_type"
+  fi
+
+  case "$NFQWS_INSTALL_TYPE" in
+    install)
+      # Interface
+      DEF_IFACE=$(isp_interface_func)
+      sed -i -E "s#^ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
+      echo "Detected ISP interface: $DEF_IFACE"
+
+      # IPv6
+      IPV6=$(ipv6_enabled_func "$DEF_IFACE" && echo 1 || echo 0)
+      sed -i -E "s#^IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
+      echo "Detected IPv6: $IPV6"
+
+      # Config paths
+      # TODO: Это надо сразу в пакете делать
+      if [ -f "$INIT_SCRIPT_OWRT" ]; then
+        sed -i -E "s#/opt/#/#g" $CONFFILE
+      fi
+
+      echo "Current working mode: auto"
+      echo "You can change settings in the configuration file: $CONFFILE"
+
+      echo "Installation successful"
+      ;;
+    *)
+      # Do nothing
+      ;;
+  esac
+}
+
+install_binary_func() {
+  local OPKG_CONF="${ROOT_DIR}/etc/opkg.conf"
+  local OWRT_FEEDS="${ROOT_DIR}/etc/opkg/distfeeds.conf"
+  local ARCH=
+
+  if [ -f "$OPKG_CONF" ]; then
+    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7|arm_|i386|i686|x86_64' | head -n 1)
+  fi
+  if [ -z "$ARCH" ] && [ -f "$OWRT_FEEDS" ]; then
+    ARCH=$(cat "$OWRT_FEEDS" | grep -oE 'mips_|mipsel_|aarch64_|arm_|i386|x86_64' | head -n 1)
+  fi
+  if [ -n "$ARCH" ]; then
+    case "$ARCH" in
+      "mips-3"|"mips_") ARCH="mips" ;;
+      "mipsel-3"|"mipsel_") ARCH="mipsel" ;;
+      "aarch64-3"|"aarch64_") ARCH="aarch64" ;;
+      "armv7"|"arm_") ARCH="armv7" ;;
+      "i386"|"i686") ARCH="x86" ;;
+      "x86_64") ARCH="x86_64" ;;
+    esac
+  fi
+
+  if [ -z $ARCH ]; then
+    ARCH=$(uname -m | grep -oE 'mips|mipsel|aarch64|armv7|i386|i686|x86_64')
+    if [ "$ARCH" == "mips" ]; then
+      if grep -qE 'system type.*MediaTek' /proc/cpuinfo; then
+        ARCH="mipsel"
+      fi
+    elif [ "$ARCH" == "i386" ] || [ "$ARCH" == "i686" ]; then
+      ARCH="x86"
+    fi
+  fi
+
+  if [ -z $ARCH ]; then
+    echo "Failed to detect architecture"
+    exit 1
+  fi
+
+  echo "Detected arch: $ARCH"
+
+  cp -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-$ARCH" "$BINFILE"
+  chmod +x "$BINFILE"
+  rm -rf "${ROOT_DIR}/tmp/nfqws_binary"
+}
+
+# Stop entware service
+if [ -f "$INIT_SCRIPT" ]; then
+  stop_func
+fi
+
+# Install binary for multiplatform package
+if [ -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-x86" ]; then
+  install_binary_func
+fi
 
 # Install configuration
 fast_install_func
 
-# Starting Services
-start_func
+# Start entware service
+if [ -f "$INIT_SCRIPT" ]; then
+  start_func
+fi
 
 exit 0
