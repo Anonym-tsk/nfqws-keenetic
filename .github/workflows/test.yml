@@ -16,7 +16,6 @@ concurrency:
 
 jobs:
   build-openwrt:
-    needs: prepare
     runs-on: ubuntu-latest
     container:
       image: openwrt/sdk:latest
