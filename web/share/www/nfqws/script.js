@@ -351,7 +351,6 @@ class UI {
         const menuDropdown = document.getElementById('dropdown-menu');
         const btnSave = document.getElementById('save');
         const btnTheme = document.getElementById('theme');
-        const btnUpdate = document.getElementById('update');
         const btnUpgrade = document.getElementById('upgrade');
         const btnLogout = document.getElementById('logout');
 
@@ -378,9 +377,8 @@ class UI {
         btnStop.addEventListener('click', () => nfqwsActionClick('stop', 'Stop service?'));
         btnStart.addEventListener('click', () => nfqwsActionClick('start', 'Start service?'));
         btnTheme.addEventListener('click', () => this.toggleTheme());
-        btnUpdate.addEventListener('click', () => nfqwsActionClick('update', 'Update packages list?'));
         btnUpgrade.addEventListener('click', async () => {
-            const result = await nfqwsActionClick('upgrade', 'Upgrade nfqws-keenetic?');
+            const result = await nfqwsActionClick('upgrade', 'Update nfqws-keenetic?');
             if (result) {
                 window.location.reload();
             }

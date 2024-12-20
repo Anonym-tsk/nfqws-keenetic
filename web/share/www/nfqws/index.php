@@ -80,14 +80,28 @@ function nfqwsServiceAction(string $action) {
     return array('output' => $output, 'status' => $retval);
 }
 
-function opkgAction(string $action) {
+function opkgUpgradeAction() {
     $output = null;
     $retval = null;
-    exec("opkg $action", $output, $retval);
+    exec("opkg update && opkg upgrade nfqws-keenetic nfqws-keenetic-web", $output, $retval);
     if (empty($output)) {
-        $output[] = 'Nothing to upgrade';
+        $output[] = 'Nothing to update';
     }
     return array('output' => $output, 'status' => $retval);
+}
+
+function apkUpgradeAction() {
+    $output = null;
+    $retval = null;
+    exec("apk --update-cache add nfqws-keenetic nfqws-keenetic-web", $output, $retval);
+    if (empty($output)) {
+        $output[] = 'Nothing to update';
+    }
+    return array('output' => $output, 'status' => $retval);
+}
+
+function upgradeAction() {
+    return file_exists('/usr/bin/apk') ? apkUpgradeAction() : opkgUpgradeAction();
 }
 
 function authenticate($username, $password) {
@@ -163,12 +177,8 @@ function main() {
             $response = nfqwsServiceAction($_POST['cmd']);
             break;
 
-        case 'update':
-            $response = opkgAction('update');
-            break;
-
         case 'upgrade':
-            $response = opkgAction('upgrade nfqws-keenetic nfqws-keenetic-web');
+            $response = upgradeAction();
             break;
 
         case 'login':
