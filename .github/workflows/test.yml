@@ -55,7 +55,7 @@ jobs:
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
+          name: nfqws-keenetic_all_openwrt.ipk
           path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
           if-no-files-found: error
 
@@ -63,6 +63,6 @@ jobs:
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.apk
+          name: nfqws-keenetic_all_openwrt.apk
           path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-${{ steps.version.outputs.content }}.apk
           if-no-files-found: error
