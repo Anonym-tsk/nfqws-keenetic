@@ -23,7 +23,7 @@ function normalizeString(string $s): string {
 function getFiles($path = ROOT_DIR . '/etc/nfqws'): array {
     // GLOB_BRACE is unsupported in openwrt
     $files = array_filter(glob($path . '/*'), function ($file) {
-        return is_file($file) && preg_match('/\.(list|list-opkg|list-old|conf|conf-opkg|conf-old)$/i', $file);
+        return is_file($file) && preg_match('/\.(list|list-opkg|list-old|conf|conf-opkg|conf-old|apk-new)$/i', $file);
     });
     $logfile = ROOT_DIR . '/var/log/nfqws.log';
     $basenames = array_map(fn($file) => basename($file), $files);
