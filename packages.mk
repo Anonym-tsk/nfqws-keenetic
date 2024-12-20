@@ -14,7 +14,9 @@ _download_bins:
 
 _conffiles:
 	cp common/ipk/conffiles out/$(BUILD_DIR)/control/conffiles
-	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/conffiles
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/conffiles; \
+	fi
 
 _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
@@ -32,16 +34,17 @@ _scripts: CONFIG_VERSION=$(shell grep -E '^CONFIG_VERSION=' etc/nfqws/nfqws.conf
 _scripts:
 	cp common/ipk/preinst out/$(BUILD_DIR)/control/preinst
 	sed -i -E "s#^CURRENT_VERSION=([0-9]+)#CURRENT_VERSION=$(CONFIG_VERSION)#" out/$(BUILD_DIR)/control/preinst
-	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/preinst
 
 	cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst
-	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postinst
-
 	cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm
-	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/prerm
-
 	cp common/ipk/postrm out/$(BUILD_DIR)/control/postrm
-	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postrm
+
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/preinst; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postinst; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/prerm; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postrm; \
+	fi
 
 _binary:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin
