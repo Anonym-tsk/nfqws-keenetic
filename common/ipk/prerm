@@ -1,13 +1,7 @@
 #!/bin/sh
 
-if [ -f "/opt/bin/opkg" ]; then
-    ROOT_DIR=/opt
-else
-    ROOT_DIR=
-fi
-
-INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
-INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
+INIT_SCRIPT="/opt/etc/init.d/S51nfqws"
+INIT_SCRIPT_OWRT="/opt/etc/init.d/nfqws-keenetic"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then

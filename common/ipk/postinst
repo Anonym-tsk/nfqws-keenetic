@@ -1,15 +1,9 @@
 #!/bin/sh
 
-if [ -f "/opt/bin/opkg" ]; then
-    ROOT_DIR=/opt
-else
-    ROOT_DIR=
-fi
-
-CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
-INIT_SCRIPT="${ROOT_DIR}/etc/init.d/S51nfqws"
-INIT_SCRIPT_OWRT="${ROOT_DIR}/etc/init.d/nfqws-keenetic"
-BINFILE="${ROOT_DIR}/usr/bin/nfqws"
+CONFFILE="/opt/etc/nfqws/nfqws.conf"
+INIT_SCRIPT="/opt/etc/init.d/S51nfqws"
+INIT_SCRIPT_OWRT="/opt/etc/init.d/nfqws-keenetic"
+BINFILE="/opt/usr/bin/nfqws"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
@@ -37,40 +31,35 @@ ipv6_enabled_func() {
   return $([ -z "$enabled" ])
 }
 
-fast_install_func() {
+install_config_func() {
   local NFQWS_INSTALL_TYPE="install"
-  if [ -f "${ROOT_DIR}/tmp/nfqws_install_type" ]; then
+  if [ -f "/opt/tmp/nfqws_install_type" ]; then
     # Set in preinst script
-    NFQWS_INSTALL_TYPE=$(cat "${ROOT_DIR}/tmp/nfqws_install_type")
-    rm -f "${ROOT_DIR}/tmp/nfqws_install_type"
+    NFQWS_INSTALL_TYPE=$(cat "/opt/tmp/nfqws_install_type")
+    rm -f "/opt/tmp/nfqws_install_type"
   fi
 
-  case "$NFQWS_INSTALL_TYPE" in
-    install)
-      # Interface
-      DEF_IFACE=$(isp_interface_func)
-      sed -i -E "s#^ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
-      echo "Detected ISP interface: $DEF_IFACE"
+  if [ "$NFQWS_INSTALL_TYPE" = "install" ]; then
+    # Interface
+    local DEF_IFACE=$(isp_interface_func)
+    sed -i -E "s#^ISP_INTERFACE=\".+\"#ISP_INTERFACE=\"$DEF_IFACE\"#" $CONFFILE
+    echo "Detected ISP interface: $DEF_IFACE"
 
-      # IPv6
-      IPV6=$(ipv6_enabled_func "$DEF_IFACE" && echo 1 || echo 0)
-      sed -i -E "s#^IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
-      echo "Detected IPv6: $IPV6"
+    # IPv6
+    local IPV6=$(ipv6_enabled_func "$DEF_IFACE" && echo 1 || echo 0)
+    sed -i -E "s#^IPV6_ENABLED=([0-9]+)#IPV6_ENABLED=$IPV6#" $CONFFILE
+    echo "Detected IPv6: $IPV6"
 
-      echo "Current working mode: auto"
-      echo "You can change settings in the configuration file: $CONFFILE"
+    echo "Current working mode: auto"
+    echo "You can change settings in the configuration file: $CONFFILE"
 
-      echo "Installation successful"
-      ;;
-    *)
-      # Do nothing
-      ;;
-  esac
+    echo "Installation successful"
+  fi
 }
 
 install_binary_func() {
-  local OPKG_CONF="${ROOT_DIR}/etc/opkg.conf"
-  local OWRT_FEEDS="${ROOT_DIR}/etc/opkg/distfeeds.conf"
+  local OPKG_CONF="/opt/etc/opkg.conf"
+  local OWRT_FEEDS="/opt/etc/opkg/distfeeds.conf"
   local ARCH=
 
   if [ -f "$OPKG_CONF" ]; then
@@ -108,9 +97,9 @@ install_binary_func() {
 
   echo "Detected arch: $ARCH"
 
-  cp -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-$ARCH" "$BINFILE"
+  cp -f "/opt/tmp/nfqws_binary/nfqws-$ARCH" "$BINFILE"
   chmod +x "$BINFILE"
-  rm -rf "${ROOT_DIR}/tmp/nfqws_binary"
+  rm -rf "/opt/tmp/nfqws_binary"
 }
 
 # Stop entware service
@@ -119,12 +108,12 @@ if [ -f "$INIT_SCRIPT" ]; then
 fi
 
 # Install binary for multiplatform package
-if [ -f "${ROOT_DIR}/tmp/nfqws_binary/nfqws-x86" ]; then
+if [ -f "/opt/tmp/nfqws_binary/nfqws-x86" ]; then
   install_binary_func
 fi
 
 # Install configuration
-fast_install_func
+install_config_func
 
 # Start entware service
 if [ -f "$INIT_SCRIPT" ]; then

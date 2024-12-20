@@ -2,15 +2,9 @@
 
 [ "${PKG_UPGRADE}" = "1" ] && exit 0
 
-if [ -f "/opt/bin/opkg" ]; then
-    ROOT_DIR=/opt
-else
-    ROOT_DIR=
-fi
-
-CONFDIR="${ROOT_DIR}/etc/nfqws"
-NFQWS_BIN="${ROOT_DIR}/usr/bin/nfqws"
-LISTLOG="${ROOT_DIR}/var/log/nfqws.log"
+CONFDIR="/opt/etc/nfqws"
+NFQWS_BIN="/opt/usr/bin/nfqws"
+LISTLOG="/opt/var/log/nfqws.log"
 
 remove_binary_func() {
   rm -f "$NFQWS_BIN"

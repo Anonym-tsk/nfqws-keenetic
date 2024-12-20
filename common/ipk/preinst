@@ -1,22 +1,16 @@
 #!/bin/sh
 
-if [ -f "/opt/bin/opkg" ]; then
-    ROOT_DIR=/opt
-else
-    ROOT_DIR=
-fi
-
-CONFFILE="${ROOT_DIR}/etc/nfqws/nfqws.conf"
-LISTFILE="${ROOT_DIR}/etc/nfqws/user.list"
+CURRENT_VERSION=0  # This variable set by build
+CONFFILE="/opt/etc/nfqws/nfqws.conf"
+LISTFILE="/opt/etc/nfqws/user.list"
 
 # Set `install` or `upgrade` for postinst script
-echo "$1" > "${ROOT_DIR}/tmp/nfqws_install_type"  # TODO: maybe we have system variable for this?
+echo "$1" > "/opt/tmp/nfqws_install_type"
 
 # Migrations
 NEED_MIGRATION_CONF=0
 NEED_MIGRATION_LIST=0
 
-CURRENT_VERSION=5  # TODO: Set from current config
 INSTALLED_VERSION=$(grep -E '^CONFIG_VERSION=' "$CONFFILE" 2>/dev/null | grep -oE '[0-9]+$')
 
 if [ -z "$INSTALLED_VERSION" ]; then
@@ -33,7 +27,7 @@ if [ $NEED_MIGRATION_CONF -ne 0 ]; then
   fi
 
   # We need clean install
-  echo "install" > "${ROOT_DIR}/tmp/nfqws_install_type"
+  echo "install" > "/opt/tmp/nfqws_install_type"
 fi
 
 if [ $NEED_MIGRATION_LIST -ne 0 ]; then

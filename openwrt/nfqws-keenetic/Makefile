@@ -38,22 +38,19 @@ define Package/nfqws-keenetic/install
 endef
 
 define Package/nfqws-keenetic/conffiles
-/etc/nfqws/nfqws.conf
-/etc/nfqws/user.list
-/etc/nfqws/auto.list
-/etc/nfqws/exclude.list
+$(file <$(PKG_BUILD_DIR)/out/openwrt/control/conffiles)
 endef
 
 define Package/nfqws-keenetic/preinst
-$(file <../../common/ipk/preinst)
+$(file <$(PKG_BUILD_DIR)/out/openwrt/control/preinst)
 endef
 
 define Package/nfqws-keenetic/postinst
-$(file <../../common/ipk/postinst)
+$(file <$(PKG_BUILD_DIR)/out/openwrt/control/postinst)
 endef
 
 define Package/nfqws-keenetic/postrm
-$(file <../../common/ipk/postrm)
+$(file <$(PKG_BUILD_DIR)/out/openwrt/control/postrm)
 endef
 
 $(eval $(call BuildPackage,nfqws-keenetic))

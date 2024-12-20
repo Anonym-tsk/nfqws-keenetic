@@ -13,10 +13,8 @@ _download_bins:
 	cd out/zapret/*/; mv binaries/ ../; cd ..
 
 _conffiles:
-	echo "$(ROOT_DIR)/etc/nfqws/nfqws.conf" > out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/user.list" >> out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/auto.list" >> out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/exclude.list" >> out/$(BUILD_DIR)/control/conffiles
+	cp common/ipk/conffiles out/$(BUILD_DIR)/control/conffiles
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/conffiles
 
 _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
@@ -30,11 +28,20 @@ _control:
 	echo "Description:  NFQWS service" >> out/$(BUILD_DIR)/control/control
 	echo "" >> out/$(BUILD_DIR)/control/control
 
+_scripts: CONFIG_VERSION=$(shell grep -E '^CONFIG_VERSION=' etc/nfqws/nfqws.conf 2>/dev/null | grep -oE '[0-9]+$$')
 _scripts:
 	cp common/ipk/preinst out/$(BUILD_DIR)/control/preinst
+	sed -i -E "s#^CURRENT_VERSION=([0-9]+)#CURRENT_VERSION=$(CONFIG_VERSION)#" out/$(BUILD_DIR)/control/preinst
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/preinst
+
 	cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postinst
+
 	cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/prerm
+
 	cp common/ipk/postrm out/$(BUILD_DIR)/control/postrm
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postrm
 
 _binary:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin
@@ -106,6 +113,9 @@ _ipk:
 _apk:
 	make _clean
 
+	make _conffiles
+	make _scripts
+
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/log
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/run
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
@@ -153,4 +163,4 @@ openwrt: _download_bins
 		ROOT_DIR= \
 		_apk
 
-packages: mipsel mips aarch64 multi openwrt
+packages: mipsel mips aarch64 multi
