@@ -66,3 +66,19 @@ jobs:
           name: nfqws-keenetic_all_openwrt.apk
           path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-${{ steps.version.outputs.content }}.apk
           if-no-files-found: error
+
+      - name: Upload web ipk
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfqws-keenetic-web_all_openwrt.ipk
+          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-web_${{ steps.version.outputs.content }}_all.ipk
+          if-no-files-found: error
+
+      - name: Upload web apk
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfqws-keenetic-web_all_openwrt.apk
+          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-web-${{ steps.version.outputs.content }}.apk
+          if-no-files-found: error

@@ -163,4 +163,4 @@ openwrt: _download_bins
 		ROOT_DIR= \
 		_apk
 
-packages: mipsel mips aarch64 multi
+entware: mipsel mips aarch64 multi

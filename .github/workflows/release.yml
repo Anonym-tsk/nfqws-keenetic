@@ -40,11 +40,11 @@ jobs:
         path: ./VERSION
         trim: true
 
-    - name: Build packages
-      run: make packages
+    - name: Build entware packages
+      run: make entware
 
-    - name: Build web
-      run: make web-interface
+    - name: Build entware web
+      run: make web-entware
 
     - name: Commit and push version file
       run: |
