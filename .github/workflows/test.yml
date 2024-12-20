@@ -64,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.apk
-          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic_${{ steps.version.outputs.content }}_all.apk
+          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-${{ steps.version.outputs.content }}.apk
           if-no-files-found: error
