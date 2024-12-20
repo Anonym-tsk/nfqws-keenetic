@@ -57,12 +57,6 @@ fast_install_func() {
       sed -i -E "s#^IPV6_ENABLED=(1|0)#IPV6_ENABLED=$IPV6#" $CONFFILE
       echo "Detected IPv6: $IPV6"
 
-      # Config paths
-      # TODO: Это надо сразу в пакете делать
-      if [ -f "$INIT_SCRIPT_OWRT" ]; then
-        sed -i -E "s#/opt/#/#g" $CONFFILE
-      fi
-
       echo "Current working mode: auto"
       echo "You can change settings in the configuration file: $CONFFILE"
 
