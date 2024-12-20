@@ -2,8 +2,6 @@ name: Test build
 
 on:
   workflow_dispatch:
-    branches:
-      - master
 
 permissions:
   contents: write
