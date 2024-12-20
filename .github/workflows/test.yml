@@ -49,13 +49,14 @@ jobs:
           make defconfig
           make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
           make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
+          ls -la /builder/bin/packages/x86_64/nfqws/
 
       - name: Upload ipk
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
-          path: /builder/bin/packages/*/nfqws/nfqws-keenetic_*.ipk
+          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
           if-no-files-found: error
 
       - name: Upload apk
@@ -63,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.apk
-          path: /builder/bin/packages/*/nfqws/nfqws-keenetic_*.apk
+          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic_${{ steps.version.outputs.content }}_all.apk
           if-no-files-found: error
