@@ -24,6 +24,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Bump version file
+        uses: francktrouillez/auto-bump-version-file@v1
+        with:
+          file: 'VERSION'
+
+      - name: Read version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./VERSION
+          trim: true
+
       - name: Init SDK
         working-directory: /builder
         run: |
@@ -40,12 +52,18 @@ jobs:
           make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
           make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
 
-          ls -la ./bin/packages/*/nfqws
+      - name: Upload ipk
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.ipk
+          path: /builder/bin/packages/*/nfqws/nfqws-keenetic_*.ipk
+          if-no-files-found: error
 
-#      - name: Upload packages
-#        if: steps.build.outcome == 'success'
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: youtubeUnblock-${{ matrix.branch }}-${{ matrix.arch }}
-#          path: /builder/youtubeUnblock*.ipk
-#          if-no-files-found: error
+      - name: Upload apk
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfqws-keenetic_${{ steps.version.outputs.content }}_all_openwrt.apk
+          path: /builder/bin/packages/*/nfqws/nfqws-keenetic_*.apk
+          if-no-files-found: error

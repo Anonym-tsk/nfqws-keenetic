@@ -21,13 +21,7 @@ _conffiles:
 _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
-
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/$(BUILD_DIR)/control/control; \
-	else \
-		echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control; \
-	fi
-
+	echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control
 	echo "Conflicts: tpws-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
@@ -66,7 +60,7 @@ _binary-multi:
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 _startup:
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]] || [[ "$(BUILD_DIR)" == "openwrt-new" ]]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
   		cat etc/init.d/openwrt-start etc/init.d/common etc/init.d/openwrt-end > out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
   		chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
 	else \
@@ -154,14 +148,6 @@ multi: _download_bins
 openwrt: _download_bins
 	@make \
 		BUILD_DIR=openwrt \
-		ARCH=all \
-		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
-		ROOT_DIR= \
-		_ipk
-
-openwrt_new: _download_bins
-	@make \
-		BUILD_DIR=openwrt-new \
 		ARCH=all \
 		ROOT_DIR= \
 		_apk

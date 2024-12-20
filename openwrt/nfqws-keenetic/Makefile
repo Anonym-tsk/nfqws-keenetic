@@ -29,12 +29,12 @@ define Build/Prepare
 endef
 
 define Build/Compile
-		cd $(PKG_BUILD_DIR) && make openwrt_new
+		cd $(PKG_BUILD_DIR) && make openwrt
 endef
 
 define Package/nfqws-keenetic/install
 		$(INSTALL_DIR) $(1)/{etc,tmp,usr,var}
-		$(CP) $(PKG_BUILD_DIR)/out/openwrt-new/data/{etc,tmp,usr,var} $(1)/
+		$(CP) $(PKG_BUILD_DIR)/out/openwrt/data/{etc,tmp,usr,var} $(1)/
 endef
 
 define Package/nfqws-keenetic/conffiles
