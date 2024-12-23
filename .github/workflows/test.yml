@@ -95,7 +95,7 @@ jobs:
         path: ./out/*.ipk
         if-no-files-found: error
 
-  test-release:
+  build-repository:
     runs-on: ubuntu-latest
     needs: [build-openwrt, build-entware]
 
@@ -122,14 +122,6 @@ jobs:
 
     - name: Build repository
       run: make repository
-
-    - name: Create openwrt keys
-      env:
-        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
-        OPENWRT_APK_PUBLIC_KEY: ${{ secrets.OPENWRT_APK_PUBLIC_KEY }}
-      run: |
-        echo "$OPENWRT_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pub
-        echo "$OPENWRT_APK_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pem
 
     - name: Create openwrt keys
       env:
