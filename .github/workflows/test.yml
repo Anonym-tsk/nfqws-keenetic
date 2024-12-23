@@ -110,21 +110,12 @@ jobs:
   test-release:
     runs-on: ubuntu-latest
     needs: [build-openwrt, build-entware]
+
     steps:
-    - name: Download openwrt artifacts
+    - name: Download artifacts
       uses: actions/download-artifact@v4
       with:
-        name: openwrt
-        path: openwrt
+        path: out
 
-    - name: Display openwrt
-      run: ls -R openwrt
-
-    - name: Download entware artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: entware
-        path: entware
-
-    - name: Display entware
-      run: ls -R entware
+    - name: Display artifacts
+      run: ls -R out
