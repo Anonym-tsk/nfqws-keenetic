@@ -72,3 +72,15 @@ jobs:
         name: openwrt
         path: /builder/bin/packages/x86_64/nfqws/*
         if-no-files-found: error
+
+  test-release:
+    runs-on: ubuntu-latest
+    needs: [build-openwrt]
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: openwrt
+        path: openwrt
+    - name: Display structure of downloaded files
+      run: ls -R openwrt
