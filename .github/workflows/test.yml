@@ -15,9 +15,11 @@ concurrency:
 jobs:
   build-openwrt:
     runs-on: ubuntu-latest
+
     container:
       image: openwrt/sdk:latest
       options: --user root
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -51,7 +53,7 @@ jobs:
         echo "$OPENWRT_APK_SECRET_KEY" > /builder/private-key.pem
         echo "$OPENWRT_APK_PUBLIC_KEY" > /builder/public-key.pem
 
-    - name: Build packages
+    - name: Build openwrt packages
       id: build
       working-directory: /builder
       run: |
@@ -73,14 +75,56 @@ jobs:
         path: /builder/bin/packages/x86_64/nfqws/*
         if-no-files-found: error
 
+  build-entware:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Bump version file
+      uses: francktrouillez/auto-bump-version-file@v1
+      with:
+        file: 'VERSION'
+
+    - name: Read version
+      id: version
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./VERSION
+        trim: true
+
+    - name: Build entware packages
+      run: make entware
+
+    - name: Build entware web
+      run: make web-entware
+
+    - name: Upload files
+      uses: actions/upload-artifact@v4
+      with:
+        name: entware
+        path: ./out/nfqws/*.ipk
+        if-no-files-found: error
+
   test-release:
     runs-on: ubuntu-latest
-    needs: [build-openwrt]
+    needs: [build-openwrt, build-entware]
     steps:
-    - name: Download artifacts
+    - name: Download openwrt artifacts
       uses: actions/download-artifact@v4
       with:
         name: openwrt
         path: openwrt
-    - name: Display structure of downloaded files
+
+    - name: Display openwrt
       run: ls -R openwrt
+
+    - name: Download entware artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: entware
+        path: entware
+
+    - name: Display entware
+      run: ls -R entware
