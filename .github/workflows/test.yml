@@ -118,7 +118,7 @@ jobs:
         path: out
 
     - name: Display openwrt
-      run: ls -R openwrt
+      run: ls -R out
 
     - name: Download entware artifacts
       uses: actions/download-artifact@v4
@@ -127,4 +127,4 @@ jobs:
         path: out
 
     - name: Display entware
-      run: ls -R entware
+      run: ls -R out
