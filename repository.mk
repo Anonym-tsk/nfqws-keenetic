@@ -6,6 +6,14 @@ _repo-copy:
 	cp "out/$(FILENAME)" "out/_pages/$(BUILD_DIR)/"
 	cp "out/$(WEB)" "out/_pages/$(BUILD_DIR)/"
 
+	@if [[ -n "$(FILENAME_APK)" ]]; then \
+		cp "out/$(FILENAME_APK)" "out/_pages/$(BUILD_DIR)/"; \
+	fi
+
+	@if [[ -n "$(WEB_APK)" ]]; then \
+		cp "out/$(WEB_APK)" "out/_pages/$(BUILD_DIR)/"; \
+	fi
+
 _repo-html:
 	echo '<html><head><title>nfqws-keenetic repository</title></head><body>' > out/_pages/$(BUILD_DIR)/index.html
 	echo '<h1>Index of /$(BUILD_DIR)/</h1><hr>' >> out/_pages/$(BUILD_DIR)/index.html
@@ -106,8 +114,8 @@ repo-openwrt:
 		BUILD_DIR=openwrt \
 		FILENAME=nfqws-keenetic_$(VERSION)_all.ipk \
 		WEB=nfqws-keenetic-web_$(VERSION)_all.ipk \
-		FILENAME_APK=nfqws-keenetic_$(VERSION).apk \
-		WEB_APK=nfqws-keenetic-web_$(VERSION).apk \
+		FILENAME_APK=nfqws-keenetic-$(VERSION).apk \
+		WEB_APK=nfqws-keenetic-web-$(VERSION).apk \
 		_repo-clean _repo-copy _repo-html
 
 repository: repo-mipsel repo-mips repo-aarch64 repo-multi repo-openwrt _repo-index
