@@ -2,6 +2,8 @@ name: Test build
 
 on:
   workflow_dispatch:
+    branches:
+      - openwrt_apk
 
 permissions:
   contents: write
