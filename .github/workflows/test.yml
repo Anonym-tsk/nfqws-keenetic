@@ -115,4 +115,34 @@ jobs:
         merge-multiple: true
 
     - name: Display artifacts
-      run: ls -R out
+      run: ls -R ./out
+
+    - name: Build entware packages
+      run: make entware
+
+    - name: Build repository
+      run: make repository
+
+    - name: Create openwrt keys
+      env:
+        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
+        OPENWRT_APK_PUBLIC_KEY: ${{ secrets.OPENWRT_APK_PUBLIC_KEY }}
+      run: |
+        echo "$OPENWRT_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pub
+        echo "$OPENWRT_APK_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pem
+
+    - name: Create openwrt keys
+      env:
+        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
+        OPENWRT_APK_PUBLIC_KEY: ${{ secrets.OPENWRT_APK_PUBLIC_KEY }}
+      run: |
+        echo "$OPENWRT_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pub
+        echo "$OPENWRT_APK_PUBLIC_KEY" > ./out/_pages/openwrt/nfqws-keenetic.pem
+
+    - name: Copy openwrt indexes
+      run: |
+        cp ./out/Packages > ./out/_pages/openwrt/Packages
+        cp ./out/Packages.gz > ./out/_pages/openwrt/Packages.gz
+        cp ./out/Packages.sig > ./out/_pages/openwrt/Packages.sig
+        cp ./out/packages.adb > ./out/_pages/openwrt/packages.adb
+        ls -R ./out/_pages/openwrt
