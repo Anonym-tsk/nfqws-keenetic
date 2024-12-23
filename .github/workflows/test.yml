@@ -50,6 +50,7 @@ jobs:
         echo -e "$OPENWRT_PUBLIC_KEY" | tr -d '\r' > /builder/key-build.pub
         echo -e "$OPENWRT_APK_SECRET_KEY" | tr -d '\r' > /builder/private-key.pem
         echo -e "$OPENWRT_APK_PUBLIC_KEY" | tr -d '\r' > /builder/public-key.pem
+        cat /builder/public-key.pem
 
     - name: Build packages
       id: build
