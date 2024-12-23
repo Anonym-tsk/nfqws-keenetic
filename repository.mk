@@ -2,30 +2,32 @@ _repo-clean:
 	rm -rf out/_pages/$(BUILD_DIR)
 	mkdir -p out/_pages/$(BUILD_DIR)
 
+_repo-copy:
+	cp "out/$(FILENAME)" "out/_pages/$(BUILD_DIR)/"
+	cp "out/$(WEB)" "out/_pages/$(BUILD_DIR)/"
+
 _repo-html:
-	echo '<html><head><title>nfqws-keenetic opkg repository</title></head><body>' > out/_pages/$(BUILD_DIR)/index.html
+	echo '<html><head><title>nfqws-keenetic repository</title></head><body>' > out/_pages/$(BUILD_DIR)/index.html
 	echo '<h1>Index of /$(BUILD_DIR)/</h1><hr>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<pre>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<a href="../">../</a>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<a href="Packages">Packages</a>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<a href="Packages.gz">Packages.gz</a>' >> out/_pages/$(BUILD_DIR)/index.html
-
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
   		echo '<a href="Packages.sig">Packages.sig</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+  		echo '<a href="packages.adb">packages.adb</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
   		echo '<a href="nfqws-keenetic.pub">nfqws-keenetic.pub</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+  		echo '<a href="nfqws-keenetic.pem">nfqws-keenetic.pem</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+		echo '<a href="$(FILENAME_APK)">$(FILENAME_APK)</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
+		echo '<a href="$(WEB_APK)">$(WEB_APK)</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
   	fi
-
 	echo '<a href="$(FILENAME)">$(FILENAME)</a>' >> out/_pages/$(BUILD_DIR)/index.html
-
-	@if [[ -n "$(WEB)" ]]; then \
-		echo '<a href="$(WEB)">$(WEB)</a>' >> out/_pages/$(BUILD_DIR)/index.html; \
-	fi
-
+	echo '<a href="$(WEB)">$(WEB)</a>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '</pre>' >> out/_pages/$(BUILD_DIR)/index.html
 	echo '<hr></body></html>' >> out/_pages/$(BUILD_DIR)/index.html
 
 _repo-index:
-	echo '<html><head><title>nfqws-keenetic opkg repository</title></head><body>' > out/_pages/index.html
+	echo '<html><head><title>nfqws-keenetic repository</title></head><body>' > out/_pages/index.html
 	echo '<h1>Index of /</h1><hr>' >> out/_pages/index.html
 	echo '<pre>' >> out/_pages/index.html
 	echo '<a href="all/">all/</a>' >> out/_pages/index.html
@@ -38,22 +40,11 @@ _repo-index:
 
 _repository:
 	make _repo-clean
-
-	cp "out/$(FILENAME)" "out/_pages/$(BUILD_DIR)/"
-
-	@if [[ -n "$(WEB)" ]]; then \
-		cp "out/$(WEB)" "out/_pages/$(BUILD_DIR)/"; \
-	fi
+	make _repo-copy
 
 	echo "Package: nfqws-keenetic" > out/_pages/$(BUILD_DIR)/Packages
 	echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages
-
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/_pages/$(BUILD_DIR)/Packages; \
-	else \
-		echo "Depends: iptables, busybox" >> out/_pages/$(BUILD_DIR)/Packages; \
-	fi
-
+	echo "Depends: iptables, busybox" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Conflicts: tpws-keenetic" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Architecture: $(ARCH)" >> out/_pages/$(BUILD_DIR)/Packages
@@ -63,18 +54,16 @@ _repository:
 	echo "Description:  NFQWS service" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "" >> out/_pages/$(BUILD_DIR)/Packages
 
-	@if [[ -n "$(WEB)" ]]; then \
-		echo "Package: nfqws-keenetic-web" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Depends: nfqws-keenetic, php8-cgi, php8-mod-session, lighttpd, lighttpd-mod-cgi, lighttpd-mod-setenv, lighttpd-mod-rewrite, lighttpd-mod-redirect" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Architecture: all" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Filename: $(WEB)" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Size: $(shell wc -c out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "SHA256sum: $(shell sha256sum out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "Description:  NFQWS service web interface" >> out/_pages/$(BUILD_DIR)/Packages; \
-		echo "" >> out/_pages/$(BUILD_DIR)/Packages; \
-	fi
+	echo "Package: nfqws-keenetic-web" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Depends: nfqws-keenetic, php8-cgi, php8-mod-session, lighttpd, lighttpd-mod-cgi, lighttpd-mod-setenv, lighttpd-mod-rewrite, lighttpd-mod-redirect" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Architecture: all" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Filename: $(WEB)" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Size: $(shell wc -c out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "SHA256sum: $(shell sha256sum out/$(WEB) | awk '{print $$1}')" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Description:  NFQWS service web interface" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "" >> out/_pages/$(BUILD_DIR)/Packages
 
 	gzip -k out/_pages/$(BUILD_DIR)/Packages
 
@@ -115,9 +104,10 @@ repo-multi:
 repo-openwrt:
 	@make \
 		BUILD_DIR=openwrt \
-		ARCH=all \
-		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
-		WEB=nfqws-keenetic-web_$(VERSION)_all_openwrt.ipk \
-		_repository
+		FILENAME=nfqws-keenetic_$(VERSION)_all.ipk \
+		WEB=nfqws-keenetic-web_$(VERSION)_all.ipk \
+		FILENAME_APK=nfqws-keenetic_$(VERSION).apk \
+		WEB_APK=nfqws-keenetic-web_$(VERSION).apk \
+		_repo-clean _repo-copy _repo-html
 
 repository: repo-mipsel repo-mips repo-aarch64 repo-multi repo-openwrt _repo-index
