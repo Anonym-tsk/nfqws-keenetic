@@ -104,7 +104,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: entware
-        path: ./out/nfqws/*.ipk
+        path: ./out/*.ipk
         if-no-files-found: error
 
   test-release:
