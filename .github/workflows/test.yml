@@ -117,9 +117,6 @@ jobs:
     - name: Display artifacts
       run: ls -R ./out
 
-    - name: Build entware packages
-      run: make entware
-
     - name: Build repository
       run: make repository
 
@@ -138,3 +135,8 @@ jobs:
         cp ./out/Packages.sig ./out/_pages/openwrt/Packages.sig
         cp ./out/packages.adb ./out/_pages/openwrt/packages.adb
         ls -R ./out/_pages/openwrt
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./out/_pages
