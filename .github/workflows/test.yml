@@ -133,8 +133,8 @@ jobs:
 
     - name: Copy openwrt indexes
       run: |
-        cp ./out/Packages > ./out/_pages/openwrt/Packages
-        cp ./out/Packages.gz > ./out/_pages/openwrt/Packages.gz
-        cp ./out/Packages.sig > ./out/_pages/openwrt/Packages.sig
-        cp ./out/packages.adb > ./out/_pages/openwrt/packages.adb
+        cp ./out/Packages ./out/_pages/openwrt/Packages
+        cp ./out/Packages.gz ./out/_pages/openwrt/Packages.gz
+        cp ./out/Packages.sig ./out/_pages/openwrt/Packages.sig
+        cp ./out/packages.adb ./out/_pages/openwrt/packages.adb
         ls -R ./out/_pages/openwrt
