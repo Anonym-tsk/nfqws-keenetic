@@ -19,66 +19,56 @@ jobs:
       image: openwrt/sdk:latest
       options: --user root
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Bump version file
-        uses: francktrouillez/auto-bump-version-file@v1
-        with:
-          file: 'VERSION'
+    - name: Bump version file
+      uses: francktrouillez/auto-bump-version-file@v1
+      with:
+        file: 'VERSION'
 
-      - name: Read version
-        id: version
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./VERSION
-          trim: true
+    - name: Read version
+      id: version
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./VERSION
+        trim: true
 
-      - name: Init SDK
-        working-directory: /builder
-        run: |
-          HOME=/builder ./setup.sh
+    - name: Init SDK
+      working-directory: /builder
+      run: |
+        HOME=/builder ./setup.sh
 
-      - name: Build packages
-        id: build
-        working-directory: /builder
-        run: |
-          echo "src-link nfqws $GITHUB_WORKSPACE/openwrt" > feeds.conf
-          ./scripts/feeds update nfqws
-          ./scripts/feeds install -a -p nfqws
-          make defconfig
-          make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
-          make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
-          ls -la /builder/bin/packages/x86_64/nfqws/
+    - name: Copy keys
+      env:
+        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
+        OPENWRT_SECRET_KEY: ${{ secrets.OPENWRT_SECRET_KEY }}
+        OPENWRT_APK_PUBLIC_KEY: ${{ secrets.OPENWRT_APK_PUBLIC_KEY }}
+        OPENWRT_APK_SECRET_KEY: ${{ secrets.OPENWRT_APK_SECRET_KEY }}
+      run: |
+        echo -e "$OPENWRT_SECRET_KEY" >> /builder/key-build
+        echo -e "$OPENWRT_PUBLIC_KEY" >> /builder/key-build.pub
+        echo -e "$OPENWRT_APK_SECRET_KEY" >> /builder/private-key.pem
+        echo -e "$OPENWRT_APK_PUBLIC_KEY" >> /builder/public-key.pem
 
-      - name: Upload ipk
-        if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nfqws-keenetic_all_openwrt.ipk
-          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic_${{ steps.version.outputs.content }}_all.ipk
-          if-no-files-found: error
+    - name: Build packages
+      id: build
+      working-directory: /builder
+      run: |
+        echo "src-link nfqws $GITHUB_WORKSPACE/openwrt" > feeds.conf
+        ./scripts/feeds update nfqws
+        ./scripts/feeds install -a -p nfqws
+        make defconfig
+        make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
+        make CONFIG_USE_APK=y package/index V=s
+        make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
+        make CONFIG_USE_APK= package/index V=s
+        ls -la /builder/bin/packages/x86_64/nfqws/
 
-      - name: Upload apk
-        if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nfqws-keenetic_all_openwrt.apk
-          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-${{ steps.version.outputs.content }}.apk
-          if-no-files-found: error
-
-      - name: Upload web ipk
-        if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nfqws-keenetic-web_all_openwrt.ipk
-          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-web_${{ steps.version.outputs.content }}_all.ipk
-          if-no-files-found: error
-
-      - name: Upload web apk
-        if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nfqws-keenetic-web_all_openwrt.apk
-          path: /builder/bin/packages/x86_64/nfqws/nfqws-keenetic-web-${{ steps.version.outputs.content }}.apk
-          if-no-files-found: error
+    - name: Upload files
+      if: steps.build.outcome == 'success'
+      uses: actions/upload-artifact@v4
+      with:
+        name: openwrt
+        path: /builder/bin/packages/x86_64/nfqws/*
+        if-no-files-found: error
