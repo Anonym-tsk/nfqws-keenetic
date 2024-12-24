@@ -64,6 +64,5 @@ jobs:
 
     - name: Summary
       run: |
-        echo "ls -R /builder/bin/packages/x86_64/nfqws/" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        ls -R /builder/bin/packages/x86_64/nfqws/ >> $GITHUB_STEP_SUMMARY
+        echo "**/builder/bin/packages/x86_64/nfqws/**" >> $GITHUB_STEP_SUMMARY
+        ls /builder/bin/packages/x86_64/nfqws/ >> $GITHUB_STEP_SUMMARY
