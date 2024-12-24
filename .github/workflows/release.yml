@@ -60,7 +60,7 @@ jobs:
         make CONFIG_USE_APK=y package/index V=s
         make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
         make CONFIG_USE_APK= package/index V=s
-        ls -la /builder/bin/packages/x86_64/nfqws/
+        ls -R /builder/bin/packages/x86_64/nfqws/
 
     - name: Upload files
       if: steps.build.outcome == 'success'
