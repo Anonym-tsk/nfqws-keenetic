@@ -187,7 +187,7 @@ jobs:
 
     - name: Summary
       run: |
-        echo "Release v${{ steps.create_release.outputs.upload_url }} created" >> $GITHUB_STEP_SUMMARY
+        echo "Release v${{ steps.version.outputs.content }} created" >> $GITHUB_STEP_SUMMARY
 
   deploy-repository:
     runs-on: ubuntu-latest
