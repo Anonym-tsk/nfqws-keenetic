@@ -31,21 +31,11 @@ _web-ipk:
 
 	# data.tar.gz
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)
-	@if [[ "$(BUILD_DIR)" == "web-openwrt" ]]; then \
-		cp -r web/share/www out/$(BUILD_DIR)/data$(ROOT_DIR)/www; \
-		sed -i -E "s#__VERSION__#v$(VERSION)#g" out/$(BUILD_DIR)/data$(ROOT_DIR)/www/nfqws/index.html; \
-	else \
-		cp -r web/share out/$(BUILD_DIR)/data$(ROOT_DIR)/share; \
-		sed -i -E "s#__VERSION__#v$(VERSION)#g" out/$(BUILD_DIR)/data$(ROOT_DIR)/share/www/nfqws/index.html; \
-	fi
+	cp -r web/share out/$(BUILD_DIR)/data$(ROOT_DIR)/share
+	sed -i -E "s#__VERSION__#v$(VERSION)#g" out/$(BUILD_DIR)/data$(ROOT_DIR)/share/www/nfqws/index.html
 
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d
-	@if [[ "$(BUILD_DIR)" == "web-openwrt" ]]; then \
-		cp web/etc/lighttpd/conf.d/openwrt.conf out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d/80-nfqws.conf; \
-	else \
-		cp web/etc/lighttpd/conf.d/entware.conf out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d/80-nfqws.conf; \
-	fi
-
+	cp web/etc/lighttpd/conf.d/entware.conf out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d/80-nfqws.conf
 	cd out/$(BUILD_DIR)/data; tar czvf ../data.tar.gz .; cd ../../..
 
 	# ipk
@@ -53,6 +43,17 @@ _web-ipk:
 	cd out/$(BUILD_DIR); \
 	tar czvf ../$(FILENAME) control.tar.gz data.tar.gz debian-binary; \
 	cd ../..
+
+_web-apk:
+	make _web-clean
+	make _web-scripts
+
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)
+	cp -r web/share/www out/$(BUILD_DIR)/data$(ROOT_DIR)/www
+	sed -i -E "s#__VERSION__#v$(VERSION)#g" out/$(BUILD_DIR)/data$(ROOT_DIR)/www/nfqws/index.html
+
+	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d
+	cp web/etc/lighttpd/conf.d/openwrt.conf out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/lighttpd/conf.d/80-nfqws.conf
 
 web-entware:
 	@make \
@@ -63,8 +64,5 @@ web-entware:
 web-openwrt:
 	@make \
 		BUILD_DIR=web-openwrt \
-		FILENAME=nfqws-keenetic-web_$(VERSION)_all_openwrt.ipk \
 		ROOT_DIR= \
-		_web-ipk
-
-web-interface: web-entware web-openwrt
+		_web-apk

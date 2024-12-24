@@ -13,21 +13,15 @@ _download_bins:
 	cd out/zapret/*/; mv binaries/ ../; cd ..
 
 _conffiles:
-	echo "$(ROOT_DIR)/etc/nfqws/nfqws.conf" > out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/user.list" >> out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/auto.list" >> out/$(BUILD_DIR)/control/conffiles
-	echo "$(ROOT_DIR)/etc/nfqws/exclude.list" >> out/$(BUILD_DIR)/control/conffiles
+	cp common/ipk/conffiles out/$(BUILD_DIR)/control/conffiles
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/conffiles; \
+	fi
 
 _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
-
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		echo "Depends: iptables, iptables-mod-extra, iptables-mod-nfqueue, iptables-mod-filter, iptables-mod-ipopt, iptables-mod-conntrack-extra, ip6tables, ip6tables-mod-nat, ip6tables-extra" >> out/$(BUILD_DIR)/control/control; \
-	else \
-		echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control; \
-	fi
-
+	echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control
 	echo "Conflicts: tpws-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
@@ -36,25 +30,20 @@ _control:
 	echo "Description:  NFQWS service" >> out/$(BUILD_DIR)/control/control
 	echo "" >> out/$(BUILD_DIR)/control/control
 
+_scripts: CONFIG_VERSION=$(shell grep -E '^CONFIG_VERSION=' etc/nfqws/nfqws.conf 2>/dev/null | grep -oE '[0-9]+$$')
 _scripts:
-	cp common/ipk/common out/$(BUILD_DIR)/control/common
 	cp common/ipk/preinst out/$(BUILD_DIR)/control/preinst
+	sed -i -E "s#^CURRENT_VERSION=([0-9]+)#CURRENT_VERSION=$(CONFIG_VERSION)#" out/$(BUILD_DIR)/control/preinst
+
+	cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst
+	cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm
 	cp common/ipk/postrm out/$(BUILD_DIR)/control/postrm
 
-	@if [[ "$(BUILD_DIR)" == "all" ]]; then \
-		cp common/ipk/postinst-multi out/$(BUILD_DIR)/control/postinst; \
-	elif [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-	  cp common/ipk/postinst-openwrt out/$(BUILD_DIR)/control/postinst; \
-	else \
-		cp common/ipk/postinst out/$(BUILD_DIR)/control/postinst; \
-	fi
-
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
-		cp common/ipk/prerm-openwrt out/$(BUILD_DIR)/control/prerm; \
-		cp common/ipk/env-openwrt out/$(BUILD_DIR)/control/env; \
-	else \
-		cp common/ipk/prerm out/$(BUILD_DIR)/control/prerm; \
-		cp common/ipk/env out/$(BUILD_DIR)/control/env; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/preinst; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postinst; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/prerm; \
+		sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/control/postrm; \
 	fi
 
 _binary:
@@ -81,7 +70,7 @@ _binary-multi:
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
 
 _startup:
-	@if [[ "$(BUILD_DIR)" == "openwrt" ]] || [[ "$(BUILD_DIR)" == "openwrt-new" ]]; then \
+	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
   		cat etc/init.d/openwrt-start etc/init.d/common etc/init.d/openwrt-end > out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
   		chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d/nfqws-keenetic; \
 	else \
@@ -127,11 +116,15 @@ _ipk:
 _apk:
 	make _clean
 
+	make _conffiles
+	make _scripts
+
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/log
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/var/run
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/init.d
 
 	cp -r etc/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws
+	sed -i -E "s#/opt/#/#g" out/$(BUILD_DIR)/data$(ROOT_DIR)/etc/nfqws/nfqws.conf
 	make _startup
 	make _binary-multi
 
@@ -170,15 +163,7 @@ openwrt: _download_bins
 	@make \
 		BUILD_DIR=openwrt \
 		ARCH=all \
-		FILENAME=nfqws-keenetic_$(VERSION)_all_openwrt.ipk \
-		ROOT_DIR= \
-		_ipk
-
-openwrt_new: _download_bins
-	@make \
-		BUILD_DIR=openwrt-new \
-		ARCH=all \
 		ROOT_DIR= \
 		_apk
 
-packages: mipsel mips aarch64 multi openwrt
+entware: mipsel mips aarch64 multi

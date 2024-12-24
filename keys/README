@@ -1,4 +1,4 @@
-# Подпись Packages.sig для OpenWRT репозитория
+# Подпись Packages.sig для OpenWRT репозитория opkg
 
 # собираем usign
 git clone https://git.openwrt.org/project/usign.git
@@ -11,3 +11,7 @@ make
 
 # подписываем пакет
 ./usign -S -m out/_pages/openwrt/Packages -s secret.key -c "nfqws-keenetic OpenWRT repository"
+
+# Ключи для OpenWRT репозитория apk
+openssl ecparam -name prime256v1 -genkey -noout -out private-key.pem
+openssl ec -in private-key.pem -pubout > public-key.pem

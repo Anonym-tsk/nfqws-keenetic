@@ -1,21 +1,31 @@
 #!/bin/sh
 
-source $(dirname $0)/nfqws-keenetic.env
-source $(dirname $0)/nfqws-keenetic.common
+[ "${PKG_UPGRADE}" = "1" ] && exit 0
+
+CONFDIR="/opt/etc/nfqws"
+NFQWS_BIN="/opt/usr/bin/nfqws"
+LISTLOG="/opt/var/log/nfqws.log"
+
+remove_binary_func() {
+  rm -f "$NFQWS_BIN"
+}
+
+remove_all_files_func() {
+  rm -f $LISTLOG
+  echo -e "\nRemove lists and config? y/N"
+  read yn
+  case $yn in
+    [Yy]* )
+      rm -rf $CONFDIR
+      ;;
+  esac
+}
 
 # Remove binary file
 remove_binary_func
 
-case "$1" in
-  upgrade)
-    # Do nothing
-    ;;
-  *)
-    # Remove all data
-    remove_all_files_func
+# Remove all data
+remove_all_files_func
 
-    echo "Uninstallation successful"
-    ;;
-esac
-
+echo "Uninstallation successful"
 exit 0

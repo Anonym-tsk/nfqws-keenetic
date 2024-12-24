@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# OpenWRT base root is in /
-ROOT_DIR=

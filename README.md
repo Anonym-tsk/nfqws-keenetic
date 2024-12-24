@@ -1,6 +1,6 @@
 # nfqws-keenetic
 
-Пакеты для установки `nfqws` на маршрутизаторы с поддержкой `opkg`.
+Пакеты для установки `nfqws` на маршрутизаторы.
 
 > [!IMPORTANT]
 > Данный материал подготовлен в научно-технических целях.
@@ -45,14 +45,6 @@
 - Все дальнейшие команды выполняются не в cli роутера, а **в среде entware**. Подключиться в неё можно несколькими способами:
   - Через telnet: в терминале выполнить `telnet 192.168.1.1`, а потом `exec sh`.
   - Или же подключиться напрямую через SSH (логин - `root`, пароль по умолчанию - `keenetic`, порт - 222 или 22). Для этого в терминале написать `ssh 192.168.1.1 -l root -p 222`.
-
-> [!IMPORTANT]
-> **Миграция с версии 1.x.x на 2.x.x:**
-> 
-> Для определения версии выполните команду `opkg info nfqws-keenetic` - она работает только на версиях 2.x.x и возвращает информацию о пакете.
-> Если ничего не вернула – у вас установлена старая версия.
->
-> Никакой специальной миграции не требуется, просто переустановите новую версию по инструкции ниже.
 
 ---
 
@@ -149,14 +141,7 @@ opkg info nfqws-keenetic-web
 
 ### Установка на OpenWRT
 
-Пакет работает только с `iptables`.
-Если в вашей системе используется `nftables`, придется удалить `nftables` и `firewall4`, и установить `firewall3` и `iptables`.
-
-Проверить, что ваша система использует `nftables`:
-```
-ls -la /sbin/fw4
-which nft
-```
+#### До версии 24.10 включительно, пакетный менеджер `opkg`
 
 1. Установите необходимые зависимости
    ```
@@ -171,7 +156,7 @@ which nft
    opkg-key add /tmp/nfqws-keenetic.pub
    ```
 
-3. Установите opkg-репозиторий в систему
+3. Установите репозиторий в систему
    ```
    echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
    ```
@@ -187,6 +172,36 @@ which nft
 5. Установите веб-интерфейс (опционально)
    ```
    opkg install nfqws-keenetic-web
+   ```
+
+#### Версии 25.xx и Snapshot, пакетный менеджер `apk`
+
+1. Установите необходимые зависимости
+   ```
+   apk --update-cache add ca-certificates wget-ssl
+   apk del wget-nossl
+   ```
+
+2. Установите публичный ключ репозитория
+   ```
+   wget -O "/etc/apk/keys/nfqws-keenetic.pem" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pem"
+   ```
+
+3. Установите репозиторий в систему
+   ```
+   echo "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/packages.adb" > /etc/apk/repositories.d/nfqws-keenetic.list
+   ```
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`.
+   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
+
+4. Установите пакет
+   ```
+   apk --update-cache add nfqws-keenetic
+   ```
+
+5. Установите веб-интерфейс (опционально)
+   ```
+   apk add nfqws-keenetic-web
    ```
 
 > [!NOTE]
