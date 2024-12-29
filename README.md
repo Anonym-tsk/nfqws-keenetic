@@ -17,6 +17,54 @@
 Однако, работоспособность также была проверена на прошивках Padavan и OpenWRT (читайте ниже).
 
 Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
+<details>
+  <summary>Собранный список моделей из темы</summary>
+ 
+  - Билайн Smart Box GIGA
+  - Билайн Smart Box Turbo
+  - Asus RT-AC68U
+  - Asus RT-AX86U
+  - Asus RT-AX88U
+  - Asus RT-N56U
+  - Zyxel Keenetic II
+  - Zyxel Keenetic III
+  - Zyxel Keenetic Giga II
+  - Zyxel Keenetic Giga III
+  - Zyxel Keenetic Ultra
+  - Zyxel Keenetic Ultra II
+  - Zyxel Keenetic Extra
+  - Keenetic Giga (KN-1010)
+  - Keenetic Giga (KN-1011)
+  - Keenetic Giga (KN-1012)
+  - Keenetic 4G (KN-1212)
+  - Keenetic Omni (KN-1410)
+  - Keenetic Extra (KN-1710)
+  - Keenetic Extra (KN-1711)
+  - Keenetic Extra (KN-1713)
+  - Keenetic Ultra (KN-1810)
+  - Keenetic Ultra (KN-1811)
+  - Keenetic Viva (KN-1910)
+  - Keenetic Viva (KN-1912)
+  - Keenetic Viva (KN-1913)
+  - Keenetic Launcher DSL (KN-2012)
+  - Keenetic Skipper DSL (KN-2112)
+  - Keenetic Hero 4G+ (KN-2311)
+  - Keenetic Giant (KN-2610)
+  - Keenetic Peak (KN-2710)
+  - Keenetic Hopper DSL (KN-3610)
+  - Keenetic Hopper (KN-3810)
+  - Keenetic Hopper (KN-3811)
+  - Keenetic Hopper SE (KN-3812)
+  - Mikrotik RB952Ui-5ac2nD
+  - TP-Link Archer C20
+  - TP-Link Archer C6U
+  - TP-Link WDR3500
+  - Xiaomi Mi Router 3G
+  - Xiaomi Mi Router 4
+  - Xiaomi Mi Router 4A
+  - Xiaomi Mi Router Pro
+
+</details>
 
 Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions) или в [чате](https://t.me/nfqws).
 
