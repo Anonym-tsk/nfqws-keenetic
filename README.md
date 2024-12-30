@@ -49,6 +49,7 @@
   - Keenetic Launcher DSL (KN-2012)
   - Keenetic Skipper DSL (KN-2112)
   - Keenetic Hero 4G+ (KN-2311)
+  - Keenetic Giga SE (KN-2410)
   - Keenetic Giant (KN-2610)
   - Keenetic Peak (KN-2710)
   - Keenetic Hopper DSL (KN-3610)
