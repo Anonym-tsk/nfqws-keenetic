@@ -30,9 +30,9 @@
   - Zyxel Keenetic III
   - Zyxel Keenetic Giga II
   - Zyxel Keenetic Giga III
+  - Zyxel Keenetic Extra
   - Zyxel Keenetic Ultra
   - Zyxel Keenetic Ultra II
-  - Zyxel Keenetic Extra
   - Keenetic Giga (KN-1010)
   - Keenetic Giga (KN-1011)
   - Keenetic Giga (KN-1012)
