@@ -48,6 +48,7 @@
   - Keenetic Viva (KN-1913)
   - Keenetic Launcher DSL (KN-2012)
   - Keenetic Skipper DSL (KN-2112)
+  - Keenetic Runner 4G (KN-2211)
   - Keenetic Hero 4G+ (KN-2311)
   - Keenetic Giga SE (KN-2410)
   - Keenetic Giant (KN-2610)
@@ -64,6 +65,7 @@
   - Xiaomi Mi Router 4
   - Xiaomi Mi Router 4A
   - Xiaomi Mi Router Pro
+  - Xiaomi Router AX3000T
 
 </details>
 
