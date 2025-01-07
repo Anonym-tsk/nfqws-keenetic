@@ -26,6 +26,7 @@
   - Asus RT-AX86U
   - Asus RT-AX88U
   - Asus RT-N56U
+  - Cudy TR3000
   - Zyxel Keenetic II
   - Zyxel Keenetic III
   - Zyxel Keenetic Giga II
@@ -64,6 +65,7 @@
   - Xiaomi Mi Router 3G
   - Xiaomi Mi Router 4
   - Xiaomi Mi Router 4A
+  - Xiaomi Mi Router Mini
   - Xiaomi Mi Router Pro
   - Xiaomi Router AX3000T
 
