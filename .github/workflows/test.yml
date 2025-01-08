@@ -60,6 +60,14 @@ jobs:
         make CONFIG_NO_STRIP=y CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
         make CONFIG_NO_STRIP=y CONFIG_USE_APK= package/index V=s
 
+    - name: Upload files
+      if: steps.build.outcome == 'success'
+      uses: actions/upload-artifact@v4
+      with:
+        name: openwrt
+        path: /builder/bin/packages/x86_64/nfqws/*
+        if-no-files-found: error
+
     - name: Summary
       run: |
         echo '```' >> $GITHUB_STEP_SUMMARY
