@@ -56,10 +56,10 @@ jobs:
         ./scripts/feeds update nfqws
         ./scripts/feeds install -a -p nfqws
         make defconfig
-        make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
-        make CONFIG_USE_APK=y package/index V=s
-        make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
-        make CONFIG_USE_APK= package/index V=s
+        make CONFIG_NO_STRIP=y CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
+        make CONFIG_NO_STRIP=y CONFIG_USE_APK=y package/index V=s
+        make CONFIG_NO_STRIP=y CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
+        make CONFIG_NO_STRIP=y CONFIG_USE_APK= package/index V=s
 
     - name: Upload files
       if: steps.build.outcome == 'success'
