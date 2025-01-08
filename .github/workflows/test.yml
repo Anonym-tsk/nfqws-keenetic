@@ -1,0 +1,67 @@
+name: Test build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-openwrt:
+    runs-on: ubuntu-latest
+
+    container:
+      image: openwrt/sdk:latest
+      options: --user root
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Bump version file
+      uses: francktrouillez/auto-bump-version-file@v1
+      with:
+        file: 'VERSION'
+
+    - name: Init SDK
+      working-directory: /builder
+      run: |
+        HOME=/builder ./setup.sh
+
+    - name: Copy keys
+      env:
+        OPENWRT_PUBLIC_KEY: ${{ secrets.OPENWRT_PUBLIC_KEY }}
+        OPENWRT_SECRET_KEY: ${{ secrets.OPENWRT_SECRET_KEY }}
+        OPENWRT_APK_PUBLIC_KEY: ${{ secrets.OPENWRT_APK_PUBLIC_KEY }}
+        OPENWRT_APK_SECRET_KEY: ${{ secrets.OPENWRT_APK_SECRET_KEY }}
+      run: |
+        echo "$OPENWRT_SECRET_KEY" > /builder/key-build
+        echo "$OPENWRT_PUBLIC_KEY" > /builder/key-build.pub
+        echo "$OPENWRT_APK_SECRET_KEY" > /builder/private-key.pem
+        echo "$OPENWRT_APK_PUBLIC_KEY" > /builder/public-key.pem
+
+    - name: Build openwrt packages
+      id: build
+      working-directory: /builder
+      run: |
+        echo "src-link nfqws $GITHUB_WORKSPACE/openwrt" > feeds.conf
+        ./scripts/feeds update nfqws
+        ./scripts/feeds install -a -p nfqws
+        make defconfig
+        cat .config
+        make CONFIG_USE_APK=y package/nfqws-keenetic/compile V=s
+        make CONFIG_USE_APK=y package/index V=s
+        make CONFIG_USE_APK= package/nfqws-keenetic/compile V=s
+        make CONFIG_USE_APK= package/index V=s
+
+    - name: Summary
+      run: |
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        ls /builder/bin/packages/x86_64/nfqws/ >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
