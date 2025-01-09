@@ -133,7 +133,6 @@ _init_policy_rule() {
     echo "Found policy '$POLICY_NAME'. Only traffic from it will be processed."
   else
     POLICY_RULE="! --mark 0x40000000/0x40000000"
-    echo "Policy '$POLICY_NAME' not found. All traffic will be processed."
   fi
 }
 
