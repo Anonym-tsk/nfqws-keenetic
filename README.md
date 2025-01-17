@@ -23,6 +23,7 @@
   - Билайн Smart Box GIGA
   - Билайн Smart Box Turbo
   - Asus RT-AC68U
+  - Asus RT-AC86U
   - Asus RT-AX86U
   - Asus RT-AX88U
   - Asus RT-N56U
