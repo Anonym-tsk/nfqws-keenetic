@@ -115,7 +115,7 @@
    mkdir -p /opt/etc/opkg
    echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all" > /opt/etc/opkg/nfqws-keenetic.conf
    ```
-   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`.
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
 
    <details>
      <summary>Или можете выбрать репозиторий под конкретную архитектуру</summary>
@@ -213,7 +213,7 @@ opkg info nfqws-keenetic-web
    ```
    echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
    ```
-   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`.
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет
@@ -244,7 +244,7 @@ opkg info nfqws-keenetic-web
    ```
    echo "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/packages.adb" > /etc/apk/repositories.d/nfqws-keenetic.list
    ```
-   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`.
+   Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет

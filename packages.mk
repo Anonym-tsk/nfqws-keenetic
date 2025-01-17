@@ -61,6 +61,7 @@ _binary-multi:
 	cp out/zapret/binaries/arm/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
 	cp out/zapret/binaries/x86/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
 	cp out/zapret/binaries/x86_64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
+	cp out/zapret/binaries/lexra/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-lexra
 
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
@@ -68,6 +69,7 @@ _binary-multi:
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
+	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-lexra
 
 _startup:
 	@if [[ "$(BUILD_DIR)" == "openwrt" ]]; then \
