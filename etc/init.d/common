@@ -66,6 +66,7 @@ create_running_config() {
   echo "TCP_PORTS=$TCP_PORTS" >> "$CONFFILE.run"
   echo "UDP_PORTS=$UDP_PORTS" >> "$CONFFILE.run"
   echo "POLICY_NAME=\"$POLICY_NAME\"" >> "$CONFFILE.run"
+  echo "POLICY_EXCLUDE=$POLICY_EXCLUDE" >> "$CONFFILE.run"
   echo "POLICY_RULE=\"$POLICY_RULE\"" >> "$CONFFILE.run"
   echo "NFQUEUE_NUM=$NFQUEUE_NUM" >> "$CONFFILE.run"
 }
@@ -129,8 +130,13 @@ kernel_modules() {
 _init_policy_rule() {
   local MARK=$(ndmc -c show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
   if [ -n "$MARK" ]; then
-    POLICY_RULE="--mark 0x$MARK"
-    echo "Found policy '$POLICY_NAME'. Only traffic from it will be processed."
+    if [ -n "$POLICY_EXCLUDE" ] && [ "$POLICY_EXCLUDE" -ne "0" ]; then
+      POLICY_RULE="! --mark 0x$MARK"
+      echo "Found policy '$POLICY_NAME'. Traffic from it will be excluded from processing."
+    else
+      POLICY_RULE="--mark 0x$MARK"
+      echo "Found policy '$POLICY_NAME'. Only traffic from it will be processed."
+    fi
   else
     POLICY_RULE="! --mark 0x40000000/0x40000000"
   fi
