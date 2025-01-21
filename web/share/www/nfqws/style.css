@@ -355,6 +355,7 @@ nav {
 
 article {
     width: 100%;
+    position: absolute;
     position: relative;
     border: 1px solid var(--color-border);
     box-sizing: border-box;
