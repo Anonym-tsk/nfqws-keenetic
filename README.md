@@ -1,7 +1,7 @@
 # nfqws-keenetic
 
 [![GitHub Release](https://img.shields.io/github/release/Anonym-tsk/nfqws-keenetic?style=flat&color=green)](https://github.com/Anonym-tsk/nfqws-keenetic/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/Anonym-tsk/nfqws-keenetic?style=flat)](https://github.com/Anonym-tsk/nfqws-keenetic)
+[![GitHub Stars](https://img.shields.io/github/stars/Anonym-tsk/nfqws-keenetic?style=flat)](https://github.com/Anonym-tsk/nfqws-keenetic/stargazers)
 [![License](https://img.shields.io/github/license/Anonym-tsk/nfqws-keenetic.svg?style=flat&color=orange)](LICENSE)
 [![CloudTips](https://img.shields.io/badge/donate-CloudTips-598bd7.svg?style=flat)](https://pay.cloudtips.ru/p/054d0666)
 [![YooMoney](https://img.shields.io/badge/donate-YooMoney-8037fd.svg?style=flat)](https://yoomoney.ru/to/410019180291197)
