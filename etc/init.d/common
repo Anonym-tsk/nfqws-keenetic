@@ -1,20 +1,47 @@
-POLICY_RULE="! --mark 0x40000000/0x40000000"
+# Keenetic policy mark
+POLICY_MARK=
+# Marks for excliude packets
+MARK_EXCLUDE="0x20000000/0x20000000"
+MARK_PROCESSED="0x40000000/0x40000000"
 
 source "$CONFFILE"
 if [ -f "$CONFFILE.run" ]; then
   source "$CONFFILE.run"
 fi
 
-_RULE_TCP() {
-  echo "POSTROUTING -o $IFACE -t mangle -p tcp -m multiport --dports $TCP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark $POLICY_RULE -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+_RULE_EXCLUDE_POLICY() {
+  local PROTO=$1 # tcp or udp
+  local PORTS=$2 # 80,443
+
+  local START="POSTROUTING -o $IFACE -t mangle -p $PROTO -m multiport --dports $PORTS -m mark"
+  local END="--mark $POLICY_MARK -j MARK --set-xmark $MARK_EXCLUDE"
+
+  # Set exclude mark for policy
+  if [ -n "$POLICY_EXCLUDE" ] && [ "$POLICY_EXCLUDE" -ne "0" ]; then
+    echo "$START $END"
+  else
+    echo "$START ! $END"
+  fi
 }
 
-_RULE_UDP() {
-  echo "POSTROUTING -o $IFACE -t mangle -p udp -m multiport --dports $UDP_PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark $POLICY_RULE -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+_RULE_EXCLUDE_PROCESSED() {
+  local PROTO=$1 # tcp or udp
+  local PORTS=$2 # 80,443
+
+  # Set exclude mark for already processed packets
+  echo "POSTROUTING -o $IFACE -t mangle -p $PROTO -m multiport --dports $PORTS -m mark --mark $MARK_PROCESSED -j MARK --set-xmark $MARK_EXCLUDE"
+}
+
+_RULE_NFQWS() {
+  local PROTO=$1 # tcp or udp
+  local PORTS=$2 # 80,443
+
+  # Main NFQUEUE rule
+  echo "POSTROUTING -o $IFACE -t mangle -p $PROTO -m multiport --dports $PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark $MARK_EXCLUDE -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
 }
 
 _RULE_MASQ() {
-  echo "POSTROUTING -o $IFACE -t nat -p udp -m mark --mark 0x40000000/0x40000000 -j MASQUERADE"
+  echo "POSTROUTING -o $IFACE -t nat -p udp -m mark --mark $MARK_PROCESSED -j MASQUERADE"
 }
 
 is_running() {
@@ -60,14 +87,20 @@ reload_service() {
 }
 
 create_running_config() {
-  _init_policy_rule
+  local MARK=$(ndmc -c show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
+  if [ -n "$MARK" ]; then
+    POLICY_MARK="0x$MARK/0x0fffffff"
+  else
+    POLICY_MARK=""
+  fi
+
   echo "ISP_INTERFACE=\"$ISP_INTERFACE\"" > "$CONFFILE.run"
   echo "IPV6_ENABLED=$IPV6_ENABLED" >> "$CONFFILE.run"
   echo "TCP_PORTS=$TCP_PORTS" >> "$CONFFILE.run"
   echo "UDP_PORTS=$UDP_PORTS" >> "$CONFFILE.run"
   echo "POLICY_NAME=\"$POLICY_NAME\"" >> "$CONFFILE.run"
   echo "POLICY_EXCLUDE=$POLICY_EXCLUDE" >> "$CONFFILE.run"
-  echo "POLICY_RULE=\"$POLICY_RULE\"" >> "$CONFFILE.run"
+  echo "POLICY_MARK=\"$POLICY_MARK\"" >> "$CONFFILE.run"
   echo "NFQUEUE_NUM=$NFQUEUE_NUM" >> "$CONFFILE.run"
 }
 
@@ -127,21 +160,6 @@ kernel_modules() {
   fi
 }
 
-_init_policy_rule() {
-  local MARK=$(ndmc -c show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
-  if [ -n "$MARK" ]; then
-    if [ -n "$POLICY_EXCLUDE" ] && [ "$POLICY_EXCLUDE" -ne "0" ]; then
-      POLICY_RULE="! --mark 0x$MARK"
-      echo "Found policy '$POLICY_NAME'. Traffic from it will be excluded from processing."
-    else
-      POLICY_RULE="--mark 0x$MARK"
-      echo "Found policy '$POLICY_NAME'. Only traffic from it will be processed."
-    fi
-  else
-    POLICY_RULE="! --mark 0x40000000/0x40000000"
-  fi
-}
-
 _startup_args() {
   local args="--user=$USER --qnum=$NFQUEUE_NUM"
 
@@ -176,10 +194,10 @@ _startup_args() {
 }
 
 _iptables_add_remove() {
-  CMD=$1 # iptables or ip6tables
-  ACTION=$2 # -I, -A, -D
+  local CMD=$1 # iptables or ip6tables
+  local ACTION=$2 # -I, -A, -D
   shift 2
-  RULE="$@"
+  local RULE="$@"
 
   $CMD -C $RULE 2>/dev/null
   exists=$? # 0 = true
@@ -204,12 +222,20 @@ _ip6tables() {
 firewall_start_v4() {
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _iptables -A "$(_RULE_UDP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _iptables -A "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
+      fi
+      _iptables -A "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
+      _iptables -A "$(_RULE_NFQWS udp $UDP_PORTS)"
       _iptables -A "$(_RULE_MASQ)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _iptables -A "$(_RULE_TCP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _iptables -A "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
+      fi
+      _iptables -A "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
+      _iptables -A "$(_RULE_NFQWS tcp $TCP_PORTS)"
     fi
   done
 }
@@ -217,12 +243,20 @@ firewall_start_v4() {
 firewall_stop_v4() {
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _iptables -D "$(_RULE_UDP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _iptables -D "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
+      fi
+      _iptables -D "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
+      _iptables -D "$(_RULE_NFQWS udp $UDP_PORTS)"
       _iptables -D "$(_RULE_MASQ)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _iptables -D "$(_RULE_TCP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _iptables -D "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
+      fi
+      _iptables -D "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
+      _iptables -D "$(_RULE_NFQWS tcp $TCP_PORTS)"
     fi
   done
 }
@@ -234,11 +268,19 @@ firewall_start_v6() {
 
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _ip6tables -A "$(_RULE_UDP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _ip6tables -A "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
+      fi
+      _ip6tables -A "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
+      _ip6tables -A "$(_RULE_NFQWS udp $UDP_PORTS)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _ip6tables -A "$(_RULE_TCP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _ip6tables -A "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
+      fi
+      _ip6tables -A "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
+      _ip6tables -A "$(_RULE_NFQWS tcp $TCP_PORTS)"
     fi
   done
 }
@@ -250,11 +292,19 @@ firewall_stop_v6() {
 
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
-      _ip6tables -D "$(_RULE_UDP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _ip6tables -D "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
+      fi
+      _ip6tables -D "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
+      _ip6tables -D "$(_RULE_NFQWS udp $UDP_PORTS)"
     fi
 
     if [ -n "$TCP_PORTS" ]; then
-      _ip6tables -D "$(_RULE_TCP)"
+      if [ -n "$POLICY_MARK" ]; then
+        _ip6tables -D "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
+      fi
+      _ip6tables -D "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
+      _ip6tables -D "$(_RULE_NFQWS tcp $TCP_PORTS)"
     fi
   done
 }
