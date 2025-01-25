@@ -193,7 +193,7 @@ _startup_args() {
   echo "$args"
 }
 
-_iptables_add_remove() {
+_firewall() {
   local CMD=$1 # iptables or ip6tables
   local ACTION=$2 # -I, -A, -D
   shift 2
@@ -211,115 +211,57 @@ _iptables_add_remove() {
   fi
 }
 
-_iptables() {
-  _iptables_add_remove iptables "$@"
-}
+_firewall_start_stop() {
+  local CMD=$1 # iptables or ip6tables
+  local ACTION=$2 # -I, -A, -D
 
-_ip6tables() {
-  _iptables_add_remove ip6tables "$@"
-}
-
-firewall_start_v4() {
   for IFACE in $ISP_INTERFACE; do
     if [ -n "$UDP_PORTS" ]; then
       if [ -n "$POLICY_MARK" ]; then
-        _iptables -A "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
+        _firewall $CMD $ACTION "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
       fi
-      _iptables -A "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
-      _iptables -A "$(_RULE_NFQWS udp $UDP_PORTS)"
-      _iptables -A "$(_RULE_MASQ)"
+      _firewall $CMD $ACTION "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
+      _firewall $CMD $ACTION "$(_RULE_NFQWS udp $UDP_PORTS)"
+      if [ "$CMD" == "iptables" ]; then
+        _firewall $CMD $ACTION "$(_RULE_MASQ)"
+      fi
     fi
 
     if [ -n "$TCP_PORTS" ]; then
       if [ -n "$POLICY_MARK" ]; then
-        _iptables -A "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
+        _firewall $CMD $ACTION "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
       fi
-      _iptables -A "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
-      _iptables -A "$(_RULE_NFQWS tcp $TCP_PORTS)"
+      _firewall $CMD $ACTION "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
+      _firewall $CMD $ACTION "$(_RULE_NFQWS tcp $TCP_PORTS)"
     fi
   done
 }
 
-firewall_stop_v4() {
-  for IFACE in $ISP_INTERFACE; do
-    if [ -n "$UDP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _iptables -D "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
-      fi
-      _iptables -D "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
-      _iptables -D "$(_RULE_NFQWS udp $UDP_PORTS)"
-      _iptables -D "$(_RULE_MASQ)"
-    fi
-
-    if [ -n "$TCP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _iptables -D "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
-      fi
-      _iptables -D "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
-      _iptables -D "$(_RULE_NFQWS tcp $TCP_PORTS)"
-    fi
-  done
+_firewall_start_stop_v4() {
+  local ACTION=$1 # -I, -A, -D
+  _firewall_start_stop iptables $ACTION
 }
 
-firewall_start_v6() {
+_firewall_start_stop_v6() {
   if [ -z "$IPV6_ENABLED" ] || [ "$IPV6_ENABLED" -eq "0" ]; then
     return
   fi
 
-  for IFACE in $ISP_INTERFACE; do
-    if [ -n "$UDP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _ip6tables -A "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
-      fi
-      _ip6tables -A "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
-      _ip6tables -A "$(_RULE_NFQWS udp $UDP_PORTS)"
-    fi
-
-    if [ -n "$TCP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _ip6tables -A "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
-      fi
-      _ip6tables -A "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
-      _ip6tables -A "$(_RULE_NFQWS tcp $TCP_PORTS)"
-    fi
-  done
-}
-
-firewall_stop_v6() {
-  if [ -z "$IPV6_ENABLED" ] || [ "$IPV6_ENABLED" -eq "0" ]; then
-    return
-  fi
-
-  for IFACE in $ISP_INTERFACE; do
-    if [ -n "$UDP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _ip6tables -D "$(_RULE_EXCLUDE_POLICY udp $UDP_PORTS)"
-      fi
-      _ip6tables -D "$(_RULE_EXCLUDE_PROCESSED udp $UDP_PORTS)"
-      _ip6tables -D "$(_RULE_NFQWS udp $UDP_PORTS)"
-    fi
-
-    if [ -n "$TCP_PORTS" ]; then
-      if [ -n "$POLICY_MARK" ]; then
-        _ip6tables -D "$(_RULE_EXCLUDE_POLICY tcp $TCP_PORTS)"
-      fi
-      _ip6tables -D "$(_RULE_EXCLUDE_PROCESSED tcp $TCP_PORTS)"
-      _ip6tables -D "$(_RULE_NFQWS tcp $TCP_PORTS)"
-    fi
-  done
+  local ACTION=$1 # -I, -A, -D
+  _firewall_start_stop ip6tables $ACTION
 }
 
 firewall_iptables() {
-  firewall_start_v4
+  _firewall_start_stop_v4 -A
 }
 
 firewall_ip6tables() {
-  firewall_start_v6
+  _firewall_start_stop_v6 -A
 }
 
 firewall_stop() {
-  firewall_stop_v4
-  firewall_stop_v6
+  _firewall_start_stop_v4 -D
+  _firewall_start_stop_v6 -D
 }
 
 system_config() {

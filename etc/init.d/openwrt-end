@@ -23,8 +23,8 @@ start_service() {
   procd_set_param stderr 1
   procd_close_instance
 
-  firewall_start_v4
-  firewall_start_v6
+  firewall_iptables
+  firewall_ip6tables
   system_config
 
   echo 'Started NFQWS service'
@@ -32,7 +32,6 @@ start_service() {
 
 stop_service() {
   echo 'Stopping NFQWS service...'
-  firewall_stop_v4
-  firewall_stop_v6
+  firewall_stop
   remove_running_config
 }

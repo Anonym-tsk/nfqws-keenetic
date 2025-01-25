@@ -9,16 +9,15 @@ start() {
 
   $NFQWS_BIN --daemon --pidfile=$PIDFILE $(_startup_args)
 
-  firewall_start_v4
-  firewall_start_v6
+  firewall_iptables
+  firewall_ip6tables
   system_config
 
   echo 'Started NFQWS service'
 }
 
 stop() {
-  firewall_stop_v4
-  firewall_stop_v6
+  firewall_stop
 
   if ! is_running; then
     echo 'Service NFQWS is not running' >&2
