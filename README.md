@@ -67,7 +67,8 @@
   - Keenetic Hopper (KN-3810)
   - Keenetic Hopper (KN-3811)
   - Keenetic Hopper SE (KN-3812)
-  - Mikrotik RB952Ui-5ac2nD
+  - MikroTik RB951G-2HnD
+  - MikroTik RB952Ui-5ac2nD
   - TP-Link Archer C20
   - TP-Link Archer C6U
   - TP-Link WDR3500
