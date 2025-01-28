@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build-openwrt:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     container:
       image: openwrt/sdk:latest
@@ -76,7 +76,7 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
 
   build-entware:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
@@ -107,7 +107,7 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
 
   build-repository:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [build-openwrt, build-entware]
 
     steps:
@@ -158,7 +158,7 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
 
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [build-repository]
 
     steps:
@@ -301,7 +301,7 @@ jobs:
         echo "Release v${{ steps.version.outputs.content }} created" >> $GITHUB_STEP_SUMMARY
 
   deploy-repository:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [build-repository]
 
     steps:
