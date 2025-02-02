@@ -29,12 +29,14 @@
  
   - Билайн Smart Box GIGA
   - Билайн Smart Box Turbo
+  - ASUS ROG Rapture GT-AX6000
   - Asus RT-AC68U
   - Asus RT-AC86U
   - Asus RT-AX86U
   - Asus RT-AX88U
   - Asus RT-N56U
   - Cudy TR3000
+  - D-Link DIR-620/D/F1A
   - GL.iNet Flint 2 (GL-MT6000)
   - Zyxel Keenetic II
   - Zyxel Keenetic III
