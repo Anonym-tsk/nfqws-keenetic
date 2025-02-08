@@ -29,11 +29,12 @@
  
   - Билайн Smart Box GIGA
   - Билайн Smart Box Turbo
-  - ASUS ROG Rapture GT-AX6000
+  - Asus ROG Rapture GT-AX6000
   - Asus RT-AC68U
   - Asus RT-AC86U
   - Asus RT-AX86U
   - Asus RT-AX88U
+  - Asus RT-N16
   - Asus RT-N56U
   - Cudy TR3000
   - D-Link DIR-620/D/F1A
@@ -81,6 +82,7 @@
   - Xiaomi Mi Router Mini
   - Xiaomi Mi Router Pro
   - Xiaomi Router AX3000T
+  - Xiaomi Router Redmi AC2100
 
 </details>
 
