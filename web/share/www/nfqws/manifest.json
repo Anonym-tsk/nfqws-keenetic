@@ -1,0 +1,23 @@
+{
+    "name": "nfqws-keenetic",
+    "short_name": "nfqws-keenetic",
+    "start_url": "http://192.168.1.1:90",
+    "display": "fullscreen",
+    "background_color": "#0175C2",
+    "theme_color": "#FFFFFF",
+    "description": "https://github.com/Anonym-tsk/nfqws-keenetic",
+    "orientation": "any",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
