@@ -4,6 +4,7 @@ CONFFILE="/opt/etc/nfqws/nfqws.conf"
 INIT_SCRIPT="/opt/etc/init.d/S51nfqws"
 INIT_SCRIPT_OWRT="/opt/etc/init.d/nfqws-keenetic"
 BINFILE="/opt/usr/bin/nfqws"
+API_URL="http://localhost:79/rci/"
 
 stop_func() {
   if [ -f "$INIT_SCRIPT" ]; then
@@ -104,6 +105,83 @@ install_binary_func() {
   rm -rf "/opt/tmp/nfqws_binary"
 }
 
+post_api() {
+  data="$1"
+  query="${2:-}"
+
+  if [ -z "$data" ]; then
+    result=$(curl -s "$API_URL$query")
+  else
+    result=$(curl -s -d "$data" "$API_URL$query")
+  fi
+
+  if ! echo "$result" | grep -q "success"; then
+    echo "Error: Failed to execute POST request"
+    return 1
+  fi
+
+  echo "$result"
+}
+
+get_api() {
+  query="$1"
+  result=$(curl -s "$API_URL$query")
+
+  if ! echo "$result" | grep -q "success"; then
+    echo "Error: Failed to execute GET request"
+    return 1
+  fi
+
+  echo "$result"
+}
+
+# Install system packages
+install_system_package() {
+  packages="opkg-kmod-netfilter ip6"
+
+  until status=$(post_api "" "components/list") && echo "$status" | grep -q "continued"; do
+    echo "Error: Failed to execute post_api request."
+    sleep 3
+  done
+
+  for package in $packages; do
+    if ! grep -q "<name>${package}</name>" /etc/components.xml; then
+      attempt=0
+      while [ $attempt -lt 5 ]; do
+        data='[{"components": {"install": {"component": "'"$package"'"}}}]'
+        result=$(post_api "$data")
+        echo "${result}"
+
+        if ! echo "$result" | grep -q "is unavailable"; then
+          break
+        fi
+
+        attempt=$((attempt + 1))
+        sleep 2
+      done
+
+      if [ $attempt -eq 5 ]; then
+        echo "Error: package $package unavailable after 5 attempts."
+      fi
+    fi
+  done
+
+  if ! post_api '[{"components": {"commit": true}}]' > /dev/null 2>&1; then
+    echo "Error: Failed to commit changes."
+    return 1
+  fi
+  sleep 5
+
+  status=$(get_api "show/components/status")
+  if echo "$status" | grep -q "request failed (507)"; then
+    echo "Not enough memory to install system packages"
+    return 1
+  fi
+
+  echo "System will be rebooted"
+}
+
+
 # Stop entware service
 if [ -f "$INIT_SCRIPT" ]; then
   stop_func
@@ -119,6 +197,7 @@ install_config_func
 
 # Start entware service
 if [ -f "$INIT_SCRIPT" ]; then
+  install_system_package
   start_func
 fi
 
