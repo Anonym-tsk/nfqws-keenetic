@@ -375,6 +375,8 @@ LOG_LEVEL=0|1
    Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
 3. Ошибки вида `readlink: not found`, `dirname: not found`<br/>
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
+4. `Failed to download the package list from https://anonym-tsk.github.io/nfqws-keenetic/all/Packages.gz`<br/>
+   Скорее всего не устеновлен пакет `wget-ssl`. Если вы уверены, что он установлен – переустановите его: `opkg install --force-reinstall wget-ssl`
 
 ### Как использовать несколько стратегий
 
