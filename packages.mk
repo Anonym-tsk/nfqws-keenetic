@@ -55,13 +55,13 @@ _binary-multi:
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/usr/bin
 	mkdir -p out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary
 
-	cp out/zapret/binaries/mips32r1-lsb/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
-	cp out/zapret/binaries/mips32r1-msb/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
-	cp out/zapret/binaries/aarch64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
-	cp out/zapret/binaries/arm/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
-	cp out/zapret/binaries/x86/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
-	cp out/zapret/binaries/x86_64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
-	cp out/zapret/binaries/lexra/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-lexra
+	cp out/zapret/binaries/linux-mipsel/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
+	cp out/zapret/binaries/linux-mips/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
+	cp out/zapret/binaries/linux-arm64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-aarch64
+	cp out/zapret/binaries/linux-arm/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-armv7
+	cp out/zapret/binaries/linux-x86/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86
+	cp out/zapret/binaries/linux-x86_64/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-x86_64
+	cp out/zapret/binaries/linux-lexra/nfqws out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-lexra
 
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mipsel
 	chmod +x out/$(BUILD_DIR)/data$(ROOT_DIR)/tmp/nfqws_binary/nfqws-mips
@@ -135,7 +135,7 @@ mipsel: _download_bins
 		BUILD_DIR=mipsel \
 		ARCH=mipsel-3.4 \
 		FILENAME=nfqws-keenetic_$(VERSION)_mipsel-3.4.ipk \
-		BIN=mips32r1-lsb \
+		BIN=linux-mipsel \
 		_ipk
 
 mips: _download_bins
@@ -143,7 +143,7 @@ mips: _download_bins
 		BUILD_DIR=mips \
 		ARCH=mips-3.4 \
 		FILENAME=nfqws-keenetic_$(VERSION)_mips-3.4.ipk \
-		BIN=mips32r1-msb \
+		BIN=linux-mips \
 		_ipk
 
 aarch64: _download_bins
@@ -151,7 +151,7 @@ aarch64: _download_bins
 		BUILD_DIR=aarch64 \
 		ARCH=aarch64-3.10 \
 		FILENAME=nfqws-keenetic_$(VERSION)_aarch64-3.10.ipk \
-		BIN=aarch64 \
+		BIN=linux-arm64 \
 		_ipk
 
 multi: _download_bins
