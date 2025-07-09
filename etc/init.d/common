@@ -37,7 +37,21 @@ _RULE_NFQWS() {
   local PORTS=$2 # 80,443
 
   # Main NFQUEUE rule
-  echo "POSTROUTING -o $IFACE -t mangle -p $PROTO -m multiport --dports $PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark $MARK_EXCLUDE -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+  local RULE="POSTROUTING -o $IFACE -t mangle -p $PROTO -m multiport --dports $PORTS -m connbytes --connbytes-dir=original --connbytes-mode=packets --connbytes 1:8 -m mark ! --mark $MARK_EXCLUDE"
+
+  # Add IP check if allowed_ips.list exists and is not empty
+  if [ -f "$ALLOWED_IPS_FILE" ] && [ -s "$ALLOWED_IPS_FILE" ]; then
+    # Read IPs from file, skip comments and empty lines
+    local IPS=$(grep -v '^#' "$ALLOWED_IPS_FILE" | grep -v '^$' | tr '\n' ',')
+    if [ -n "$IPS" ]; then
+      # Remove trailing comma
+      IPS=${IPS%,}
+      RULE="$RULE -m iprange --src-range $IPS"
+    fi
+  fi
+
+  RULE="$RULE -j NFQUEUE --queue-num $NFQUEUE_NUM --queue-bypass"
+  echo "$RULE"
 }
 
 _RULE_MASQ() {
@@ -107,6 +121,7 @@ create_running_config() {
   echo "POLICY_EXCLUDE=$POLICY_EXCLUDE" >> "$CONFFILE.run"
   echo "POLICY_MARK=\"$POLICY_MARK\"" >> "$CONFFILE.run"
   echo "NFQUEUE_NUM=$NFQUEUE_NUM" >> "$CONFFILE.run"
+  echo "ALLOWED_IPS_FILE=\"$ALLOWED_IPS_FILE\"" >> "$CONFFILE.run"
 }
 
 remove_running_config() {
