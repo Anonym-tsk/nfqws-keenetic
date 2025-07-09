@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     container:
-      image: openwrt/sdk:latest
+      image: openwrt/sdk:x86_64-24.10.2
       options: --user root
 
     steps:
