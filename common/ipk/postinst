@@ -63,15 +63,16 @@ install_binary_func() {
   local ARCH=
 
   if [ -f "$OPKG_CONF" ]; then
-    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|aarch64-3|aarch64_|armv7|arm_|i386|i686|x86_64' | head -n 1)
+    ARCH=$(cat "$OPKG_CONF" | grep -oE 'mips-3|mips_|mipsel-3|mipsel_|mips64|aarch64-3|aarch64_|armv7|arm_|i386|i686|x86_64' | head -n 1)
   fi
   if [ -z "$ARCH" ] && [ -f "$OWRT_FEEDS" ]; then
-    ARCH=$(cat "$OWRT_FEEDS" | grep -oE 'mips_|mipsel_|aarch64_|arm_|i386|x86_64' | head -n 1)
+    ARCH=$(cat "$OWRT_FEEDS" | grep -oE 'mips_|mipsel_|mips64|aarch64_|arm_|i386|x86_64' | head -n 1)
   fi
   if [ -n "$ARCH" ]; then
     case "$ARCH" in
       "mips-3"|"mips_") ARCH="mips" ;;
       "mipsel-3"|"mipsel_") ARCH="mipsel" ;;
+      "mips64") ARCH="mips64" ;;
       "aarch64-3"|"aarch64_") ARCH="aarch64" ;;
       "armv7"|"arm_") ARCH="armv7" ;;
       "i386"|"i686") ARCH="x86" ;;
@@ -80,7 +81,7 @@ install_binary_func() {
   fi
 
   if [ -z $ARCH ]; then
-    ARCH=$(uname -m | grep -oE 'mips|mipsel|aarch64|armv7|i386|i686|x86_64|rlx')
+    ARCH=$(uname -m | grep -oE 'mips|mipsel|mips64|aarch64|armv7|i386|i686|x86_64|rlx')
     if [ "$ARCH" == "rlx" ]; then
       ARCH="lexra"
     elif [ "$ARCH" == "mips" ]; then
