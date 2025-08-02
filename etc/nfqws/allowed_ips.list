@@ -1,0 +1,7 @@
+# List of IP addresses for which bypass will work
+# One IP address per line
+# If file is empty, bypass will work for all IP addresses
+# Examples:
+# 192.168.1.100
+# 192.168.1.101
+# 192.168.1.102 
