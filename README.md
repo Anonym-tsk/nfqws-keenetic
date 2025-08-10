@@ -29,13 +29,16 @@
  
   - Билайн Smart Box GIGA
   - Билайн Smart Box Turbo
-  - Asus ROG Rapture GT-AX6000
-  - Asus RT-AC68U
-  - Asus RT-AC86U
-  - Asus RT-AX86U
-  - Asus RT-AX88U
-  - Asus RT-N16
-  - Asus RT-N56U
+  - ASUS ROG Rapture GT-AX6000
+  - ASUS RT-AC51U
+  - ASUS RT-AC68U
+  - ASUS RT-AC86U
+  - ASUS RT-AX58U
+  - ASUS RT-AX86U
+  - ASUS RT-AX88U
+  - ASUS RT-N16
+  - ASUS RT-N56U
+  - Cudy TR1200
   - Cudy TR3000
   - D-Link DIR-620/D/F1A
   - GL.iNet Flint 2 (GL-MT6000)
@@ -44,6 +47,7 @@
   - Zyxel Keenetic Giga II
   - Zyxel Keenetic Giga III
   - Zyxel Keenetic Extra
+  - Zyxel Keenetic Extra II
   - Zyxel Keenetic Ultra
   - Zyxel Keenetic Ultra II
   - Keenetic Giga (KN-1010)
@@ -59,7 +63,9 @@
   - Keenetic Viva (KN-1910)
   - Keenetic Viva (KN-1912)
   - Keenetic Viva (KN-1913)
+  - Keenetic DSL (KN-2010)
   - Keenetic Launcher DSL (KN-2012)
+  - Keenetic Duo (KN-2110)
   - Keenetic Skipper DSL (KN-2112)
   - Keenetic Runner 4G (KN-2211)
   - Keenetic Hero 4G+ (KN-2311)
@@ -70,8 +76,9 @@
   - Keenetic Hopper (KN-3810)
   - Keenetic Hopper (KN-3811)
   - Keenetic Hopper SE (KN-3812)
+  - MikroTik hEX S (RB760iGS)
   - MikroTik RB951G-2HnD
-  - MikroTik RB952Ui-5ac2nD
+  - Mikrotik hAP ac lite (RB952Ui-5ac2nD)
   - TP-Link Archer C20
   - TP-Link Archer C6U
   - TP-Link WDR3500
@@ -81,6 +88,7 @@
   - Xiaomi Mi Router 4C
   - Xiaomi Mi Router Mini
   - Xiaomi Mi Router Pro
+  - Xiaomi Mi Wi-Fi mini
   - Xiaomi Router AX3000T
   - Xiaomi Router Redmi AC2100
 
