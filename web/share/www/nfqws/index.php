@@ -31,7 +31,7 @@ function getFiles($path = ROOT_DIR . '/etc/nfqws'): array {
         array_push($basenames, basename($logfile));
     }
 
-    $priority = ['nfqws.conf' => -5, 'user.list' => -4, 'exclude.list' => -3, 'auto.list' => -2, 'nfqws.log' => -1];
+    $priority = ['nfqws.conf' => -7, 'user.list' => -6, 'exclude.list' => -5, 'auto.list' => -4, 'ipset.list' => -3, 'ipset_exclude.list' => -2, 'nfqws.log' => -1];
     usort($basenames, fn($a, $b) => ($priority[$a] ?? 1) - ($priority[$b] ?? -1));
 
     return $basenames;

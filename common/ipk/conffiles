@@ -2,3 +2,5 @@
 /opt/etc/nfqws/user.list
 /opt/etc/nfqws/auto.list
 /opt/etc/nfqws/exclude.list
+/opt/etc/nfqws/ipset.list
+/opt/etc/nfqws/ipset_exclude.list

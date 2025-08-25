@@ -189,11 +189,18 @@ _startup_args() {
 
   # QUIC
   if [ -n "$NFQWS_ARGS_QUIC" ]; then
-    args="$args $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS --new"
+    args="$args $NFQWS_ARGS_QUIC $NFQWS_EXTRA_ARGS"
+    if [ -n "$NFQWS_ARGS_IPSET" ]; then
+      args="$args $NFQWS_ARGS_IPSET"
+    fi
+    args="$args --new"
   fi
 
   # HTTP(S)
   args="$args $NFQWS_ARGS $NFQWS_EXTRA_ARGS"
+  if [ -n "$NFQWS_ARGS_IPSET" ]; then
+    args="$args $NFQWS_ARGS_IPSET"
+  fi
 
   echo "$args"
 }
