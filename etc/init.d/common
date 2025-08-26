@@ -182,6 +182,11 @@ _startup_args() {
     args="--debug=syslog $args"
   fi
 
+  # Custom args
+  if [ -n "$NFQWS_ARGS_CUSTOM" ]; then
+    args="$args $NFQWS_ARGS_CUSTOM --new"
+  fi
+
   # UDP
   if [ -n "$NFQWS_ARGS_UDP" ]; then
     args="$args $NFQWS_ARGS_UDP --new"

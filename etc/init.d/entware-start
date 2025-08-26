@@ -2,6 +2,7 @@
 # Entware startup script
 
 PATH=/opt/sbin:/opt/bin:/opt/usr/sbin:/opt/usr/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Required for ndmc call from web interface and startup
 LD_LIBRARY_PATH=/lib:/usr/lib:/opt/lib:/opt/usr/lib
 
 NFQWS_BIN="/opt/usr/bin/nfqws"
