@@ -4,6 +4,7 @@ start() {
     return 1
   fi
 
+  validate_config || return 1
   create_running_config
   kernel_modules
 

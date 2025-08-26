@@ -13,6 +13,7 @@ extra_command "firewall_stop" "Unload firewall rules"
 extra_command "kernel_modules" "Load kernel modules"
 
 start_service() {
+  validate_config || return 1
   create_running_config
   kernel_modules
 

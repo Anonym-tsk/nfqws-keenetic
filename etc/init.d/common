@@ -86,6 +86,29 @@ reload_service() {
   kill -1 $(cat "$PIDFILE")
 }
 
+validate_config() {
+  if [[ "$NFQWS_ARGS" =~ "--new" ]]; then
+    echo "Using --new in NFQWS_ARGS is not allowed. Use NFQWS_ARGS_CUSTOM instead"
+    return 1
+  fi
+  if [[ "$NFQWS_ARGS_QUIC" =~ "--new" ]]; then
+    echo "Using --new in NFQWS_ARGS_QUIC is not allowed. Use NFQWS_ARGS_CUSTOM instead"
+    return 1
+  fi
+  if [[ "$NFQWS_ARGS_UDP" =~ "--new" ]]; then
+    echo "Using --new in NFQWS_ARGS_UDP is not allowed. Use NFQWS_ARGS_CUSTOM instead"
+    return 1
+  fi
+  if [[ "$NFQWS_EXTRA_ARGS" =~ "--new" ]]; then
+    echo "Using --new in NFQWS_EXTRA_ARGS is not allowed. Use NFQWS_ARGS_CUSTOM instead"
+    return 1
+  fi
+  if [[ "$NFQWS_ARGS_IPSET" =~ "--new" ]]; then
+    echo "Using --new in NFQWS_ARGS_IPSET is not allowed. Use NFQWS_ARGS_CUSTOM instead"
+    return 1
+  fi
+}
+
 create_running_config() {
   local MARK=$(/bin/ndmc -c show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
   if [ -n "$MARK" ]; then
