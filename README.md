@@ -6,6 +6,7 @@
 [![CloudTips](https://img.shields.io/badge/donate-CloudTips-598bd7.svg?style=flat)](https://pay.cloudtips.ru/p/054d0666)
 [![YooMoney](https://img.shields.io/badge/donate-YooMoney-8037fd.svg?style=flat)](https://yoomoney.ru/to/410019180291197)
 [![Join Telegram group](https://img.shields.io/badge/Telegram_group-Join-blue.svg?style=social&logo=telegram)](https://t.me/nfqws)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Anonym-tsk/nfqws-keenetic)
 
 Пакеты для установки `nfqws` на маршрутизаторы.
 
