@@ -94,6 +94,7 @@
 - Router AX3000T
 - Router Redmi AC2100
 </details>
+
 > 💡 Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions) или в [чате](https://t.me/nfqws).
 
 ---
