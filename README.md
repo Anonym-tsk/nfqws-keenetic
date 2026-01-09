@@ -126,14 +126,14 @@
 ### Установка на Keenetic/Netcraze и другие системы с Entware
 
 1. Установите необходимые зависимости
-   ```
+   ```bash
    opkg update
    opkg install ca-certificates wget-ssl
    opkg remove wget-nossl
    ```
 
 2. Установите opkg-репозиторий в систему
-   ```
+   ```bash
    mkdir -p /opt/etc/opkg
    echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all" > /opt/etc/opkg/nfqws-keenetic.conf
    ```
@@ -143,32 +143,32 @@
      <summary>Или можете выбрать репозиторий под конкретную архитектуру</summary>
 
      - `mips-3.4` <sub><sup>Keenetic Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610); Zyxel Keenetic DSL, LTE, VOX</sup></sub>
-       ```
+       ```bash
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
      - `mipsel-3.4` <sub><sup>Keenetic 4G (KN-1212), Omni (KN-1410), Extra (KN-1710/1711/1713), Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912/1913), Hero 4G (KN-2310/2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810); Zyxel Keenetic II / III, Extra, Extra II, Giga II / III, Omni, Omni II, Viva, Ultra, Ultra II</sup></sub>
-       ```
+       ```bash
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
      - `aarch64-3.10` <sub><sup>Keenetic Peak (KN-2710), Ultra (KN-1811), Hopper (KN-3811), Hopper SE (KN-3812), Giga (KN-1012)</sup></sub>
-       ```
+       ```bash
        mkdir -p /opt/etc/opkg
        echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
    </details>
 
 3. Установите пакет
-   ```
+   ```bash
    opkg update
    opkg install nfqws-keenetic
    ```
 
 4. Установите веб-интерфейс (опционально)
-   ```
+   ```bash
    opkg install nfqws-keenetic-web
    ```
 > [!NOTE]
@@ -179,7 +179,7 @@
 > По-умолчанию php использует только 8Мб памяти. Из-за этого ограничения, могут не загружаться большие списки файлов.
 > Вы можете изменить конфигурацию php самостоятельно:<br/>
 > Откройте файл `/opt/etc/php.ini` и измените следующие значения
-> ```
+> ```ini
 > memory_limit = 32M
 > post_max_size = 32M
 > upload_max_filesize = 16M
@@ -187,7 +187,7 @@
 
 ##### Обновление
 
-```
+```bash
 opkg update
 opkg upgrade nfqws-keenetic
 opkg upgrade nfqws-keenetic-web
@@ -195,13 +195,13 @@ opkg upgrade nfqws-keenetic-web
 
 ##### Удаление
 
-```
+```bash
 opkg remove --autoremove nfqws-keenetic-web nfqws-keenetic
 ```
 
 ##### Информация об установленной версии
 
-```
+```bash
 opkg info nfqws-keenetic
 opkg info nfqws-keenetic-web
 ```
@@ -224,63 +224,63 @@ _Не забудьте поставить галочку на интерфейс
 #### До версии 24.10 включительно, пакетный менеджер `opkg`
 
 1. Установите необходимые зависимости
-   ```
+   ```bash
    opkg update
    opkg install ca-certificates wget-ssl
    opkg remove wget-nossl
    ```
 
 2. Установите публичный ключ репозитория
-   ```
+   ```bash
    wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
    opkg-key add /tmp/nfqws-keenetic.pub
    ```
 
 3. Установите репозиторий в систему
-   ```
+   ```bash
    echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `mips64`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет
-   ```
+   ```bash
    opkg update
    opkg install nfqws-keenetic
    ```
 
 5. Установите веб-интерфейс (опционально)
-   ```
+   ```bash
    opkg install nfqws-keenetic-web
    ```
 
 #### Версии 25.xx и Snapshot, пакетный менеджер `apk`
 
 1. Установите необходимые зависимости
-   ```
+   ```bash
    apk --update-cache add ca-certificates wget-ssl
    apk del wget-nossl
    ```
 
 2. Установите публичный ключ репозитория
-   ```
+   ```bash
    wget -O "/etc/apk/keys/nfqws-keenetic.pem" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pem"
    ```
 
 3. Установите репозиторий в систему
-   ```
+   ```bash
    echo "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/packages.adb" > /etc/apk/repositories.d/nfqws-keenetic.list
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `mips64`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
    Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет
-   ```
+   ```bash
    apk --update-cache add nfqws-keenetic
    ```
 
 5. Установите веб-интерфейс (опционально)
-   ```
+   ```bash
    apk add nfqws-keenetic-web
    ```
 
@@ -296,7 +296,7 @@ _Не забудьте поставить галочку на интерфейс
 
 Файл настроек расположен по пути `/opt/etc/nfqws/nfqws.conf`. Для редактирования можно воспользоваться встроенным редактором `vi` или установить `nano`.
 
-```
+```bash
 # Интерфейс провайдера. Обычно `eth3` или `eth2.2` для проводного соединения, и `ppp0` для PPPoE
 # Заполняется автоматически при установке
 # Можно ввести несколько интерфейсов, например ISP_INTERFACE="eth3 nwg1"
@@ -403,14 +403,14 @@ LOG_LEVEL=0|1
 Можно добавить дополнительные стратегии в опции `NFQWS_ARGS_CUSTOM` в конфиге и разделять их параметром `--new`.
 Например, стратегия ниже применит опцию `--dpi-desync=fake,split2` для HTTPS запросов к доменам из `custom.list`,
 а для HTTP запросов будет использовать `--dpi-desync=disorder2 --dpi-desync-fooling=md5sig,badseq`:
-```
+```bash
 NFQWS_ARGS_CUSTOM="--filter-tcp=443 --dpi-desync=fake,split2 --hostlist=custom.list --new --filter-tcp=80 --dpi-desync=disorder2 --dpi-desync-fooling=md5sig,badseq"
 ```
 
 ### Как подобрать рабочую стратегию NFQWS
 
 1. Запустить скрипт и следовать его инструкциям
-   ```
+   ```bash
    opkg install curl
    /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/common/strategy.sh)"
    ```
