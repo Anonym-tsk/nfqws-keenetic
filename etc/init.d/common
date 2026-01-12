@@ -243,10 +243,10 @@ _firewall() {
 
   if [ "$ACTION" == "-A" ] || [ "$ACTION" == "-I" ]; then
     if [ $exists -ne 0 ]; then
-      $CMD $ACTION $RULE
+      $CMD -w $ACTION $RULE
     fi
   elif [ "$ACTION" == "-D" ] && [ $exists -eq 0 ]; then
-    $CMD $ACTION $RULE
+    $CMD -w $ACTION $RULE
   fi
 }
 
