@@ -1,12 +1,10 @@
 name: Send notification to Telegram
 on:
   release:
-    types: [ published ]
+    types: [ released ]
 
 jobs:
   notify:
-    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
-
     runs-on: ubuntu-latest
 
     steps:
