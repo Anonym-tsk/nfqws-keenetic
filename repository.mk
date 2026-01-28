@@ -53,7 +53,7 @@ _repository:
 	echo "Package: nfqws-keenetic" > out/_pages/$(BUILD_DIR)/Packages
 	echo "Version: $(VERSION)" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Depends: iptables, busybox" >> out/_pages/$(BUILD_DIR)/Packages
-	echo "Conflicts: tpws-keenetic" >> out/_pages/$(BUILD_DIR)/Packages
+	echo "Conflicts: tpws-keenetic, nfqws2-keenetic" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Section: net" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Architecture: $(ARCH)" >> out/_pages/$(BUILD_DIR)/Packages
 	echo "Filename: $(FILENAME)" >> out/_pages/$(BUILD_DIR)/Packages

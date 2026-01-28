@@ -22,7 +22,7 @@ _control:
 	echo "Package: nfqws-keenetic" > out/$(BUILD_DIR)/control/control
 	echo "Version: $(VERSION)" >> out/$(BUILD_DIR)/control/control
 	echo "Depends: iptables, busybox" >> out/$(BUILD_DIR)/control/control
-	echo "Conflicts: tpws-keenetic" >> out/$(BUILD_DIR)/control/control
+	echo "Conflicts: tpws-keenetic, nfqws2-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
 	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
