@@ -204,7 +204,7 @@ jobs:
         tag_name: v${{ steps.version.outputs.content }}
         release_name: Release v${{ steps.version.outputs.content }}
         draft: false
-        prerelease: false
+        prerelease: true
 
     - name: Upload Release mips
       uses: actions/upload-release-asset@v1
@@ -300,6 +300,7 @@ jobs:
       run: |
         echo "Release v${{ steps.version.outputs.content }} created" >> $GITHUB_STEP_SUMMARY
 
+  # TODO: deploy only when release published
   deploy-repository:
     runs-on: ubuntu-22.04
     needs: [build-repository]
