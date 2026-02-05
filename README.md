@@ -167,43 +167,25 @@
    opkg install nfqws-keenetic
    ```
 
-4. Установите веб-интерфейс (опционально)
-   ```bash
-   opkg install nfqws-keenetic-web
-   ```
-> [!NOTE]
-> Адрес веб-интерфейса `http://<router_ip>:90` (например http://192.168.1.1:90)<br/>
-> Для авторизации введите имя пользователя и пароль пользователя entware (по умолчанию root и keenetic если не меняли при установке)
-
-> [!TIP]
-> По-умолчанию php использует только 8Мб памяти. Из-за этого ограничения, могут не загружаться большие списки файлов.
-> Вы можете изменить конфигурацию php самостоятельно:<br/>
-> Откройте файл `/opt/etc/php.ini` и измените следующие значения
-> ```ini
-> memory_limit = 32M
-> post_max_size = 32M
-> upload_max_filesize = 16M
-> ```
+4. [Установите веб-интерфейс](https://github.com/nfqws/nfqws-keenetic-web) (опционально)
 
 ##### Обновление
 
 ```bash
 opkg update
 opkg upgrade nfqws-keenetic
-opkg upgrade nfqws-keenetic-web
 ```
 
 ##### Удаление
 
 ```bash
-opkg remove --autoremove nfqws-keenetic-web nfqws-keenetic
+opkg remove --autoremove nfqws-keenetic
 ```
 
 ##### Информация об установленной версии
 
 ```bash
 opkg info nfqws-keenetic
-opkg info nfqws-keenetic-web
 ```
 
 ### Политики доступа на Keenetic/Netcraze
@@ -249,10 +231,7 @@ _Не забудьте поставить галочку на интерфейс
    opkg install nfqws-keenetic
    ```
 
-5. Установите веб-интерфейс (опционально)
-   ```bash
-   opkg install nfqws-keenetic-web
-   ```
+5. [Установите веб-интерфейс](https://github.com/nfqws/nfqws-keenetic-web) (опционально)
 
 #### Версии 25.xx и Snapshot, пакетный менеджер `apk`
 
@@ -279,10 +258,7 @@ _Не забудьте поставить галочку на интерфейс
    apk --update-cache add nfqws-keenetic
    ```
 
-5. Установите веб-интерфейс (опционально)
-   ```bash
-   apk add nfqws-keenetic-web
-   ```
+5. [Установите веб-интерфейс](https://github.com/nfqws/nfqws-keenetic-web) (опционально)
 
 > [!NOTE]
 > NB: Все пути файлов, описанные в этой инструкции, начинающиеся с `/opt`, на OpenWRT будут начинаться с корня `/`.
