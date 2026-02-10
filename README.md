@@ -118,7 +118,7 @@
 
 - Установить entware на маршрутизатор по инструкции [на встроенную память роутера](https://help.keenetic.com/hc/ru/articles/360021888880) или [на USB-накопитель](https://help.keenetic.com/hc/ru/articles/360021214160).
 
-- Через web-интерфейс Keenetic/Netcraze установить пакеты **Протокол IPv6** (**Network functions > IPv6**) и **Модули ядра подсистемы Netfilter** (**OPKG > Kernel modules for Netfilter** - не путать с "Netflow"). Обратите внимание, что второй компонент отобразится в списке пакетов только после того, как вы отметите к установке первый.
+- Через web-интерфейс Keenetic/Netcraze установить пакет **Модули ядра подсистемы Netfilter** (**OPKG > Kernel modules for Netfilter**). На старых прошивках он доступен к установке только после выбора компонента **Протокол IPv6** (**Network functions > IPv6**).
 
 - В разделе "Интернет-фильтры" отключить все сторонние фильтры (NextDNS, SkyDNS, Яндекс DNS и другие).
 
