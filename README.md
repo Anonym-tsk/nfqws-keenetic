@@ -1,12 +1,12 @@
 # nfqws-keenetic
 
-[![GitHub Release](https://img.shields.io/github/release/Anonym-tsk/nfqws-keenetic?style=flat&color=green)](https://github.com/Anonym-tsk/nfqws-keenetic/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/Anonym-tsk/nfqws-keenetic?style=flat)](https://github.com/Anonym-tsk/nfqws-keenetic/stargazers)
-[![License](https://img.shields.io/github/license/Anonym-tsk/nfqws-keenetic.svg?style=flat&color=orange)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/nfqws/nfqws-keenetic?style=flat&color=green)](https://github.com/nfqws/nfqws-keenetic/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/nfqws/nfqws-keenetic?style=flat)](https://github.com/nfqws/nfqws-keenetic/stargazers)
+[![License](https://img.shields.io/github/license/nfqws/nfqws-keenetic.svg?style=flat&color=orange)](LICENSE)
 [![CloudTips](https://img.shields.io/badge/donate-CloudTips-598bd7.svg?style=flat)](https://pay.cloudtips.ru/p/054d0666)
 [![YooMoney](https://img.shields.io/badge/donate-YooMoney-8037fd.svg?style=flat)](https://yoomoney.ru/to/410019180291197)
 [![Join Telegram group](https://img.shields.io/badge/Telegram_group-Join-blue.svg?style=social&logo=telegram)](https://t.me/nfqws)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Anonym-tsk/nfqws-keenetic)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/nfqws/nfqws-keenetic)
 
 Пакеты для установки `nfqws` на маршрутизаторы.
 
@@ -29,7 +29,7 @@
 Изначально написано для роутеров Keenetic/Netcraze с установленным entware.
 Однако, работоспособность также была проверена на прошивках Padavan и OpenWRT (читайте ниже).
 
-Списки проверенного оборудования собираем в [отдельной теме](https://github.com/Anonym-tsk/nfqws-keenetic/discussions/1).
+Списки проверенного оборудования собираем в [отдельной теме](https://github.com/nfqws/nfqws-keenetic/discussions/1).
 <details>
   <summary>Собранный список моделей из темы</summary>
  
@@ -100,7 +100,7 @@
 
 </details>
 
-Поделиться опытом можно в разделе [Discussions](https://github.com/Anonym-tsk/nfqws-keenetic/discussions) или в [чате](https://t.me/nfqws).
+Поделиться опытом можно в разделе [Discussions](https://github.com/nfqws/nfqws-keenetic/discussions) или в [чате](https://t.me/nfqws).
 
 ### Что это?
 
@@ -140,7 +140,7 @@
 2. Установите opkg-репозиторий в систему
    ```bash
    mkdir -p /opt/etc/opkg
-   echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/all" > /opt/etc/opkg/nfqws-keenetic.conf
+   echo "src/gz nfqws-keenetic https://nfqws.github.io/nfqws-keenetic/all" > /opt/etc/opkg/nfqws-keenetic.conf
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `mips64`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
 
@@ -150,19 +150,19 @@
      - `mips-3.4` <sub><sup>Keenetic Giga SE (KN-2410), Ultra SE (KN-2510), DSL (KN-2010), Launcher DSL (KN-2012), Duo (KN-2110), Skipper DSL (KN-2112), Hopper DSL (KN-3610); Zyxel Keenetic DSL, LTE, VOX</sup></sub>
        ```bash
        mkdir -p /opt/etc/opkg
-       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
+       echo "src/gz nfqws-keenetic https://nfqws.github.io/nfqws-keenetic/mips" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
      - `mipsel-3.4` <sub><sup>Keenetic 4G (KN-1212), Omni (KN-1410), Extra (KN-1710/1711/1713), Giga (KN-1010/1011), Ultra (KN-1810), Viva (KN-1910/1912/1913), Hero 4G (KN-2310/2311), Giant (KN-2610), Skipper 4G (KN-2910), Hopper (KN-3810); Zyxel Keenetic II / III, Extra, Extra II, Giga II / III, Omni, Omni II, Viva, Ultra, Ultra II</sup></sub>
        ```bash
        mkdir -p /opt/etc/opkg
-       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
+       echo "src/gz nfqws-keenetic https://nfqws.github.io/nfqws-keenetic/mipsel" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
 
      - `aarch64-3.10` <sub><sup>Keenetic Peak (KN-2710), Ultra (KN-1811), Hopper (KN-3811), Hopper SE (KN-3812), Giga (KN-1012)</sup></sub>
        ```bash
        mkdir -p /opt/etc/opkg
-       echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
+       echo "src/gz nfqws-keenetic https://nfqws.github.io/nfqws-keenetic/aarch64" > /opt/etc/opkg/nfqws-keenetic.conf
        ```
    </details>
 
@@ -219,16 +219,16 @@ _Не забудьте поставить галочку на интерфейс
 
 2. Установите публичный ключ репозитория
    ```bash
-   wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
+   wget -O "/tmp/nfqws-keenetic.pub" "https://nfqws.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
    opkg-key add /tmp/nfqws-keenetic.pub
    ```
 
 3. Установите репозиторий в систему
    ```bash
-   echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
+   echo "src/gz nfqws-keenetic https://nfqws.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `mips64`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
-   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
+   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/nfqws/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет
    ```bash
@@ -248,15 +248,15 @@ _Не забудьте поставить галочку на интерфейс
 
 2. Установите публичный ключ репозитория
    ```bash
-   wget -O "/etc/apk/keys/nfqws-keenetic.pem" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pem"
+   wget -O "/etc/apk/keys/nfqws-keenetic.pem" "https://nfqws.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pem"
    ```
 
 3. Установите репозиторий в систему
    ```bash
-   echo "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/packages.adb" > /etc/apk/repositories.d/nfqws-keenetic.list
+   echo "https://nfqws.github.io/nfqws-keenetic/openwrt/packages.adb" > /etc/apk/repositories.d/nfqws-keenetic.list
    ```
    Репозиторий универсальный, поддерживаемые архитектуры: `mipsel`, `mips`, `mips64`, `aarch64`, `armv7`, `x86`, `x86_64`, `lexra`.
-   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/Anonym-tsk/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
+   Для добавления поддержки новых устройств, [создайте Feature Request](https://github.com/nfqws/nfqws-keenetic/issues/new?template=feature_request.md&title=%5BFeature+request%5D+)
 
 4. Установите пакет
    ```bash
@@ -376,7 +376,7 @@ LOG_LEVEL=0|1
    Не установлен пакет "Протокол IPv6". Также, проблема может появляться на старых прошивках 2.xx, выключите поддержку IPv6 в конфиге NFQWS
 3. Ошибки вида `readlink: not found`, `dirname: not found`<br/>
    Обычно возникают не на кинетиках. Решение - установить busybox: `opkg install busybox` или отдельно пакеты `opkg install coreutils-readlink coreutils-dirname`
-4. `Failed to download the package list from https://anonym-tsk.github.io/nfqws-keenetic/all/Packages.gz`<br/>
+4. `Failed to download the package list from https://nfqws.github.io/nfqws-keenetic/all/Packages.gz`<br/>
    Скорее всего не устеновлен пакет `wget-ssl`. Если вы уверены, что он установлен – переустановите его: `opkg install --force-reinstall wget-ssl`
 
 ### Как использовать несколько стратегий
@@ -393,7 +393,7 @@ NFQWS_ARGS_CUSTOM="--filter-tcp=443 --dpi-desync=fake,split2 --hostlist=custom.l
 1. Запустить скрипт и следовать его инструкциям
    ```bash
    opkg install curl
-   /bin/sh -c "$(curl -fsSL https://github.com/Anonym-tsk/nfqws-keenetic/raw/master/common/strategy.sh)"
+   /bin/sh -c "$(curl -fsSL https://github.com/nfqws/nfqws-keenetic/raw/master/common/strategy.sh)"
    ```
    Подробнее можно почитать на [исходной странице](https://github.com/bol-van/zapret?tab=readme-ov-file#%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%BF%D1%80%D0%BE%D0%B2%D0%B0%D0%B9%D0%B4%D0%B5%D1%80%D0%B0)
 

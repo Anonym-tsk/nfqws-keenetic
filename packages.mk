@@ -25,7 +25,7 @@ _control:
 	echo "Conflicts: tpws-keenetic, nfqws2-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "License: MIT" >> out/$(BUILD_DIR)/control/control
 	echo "Section: net" >> out/$(BUILD_DIR)/control/control
-	echo "URL: https://github.com/Anonym-tsk/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
+	echo "URL: https://github.com/nfqws/nfqws-keenetic" >> out/$(BUILD_DIR)/control/control
 	echo "Architecture: $(ARCH)" >> out/$(BUILD_DIR)/control/control
 	echo "Description:  NFQWS service" >> out/$(BUILD_DIR)/control/control
 	echo "" >> out/$(BUILD_DIR)/control/control

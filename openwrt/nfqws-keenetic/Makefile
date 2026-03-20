@@ -14,7 +14,7 @@ define Package/nfqws-keenetic
   DEPENDS:=+iptables +iptables-mod-extra +iptables-mod-nfqueue +iptables-mod-filter +iptables-mod-ipopt +iptables-mod-conntrack-extra +ip6tables +ip6tables-mod-nat +ip6tables-extra
   CONFLICTS:=tpws-keenetic, nfqws2-keenetic
   PKGARCH:=all
-  URL:=https://github.com/Anonym-tsk/nfqws-keenetic
+  URL:=https://github.com/nfqws/nfqws-keenetic
   VERSION:=$(PKG_VERSION)
 endef
 
