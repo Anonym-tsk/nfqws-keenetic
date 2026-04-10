@@ -109,8 +109,13 @@ validate_config() {
   fi
 }
 
+ndmc_cli() {
+  local SYSTEM_LD_LIBRARY_PATH="/lib:/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  LD_LIBRARY_PATH="$SYSTEM_LD_LIBRARY_PATH" /bin/ndmc -c "$@"
+}
+
 create_running_config() {
-  local MARK=$(/bin/ndmc -c show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
+  local MARK=$(ndmc_cli show ip policy 2>&1 | grep -i "description = $POLICY_NAME:" -A 1 | grep 'mark:' | grep -o '[^ ]*$' | head -n 1)
   if [ -n "$MARK" ]; then
     POLICY_MARK="0x$MARK/0x0fffffff"
     if [ -n "$POLICY_EXCLUDE" ] && [ "$POLICY_EXCLUDE" -ne "0" ]; then
